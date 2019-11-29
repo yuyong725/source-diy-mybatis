@@ -13,6 +13,7 @@
 3. 对第三方工具（包括jdk和引入的其他jar）抛出的异常，尽量使用`exception`去捕捉，再抛出框架自定义的异常
 4. 为空判断统一使用 `a == null`
 5. 基于模块，为每个模块分配一个异常，若模块很大，再细分
+6. 不允许更改方法名，避免对照mybatis源码时比对不上
 
 #### 模块划分
 * 基础支持层
@@ -41,3 +42,16 @@
 > 使用`find . -name "*.java"|xargs cat|grep -v -e ^$ -e ^\s*\/\/.*$|wc -l`统计每个包的代码量
 
 ![进度表](https://i.loli.net/2019/11/30/NxOe8CTiI93yPoq.png)
+
+#### 各个模块的删减部分
+> 都是与主功能无关，且我不懂的地方，比如xml文件的DTD验证，反射的SecurityManager安全管理
+
+##### 解析器模块
+* `XPathParser`解析器的xml验证
+    * 涉及`validation`与`entityResolver`属性
+        * `validation`: xml格式校验是否开启，默认开启
+        * `entityResolver`: xml文档头部指定的DTD或XSD文件，用于对像xml格式进行校验，但离线情况下下载不下来会出现xml校验失败的情况，通过此类实现使用本地DTD的效果
+    
+##### 反射模块
+* `Reflector`等反射操作的安全验证
+    * 源码可以参见mybatis的`Reflector#canControlMemberAccessible`方法

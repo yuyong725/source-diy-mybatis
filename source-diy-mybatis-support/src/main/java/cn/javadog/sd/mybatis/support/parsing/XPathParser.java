@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.ParsingException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -105,7 +105,7 @@ public class XPathParser {
 			// 解析XML
 			return builder.parse(inputSource);
 		}catch (Exception e){
-			throw new BuilderException("Error creating document instance, Cause: " + e, e);
+			throw new ParsingException("Error creating document instance, Cause: " + e, e);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class XPathParser {
 		try {
 			return xPath.evaluate(expression, root, returnType);
 		} catch (Exception e) {
-			throw new BuilderException("Error evaluating XPath. Cause: " + e, e);
+			throw new ParsingException("Error evaluating XPath. Cause: " + e, e);
 		}
 	}
 
