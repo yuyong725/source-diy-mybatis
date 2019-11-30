@@ -10,4 +10,8 @@ public class ReflectionException extends BaseException {
 	public ReflectionException(String message) {
 		super(message);
 	}
+
+	public ReflectionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }
