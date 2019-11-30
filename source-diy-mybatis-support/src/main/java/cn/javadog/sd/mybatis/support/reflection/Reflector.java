@@ -3,14 +3,18 @@ package cn.javadog.sd.mybatis.support.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cn.javadog.sd.mybatis.support.reflection.invoker.Invoker;
+import cn.javadog.sd.mybatis.support.reflection.invoker.MethodInvoker;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyNamer;
 
 /**
@@ -89,7 +93,7 @@ public class Reflector {
 	 *  获取指定类的默认构造
 	 *  note 这里没有做 {@link SecurityManager} 的安全验证，感兴趣的自行谷歌，我是不懂+不感兴趣
 	 */
-	public void addDefaultConstructor(Class<?> cls) {
+	private void addDefaultConstructor(Class<?> cls) {
 		// 获取所有构造，包括public和private的
 		Constructor<?>[] declaredConstructors = cls.getDeclaredConstructors();
 		for (Constructor<?> constructor : declaredConstructors) {
@@ -140,7 +144,7 @@ public class Reflector {
 	/**
 	 * 获取类的所有方法，包括所有父类的，以及所有private方法
 	 */
-	public static Method[] getClassMethods(Class<?> clazz) {
+	private Method[] getClassMethods(Class<?> clazz) {
 		// 每个方法签名与该方法的映射
 		Map<String, Method> uniqueMethods = new HashMap<>();
 		Class<?> currentClass = clazz;
@@ -157,7 +161,7 @@ public class Reflector {
 				addUniqueMethods(uniqueMethods, anInterface.getMethods());
 			}
 			// 获得父类，再去循坏
-			currentClass = currentClass.getDeclaringClass();
+			currentClass = currentClass.getSuperclass();
 		}
 		// 转换成数组返回
 		Collection<Method> methods = uniqueMethods.values();
@@ -168,7 +172,7 @@ public class Reflector {
 	/**
 	 * 将获取到的所有方法与uniqueMethods比对，去重后加入，保证最终拿到一个类所有的方法
 	 */
-	private static void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
+	private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
 		for (Method currentMethod : methods) {
 			// 忽略 bridge 方法，
 			// note 推荐看下 https://www.zhihu.com/question/54895701/answer/141623158 文章，
@@ -191,7 +195,7 @@ public class Reflector {
 	 * 获取方法的签名
 	 * 就拿当前方法举例，返回值应为 java.lang.String#getSignature:java.lang.reflect.Method
 	 */
-	private static String getSignature(Method method) {
+	private String getSignature(Method method) {
 		StringBuilder sb = new StringBuilder();
 		// 返回类型
 		Class<?> returnType = method.getReturnType();
@@ -211,7 +215,7 @@ public class Reflector {
 	/**
 	 * 设置方法可执行，一行代码，包了try-catch而已
 	 */
-	private static void setAccessible(Executable executable) {
+	private void setAccessible(Executable executable) {
 		try {
 			executable.setAccessible(true);
 		}catch (Exception e){
@@ -230,8 +234,9 @@ public class Reflector {
 
 	/**
 	 * 解决get冲突，冲突产生的原因是子类重写父类的get方法，当然也有可能来自接口;
-	 * note 核心逻辑就是选择返回值最接近属性类型的get方法，注意不是最精准；比如 A类继承B类，B类继承C类，如果属性是B类型，
-	 * 那么即使三个类型的返回值的方法中，C类型更'精准'，但胜利者还是B类型返回值的get方法
+	 * note 核心逻辑就是选择返回值最精准（属性范围越小越精准，如ArrayList比List精准）, 不一定是最接近属性（和属性类型一致最接近）类型的get方法；
+	 *  比如A类有个 {@link Map} 类型的属性name，父类有个 返回{@link Map} 类型的get方法getName，它自己有一个返回{@link HashMap} 类型的get方法getName，
+	 *  实际最终选用的是返回{@link HashMap} 类型的get方法；这也符合jdk的规则，jdk要求子类重写父类或接口的方法时，返回类型必须相同或更精准
 	 */
 	private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
 		for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
@@ -246,9 +251,56 @@ public class Reflector {
 				}
 				// 基于返回类型比较
 				Class<?> winnerType = winner.getReturnType();
-				Class<?> returnType = candidate.getReturnType();
-				//
+				Class<?> candidateType = candidate.getReturnType();
+				// 类型相同直接报错，因为前面 #getClassMethods 已经保证了方法的unique，出现相同返回类型唯一允许的可能性就是 is/get 方法
+				if (winnerType == candidateType) {
+					if (!Boolean.class.equals(candidateType)){
+						throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
+							+ propName + " in class " + winner.getDeclaringClass() + ". This breaks the JavaBeans " +
+							"specification and can cause unpredictable results.");
+					} else if (candidate.getName().startsWith("is")) {
+						// 选择 boolean 类型的 is 方法
+						winner = candidate;
+					}
+				} else if (candidateType.isAssignableFrom(winnerType)) {
+					// 竞选失败 isAssignableFrom表示 参数class是否可以被调用者所代表，比如狮子狗可以用狗来代表；通俗点将，在这里就是
+					// winnerType 是否可以被 candidateType代表；如果可以的话，winnerType更精准，自然candidateType竞选失败
+				} else if (winnerType.isAssignableFrom(candidateType)) {
+					// 竞选成功
+					winner = candidate;
+				} else {
+					// 两个类风牛马不相及的场景，一个返回狗，一个返回猫，方法都叫 getAnimal，JDK其实都编译不过去
+					// note 加此判断从逻辑上说没有意义，还是框架作者也没想那么多？
+					throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
+						+ propName + " in class " + winner.getDeclaringClass() + ". This breaks the JavaBeans " +
+						"specification and can cause unpredictable results.");
+				}
 			}
+			// 添加到 getMethods 和 getTypes 中
+			addGetMethod(propName, winner);
 		}
 	}
+
+	/**
+	 * 将属性与方法添加到 getMethods 和 getTypes 中
+	 */
+	private void addGetMethod(String propName, Method winner) {
+		// 判断属性名是否合法
+		if (isValidPropertyName(propName)) {
+			// 添加到getMethods
+			getMethods.put(propName, new MethodInvoker(winner));
+		}
+	}
+
+	/**
+	 *  判断属性名是否合法, 排除特殊的符合和序列化用的属性，注意 逻辑运算符'!'在对外面
+	 *  coder不是闲得慌也不会这么命名
+	 */
+	private boolean isValidPropertyName(String name) {
+		return !( name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name) );
+	}
+
 }
+
+
+
