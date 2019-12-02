@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import cn.javadog.sd.mybatis.support.reflection.ReflectionException;
+import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
 
 /**
  * @author 余勇

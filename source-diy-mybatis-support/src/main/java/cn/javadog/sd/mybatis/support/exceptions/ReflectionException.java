@@ -1,6 +1,4 @@
-package cn.javadog.sd.mybatis.support.reflection;
-
-import cn.javadog.sd.mybatis.support.exceptions.BaseException;
+package cn.javadog.sd.mybatis.support.exceptions;
 
 /**
  * @author 余勇

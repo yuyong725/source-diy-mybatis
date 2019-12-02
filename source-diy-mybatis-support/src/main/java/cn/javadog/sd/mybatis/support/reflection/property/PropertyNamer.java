@@ -2,7 +2,7 @@ package cn.javadog.sd.mybatis.support.reflection.property;
 
 import java.util.Locale;
 
-import cn.javadog.sd.mybatis.support.reflection.ReflectionException;
+import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
 
 /**
  * @author 余勇

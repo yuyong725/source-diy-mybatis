@@ -1,21 +1,29 @@
 package cn.javadog.sd.mybatis.support.reflection;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
-import java.util.AbstractMap;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
+import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
+import cn.javadog.sd.mybatis.support.reflection.invoker.GetFieldInvoker;
 import cn.javadog.sd.mybatis.support.reflection.invoker.Invoker;
 import cn.javadog.sd.mybatis.support.reflection.invoker.MethodInvoker;
+import cn.javadog.sd.mybatis.support.reflection.invoker.SetFieldInvoker;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyNamer;
+import cn.javadog.sd.mybatis.support.reflection.resolver.TypeParameterResolver;
 
 /**
  * @author 余勇
@@ -32,14 +40,14 @@ public class Reflector {
 	private final Class<?> type;
 
 	/**
-	 * 可读属性数组
+	 * 可读属性数组，可读就是有get入口，不管是否private
 	 */
-	// private final String[] readablePropertyNames;
+	 private final String[] readablePropertyNames;
 
 	/**
-	 * 可写属性数组
+	 * 可写属性数组，可写就是有set入口，不管是否private
 	 */
-	// private final String[] writeablePropertyNames;
+	 private final String[] writeablePropertyNames;
 
 	/**
 	 * 属性对应set方法集合
@@ -75,18 +83,35 @@ public class Reflector {
 	private Constructor<?> defaultConstructor;
 
 	/**
-	 * 不区分大小写的属性集合
-	 * todo key-value分别对应什么？
+	 * 不区分大小写的属性集合，查询属性时用到，其实放个数组也可以，做成map通用性好一点吧
+	 * key 不区分大写的的属性名
+	 * value 区分大小写的属性名
 	 */
-	private Map<String, String> caseInsentivePropertyMap = new HashMap<>();
+	private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
+	/**
+	 * 构造函数
+	 */
 	public Reflector(Class<?> clazz) {
 		// 设置对应的类
 		type = clazz;
 		// 初始化 defaultConstructor
 		addDefaultConstructor(clazz);
-		// 初始化 getMethods 和 getTypes
+		// 初始化 getMethods 和 getTypes ，通过遍历 get 方法。note 注意顺序，先初始化的Get方法，因为下面的 addSetMethods 会使用到这个方法的结果 getTypes
 		addGetMethods(clazz);
+		// 初始化 setMethods 和 setTypes ，通过遍历 setting 方法。
+		addSetMethods(clazz);
+		// 初始化 getMethods + getTypes 和 setMethods + setTypes ，通过遍历 fields 属性
+		addFields(clazz);
+		// 初始化 readablePropertyNames、writeablePropertyNames、caseInsensitivePropertyMap 属性
+		readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
+		writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+		for (String propName : readablePropertyNames) {
+			caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
+		}
+		for (String propName : writeablePropertyNames) {
+			caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
+		}
 	}
 
 	/**
@@ -103,7 +128,7 @@ public class Reflector {
 				try {
 					constructor.setAccessible(true);
 				}catch (Exception e){
-					// 关于反射的异常，我就照搬的代码包一下，毕竟咱也模拟不出怎么出现异常
+					// 如果有异常 defaultConstructor 最终就是null
 				}
 			}
 			// 如果构造方法可以访问，也就是上面没有出现异常，那么就赋值为defaultConstructor
@@ -123,23 +148,111 @@ public class Reflector {
 		Method[] methods = getClassMethods(cls);
 		// 遍历所有方法
 		for (Method method : methods) {
-			// 首先排除参数熟练大于0的方法
+			// 首先排除参数熟练大于0的方法，get方法没有参数
 			if (method.getParameterCount() > 0) {
 				continue;
 			}
 			// 以 get 或者 id 方法名开头的方法，且必须有属性名，那么就是get方法
 			String name = method.getName();
-			if ((name.startsWith("get") && name.length() > 3)
-				|| (name.startsWith("is") && name.length() > 2)) {
+			if ((name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2)) {
 				// 获得属性
 				name = PropertyNamer.methodToProperty(name);
 				// 添加到 conflictingGetMethods 中
 				addMethodConflict(conflictingGetters, name, method);
-				// 解决get冲突，即选择最适合返回类型的get方法
 			}
+		}
+		// 解决get冲突，即选择最适合返回类型的get方法
+		resolveGetterConflicts(conflictingGetters);
+	}
+
+	/**
+	 * 始化 setMethods 和 setTypes ，通过遍历 setting 方法
+	 */
+	private void addSetMethods(Class<?> cls) {
+		// 属性与其 setting 方法的映射。
+		Map<String, List<Method>> conflictingSetters = new HashMap<>();
+		// 获得所有方法
+		Method[] methods = getClassMethods(cls);
+		// 遍历所有方法
+		for (Method method : methods) {
+			String name = method.getName();
+			// 方法名为 set 开头，并排除 set() 方法
+			if (name.startsWith("set") && name.length() > 3) {
+				// 参数数量为 1
+				if (method.getParameterTypes().length == 1) {
+					// 获得属性
+					name = PropertyNamer.methodToProperty(name);
+					// 添加到 conflictingSetters 中
+					addMethodConflict(conflictingSetters, name, method);
+				}
+			}
+		}
+		// 解决 setting 冲突方法
+		resolveSetterConflicts(conflictingSetters);
+	}
+
+	/**
+	 * 初始化 getMethods + getTypes 和 setMethods + setTypes ，通过遍历 fields 属性。
+	 * 实际是对 addGetMethods 和 addSetMethods 方法的补充，某些字段没有 set/get 方法，通过Set/GetFieldInvoker的方式 去操作字段的值
+	 */
+	private void addFields(Class<?> clazz) {
+		// 获得所有 field 们
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			// 设置 field 可访问
+			try {
+				field.setAccessible(true);
+			} catch (Exception e) {
+			}
+			if (field.isAccessible()) {
+				// 添加到 setMethods 和 setTypes 中
+				if (!setMethods.containsKey(field.getName())) {
+					// final+static 类型的字段只能够被classloader修改，我们只处理没有final+static的字段
+					int modifiers = field.getModifiers();
+					if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+						addSetField(field);
+					}
+				}
+				// 添加到 getMethods 和 getTypes 中
+				if (!getMethods.containsKey(field.getName())) {
+					addGetField(field);
+				}
+			}
+		}
+		// 递归，处理父类
+		if (clazz.getSuperclass() != null) {
+			addFields(clazz.getSuperclass());
 		}
 	}
 
+	/**
+	 * 将字段添加到 setMethods + setTypes，实际针对的是没有 set方法 的字段
+	 */
+	private void addSetField(Field field) {
+		// 判断是合理的属性
+		if (isValidPropertyName(field.getName())) {
+			// 添加到 setMethods 中
+			setMethods.put(field.getName(), new SetFieldInvoker(field));
+			// 处理字段的类型
+			Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+			// 添加到 setTypes 中
+			setTypes.put(field.getName(), typeToClass(fieldType));
+		}
+	}
+
+	/**
+	 * 将字段添加到 setMethods + setTypes，实际针对的是没有 get方法 的字段
+	 */
+	private void addGetField(Field field) {
+		// 判断是合理的属性
+		if (isValidPropertyName(field.getName())) {
+			// 添加到 getMethods 中
+			getMethods.put(field.getName(), new GetFieldInvoker(field));
+			// 添加到 getTypes 中
+			Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+			getTypes.put(field.getName(), typeToClass(fieldType));
+		}
+	}
 
 	/**
 	 * 获取类的所有方法，包括所有父类的，以及所有private方法
@@ -213,6 +326,7 @@ public class Reflector {
 	}
 
 	/**
+	 * 源码里面没有
 	 * 设置方法可执行，一行代码，包了try-catch而已
 	 */
 	private void setAccessible(Executable executable) {
@@ -230,6 +344,47 @@ public class Reflector {
 	private void addMethodConflict(Map<String, List<Method>> conflictingGetMethods, String name, Method method) {
 		List<Method> methods = conflictingGetMethods.computeIfAbsent(name, k -> new ArrayList<>());
 		methods.add(method);
+	}
+
+	/**
+	 * 解决 setting 冲突方法
+	 */
+	private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
+		// 遍历每个属性，查找其最匹配的方法。
+		// 因为子类可以覆写父类的方法，所以一个属性，可能对应多个 setting 方法
+		for (String propName : conflictingSetters.keySet()) {
+			List<Method> setters = conflictingSetters.get(propName);
+			Class<?> getterType = getTypes.get(propName);
+			Method match = null;
+			ReflectionException exception = null;
+			// 遍历属性对应的 setting 方法
+			for (Method setter : setters) {
+				Class<?> paramType = setter.getParameterTypes()[0];
+				if (paramType.equals(getterType)) {
+					// 和 getterType 相同，直接使用，并跳出break
+					match = setter;
+					break;
+				}
+				// 这个 exception 来源于上一个 setter 的 pickBetterSetter；
+				// note 如果上一次抛错了，除非 paramType.equals(getterType) ，否则最终 match 就是null，程序会抛出错误
+				if (exception == null) {
+					try {
+						// 选择一个更加匹配的
+						match = pickBetterSetter(match, setter, propName);
+					} catch (ReflectionException e) {
+						// 逻辑上讲，抛错了match就是null，不需要再赋值一次
+						match = null;
+						exception = e;
+					}
+				}
+			}
+			// 添加到 setMethods 和 setTypes 中
+			if (match == null) {
+				throw exception;
+			} else {
+				addSetMethod(propName, match);
+			}
+		}
 	}
 
 	/**
@@ -282,14 +437,84 @@ public class Reflector {
 	}
 
 	/**
+	 * 选择更匹配的setter，这里更改了源码中的参数名，更易于理解
+	 */
+	private Method pickBetterSetter(Method winner, Method candidate, String property) {
+		// 如果 winner 为 null，直接将 candidate 作为 winner
+		if (winner == null) {
+			return candidate;
+		}
+		// 取方法的第一个参数，set只有一个参数
+		Class<?> winnerType = winner.getParameterTypes()[0];
+		Class<?> candidateType = candidate.getParameterTypes()[0];
+		// 逻辑与方法 resolveGetterConflicts 一样，谁精准用谁
+		if (winnerType.isAssignableFrom(candidateType)) {
+			return candidate;
+		} else if (candidateType.isAssignableFrom(winnerType)) {
+			return winner;
+		}
+		throw new ReflectionException("Ambiguous setters defined for property '" + property + "' in class '"
+			+ candidate.getDeclaringClass() + "' with types '" + winnerType.getName() + "' and '"
+			+ candidateType.getName() + "'.");
+	}
+
+	/**
+	 * 将指定属性的set方法添加到 setMethods 和 setTypes
+	 */
+	private void addSetMethod(String name, Method method) {
+		// 排除方法名不合法的
+		if (isValidPropertyName(name)) {
+			setMethods.put(name, new MethodInvoker(method));
+			// 处理 方法的参数类型
+			Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
+			// 实际只有一个参数，所以就放第一个
+			setTypes.put(name, typeToClass(paramTypes[0]));
+		}
+	}
+
+	/**
 	 * 将属性与方法添加到 getMethods 和 getTypes 中
 	 */
-	private void addGetMethod(String propName, Method winner) {
+	private void addGetMethod(String name, Method method) {
 		// 判断属性名是否合法
-		if (isValidPropertyName(propName)) {
+		if (isValidPropertyName(name)) {
 			// 添加到getMethods
-			getMethods.put(propName, new MethodInvoker(winner));
+			getMethods.put(name, new MethodInvoker(method));
+			// 处理方法返回的类型
+			Type returnType = TypeParameterResolver.resolveReturnType(method, type);
+			// 添加到 getTypes 中
+			getTypes.put(name, typeToClass(returnType));
 		}
+	}
+
+	/**
+	 * 将类型转成 class，比如List<String> => List, T => Object
+	 */
+	private Class<?> typeToClass(Type src) {
+		Class<?> result = null;
+		if (src instanceof Class) {
+			// 普通类型，直接使用类
+			result = (Class<?>) src;
+		} else if (src instanceof ParameterizedType) {
+			// 泛型类型，使用泛型，如 List<Student>, 取RawType就是List
+			result = (Class<?>) ((ParameterizedType) src).getRawType();
+		} else if (src instanceof GenericArrayType) {
+			// 带有泛型的数组，获得具体类，如 T[]，List<T>[]，List<String>[]
+			Type componentType = ((GenericArrayType) src).getGenericComponentType();
+			if (componentType instanceof Class) {
+				// 普通类型，返回指定类型的数组
+				result = Array.newInstance((Class<?>) componentType, 0).getClass();
+			} else {
+				// 递归该方法，返回类
+				Class<?> componentClass = typeToClass(componentType);
+				result = Array.newInstance((Class<?>) componentClass, 0).getClass();
+			}
+		}
+		// 都不符合，使用 Object 类, 如T[]，首先是 GenericArrayType，转成componentType=T，递归调用后就是Object
+		if (result == null) {
+			result = Object.class;
+		}
+		return result;
 	}
 
 	/**
@@ -300,6 +525,109 @@ public class Reflector {
 		return !( name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name) );
 	}
 
+	/**
+	 * 获取指定属性的 get方法 的返回类型
+	 */
+	public Class<?> getGetterType(String propertyName) {
+		Class<?> clazz = getTypes.get(propertyName);
+		if (clazz == null) {
+			throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
+		}
+		return clazz;
+	}
+
+	/**
+	 * 获取指定属性的 set方法 的返回类型
+	 */
+	public Class<?> getSetterType(String propertyName) {
+		Class<?> clazz = setTypes.get(propertyName);
+		if (clazz == null) {
+			throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
+		}
+		return clazz;
+	}
+
+	/**
+	 * 返回可读的属性的数组
+	 */
+	public String[] getGetablePropertyNames() {
+		return readablePropertyNames;
+	}
+
+	/**
+	 * 返回可写属性的数组
+	 */
+	public String[] getSetablePropertyNames() {
+		return writeablePropertyNames;
+	}
+
+	/**
+	 * 获取指定属性的 get方法 的Invoker, 没有会直接抛错
+	 */
+	public Invoker getGetInvoker(String propertyName) {
+		Invoker method = getMethods.get(propertyName);
+		if (method == null) {
+			throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
+		}
+		return method;
+	}
+
+	/**
+	 * 获取指定属性的 set方法 的Invoker, 没有会直接抛错
+	 */
+	public Invoker getSetInvoker(String propertyName) {
+		Invoker method = setMethods.get(propertyName);
+		if (method == null) {
+			throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
+		}
+		return method;
+	}
+
+	/**
+	 * 查询指定属性属否有 set方法
+	 */
+	public boolean hasSetter(String propertyName) {
+		return setMethods.keySet().contains(propertyName);
+	}
+
+	/**
+	 * 查询指定属性属否有 get方法
+	 */
+	public boolean hasGetter(String propertyName) {
+		return getMethods.keySet().contains(propertyName);
+	}
+
+	/**
+	 * 获取反射器对应的类
+	 */
+	public Class<?> getType() {
+		return type;
+	}
+
+	/**
+	 * 查询是否有默认构造
+	 */
+	public boolean hasDefaultConstructor() {
+		return defaultConstructor != null;
+	}
+
+	/**
+	 * 获取默认构造，没找到会报错，实例化 Reflector 时会通过反射获取默认构造，没获取到就返回了空，在那里并不会报错
+	 */
+	public Constructor<?> getDefaultConstructor() {
+		if (defaultConstructor != null) {
+			return defaultConstructor;
+		} else {
+			throw new ReflectionException("There is no default constructor for " + type);
+		}
+	}
+
+	/**
+	 * 查询指定名称的属性，查询的名称可以不区分大小写
+	 */
+	public String findPropertyName(String name) {
+		return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
+	}
 }
 
 

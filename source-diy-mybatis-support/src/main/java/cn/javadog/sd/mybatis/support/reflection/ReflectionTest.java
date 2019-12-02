@@ -1,5 +1,6 @@
 package cn.javadog.sd.mybatis.support.reflection;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -39,6 +40,9 @@ public class ReflectionTest<T,D extends List> extends ArrayList {
 				.append(Arrays.toString(parameterizedType.getActualTypeArguments()));
 		}
 		System.out.println(sb.toString());
+
+		Class<?> aClass = Array.newInstance(Reflector.class, 8).getClass();
+		System.out.println(aClass.getName());
 	}
 
 }

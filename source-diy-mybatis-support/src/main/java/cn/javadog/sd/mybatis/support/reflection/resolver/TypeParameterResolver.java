@@ -1,6 +1,7 @@
-package cn.javadog.sd.mybatis.support.reflection;
+package cn.javadog.sd.mybatis.support.reflection.resolver;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -48,6 +49,34 @@ public class TypeParameterResolver {
 		Class<?> declaringClass = method.getDeclaringClass();
 		// 解析类型
 		return resolveType(returnType, srcType, declaringClass);
+	}
+
+	/**
+	 * 解析方法参数的类型数组
+	 *
+	 * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the declaration,<br>
+	 *         they will be resolved to the actual runtime {@link Type}s.
+	 */
+	public static Type[] resolveParamTypes(Method method, Type srcType) {
+		// 获得方法参数类型数组
+		Type[] paramTypes = method.getGenericParameterTypes();
+		// 定义的类
+		Class<?> declaringClass = method.getDeclaringClass();
+		// 解析类型们
+		Type[] result = new Type[paramTypes.length];
+		for (int i = 0; i < paramTypes.length; i++) {
+			result[i] = resolveType(paramTypes[i], srcType, declaringClass);
+		}
+		return result;
+	}
+
+	public static Type resolveFieldType(Field field, Type srcType) {
+		// 属性类型
+		Type fieldType = field.getGenericType();
+		// 定义的类
+		Class<?> declaringClass = field.getDeclaringClass();
+		// 解析类型
+		return resolveType(fieldType, srcType, declaringClass);
 	}
 
 	/**

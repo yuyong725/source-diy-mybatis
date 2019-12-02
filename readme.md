@@ -1,5 +1,8 @@
 ### 手抄Mybatis
 
+#### TODO
+1. invoker,factory,meta,resolver 分包搞清楚, 按设计模式
+
 #### 说明
 1. 对标线上的3.5.1-SNAPSHOT分支, 使用JDK8
 2. 只支持Mysql，不做其他数据库类型的兼容
