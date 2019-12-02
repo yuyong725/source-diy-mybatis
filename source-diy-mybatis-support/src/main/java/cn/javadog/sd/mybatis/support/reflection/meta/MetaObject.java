@@ -16,8 +16,7 @@ import cn.javadog.sd.mybatis.support.reflection.wrapper.ObjectWrapperFactory;
 /**
  * @author Clinton Begin
  *
- * 对象元数据，提供了对象的属性值的获得和设置等等方法。
- * 😈 可以理解成，对 BaseWrapper 操作的进一步增强。
+ * 对象元数据，提供了对象的属性值的获得和设置等等方法。可以理解成，对 BaseWrapper 操作的进一步增强。
  */
 public class MetaObject {
 
@@ -112,22 +111,26 @@ public class MetaObject {
     return objectWrapper.hasGetter(name);
   }
 
+  /**
+   * 根据PropertyTokenizer表达式获取值，是完整的解析
+   * 如 a[5].b.c[2].d['id'] 这种都直接递归解析到最后，但最后一步的 d['id'] 的解析交给特定的objectWrapper去实现！
+   */
   public Object getValue(String name) {
     // 创建 PropertyTokenizer 对象，对 name 分词
     PropertyTokenizer prop = new PropertyTokenizer(name);
     // 有子表达式
     if (prop.hasNext()) {
-      // 创建 MetaObject 对象
+      // 创建 MetaObject 对象，获取是前面的值 如students[4].name，这里获取的是 students[4]的值
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      // <2> 递归判断子表达式 children ，获取值
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        // 返回的MetaObject为空，说明取出来的值是空，直接返回
         return null;
-      // 无子表达式
       } else {
+        // 递归判断子表达式 children ，获取值，也就是上面的案例中 students[4]是小明同学，再继续获取他的名字
         return metaValue.getValue(prop.getChildren());
       }
     } else {
-      // <1> 获取值
+      // 无子表达式，直接获取值即可
       return objectWrapper.get(prop);
     }
   }

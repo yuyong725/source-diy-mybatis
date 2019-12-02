@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @author 余勇
  * @date 2019年11月30日 22:53:00
- * 设置 Field 调用者
+ * Field 值设置调用者
  */
 public class SetFieldInvoker implements Invoker {
 	/**
@@ -14,6 +14,9 @@ public class SetFieldInvoker implements Invoker {
 	 */
 	private final Field field;
 
+	/**
+	 * 构造
+	 */
 	public SetFieldInvoker(Field field) {
 		this.field = field;
 	}

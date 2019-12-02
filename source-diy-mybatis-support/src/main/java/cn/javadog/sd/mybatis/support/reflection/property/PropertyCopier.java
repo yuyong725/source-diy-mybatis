@@ -19,7 +19,7 @@ public class PropertyCopier {
 	 * 将 sourceBean 的属性，复制到 destinationBean 中
 	 * 框架都有这个类，一般叫 BeanUtils
 	 *
-	 * @param type 指定类
+	 * @param type 指定类，可能是sourceBean的类，也可能是它的父类，这样就只复制父类的属性值
 	 * @param sourceBean 来源 Bean 对象
 	 * @param destinationBean 目标 Bean 对象
 	 */

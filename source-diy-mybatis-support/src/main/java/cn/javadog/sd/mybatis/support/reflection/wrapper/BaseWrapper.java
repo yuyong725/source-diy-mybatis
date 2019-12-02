@@ -17,6 +17,9 @@ import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
  */
 public abstract class BaseWrapper implements ObjectWrapper {
 
+  /**
+   * 没有参数的数组，用于 Invoker.invoke() 方法
+   */
   protected static final Object[] NO_ARGUMENTS = new Object[0];
 
   /**
@@ -24,13 +27,15 @@ public abstract class BaseWrapper implements ObjectWrapper {
    */
   protected final MetaObject metaObject;
 
+  /**
+   * 构造函数，protected类型
+   */
   protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
   }
 
   /**
-   * 获得指定属性的值
-   *
+   * 获得指定的集合属性属性的值，标题带有Collection，但看起来和Collection关系不大，实际上真有关系！！！
    * @param prop PropertyTokenizer 对象
    * @param object 指定 Object 对象
    * @return 值
@@ -39,6 +44,8 @@ public abstract class BaseWrapper implements ObjectWrapper {
     if ("".equals(prop.getName())) {
       return object;
     } else {
+      // 核心读取 Object 对象 PropertyTokenizer 位置的属性的值 的逻辑在 metaObject类里面；
+      // note 注意这里是prop.getName()，而不是 prop.getIndexedName()，也就是只获取到 name，对 index 的获取调用下面的 getCollectionValue处理的
       return metaObject.getValue(prop.getName());
     }
   }
@@ -52,9 +59,12 @@ public abstract class BaseWrapper implements ObjectWrapper {
    */
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
     if (collection instanceof Map) {
+      // map 类型，根据key查找，index不一定是数字的，当是map类型时，就是key
       return ((Map) collection).get(prop.getIndex());
     } else {
+      // collection或数组类型类型，取角标
       int i = Integer.parseInt(prop.getIndex());
+      // 根据角标取取就好，分情况强转一下，注意set是不可以读角标的
       if (collection instanceof List) {
         return ((List) collection).get(i);
       } else if (collection instanceof Object[]) {
@@ -82,7 +92,7 @@ public abstract class BaseWrapper implements ObjectWrapper {
   }
 
   /**
-   * 设置集合中指定位置的值
+   * 设置集合中指定位置的值，和getCollectionValue的逻辑差不多，很简单
    *
    * @param prop PropertyTokenizer 对象
    * @param collection 集合

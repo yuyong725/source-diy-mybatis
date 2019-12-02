@@ -30,10 +30,15 @@ public final class SystemMetaObject {
    */
   public static final MetaObject NULL_META_OBJECT = MetaObject.forObject(NullObject.class, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
 
+  /**
+   * 关掉默认构造
+   */
   private SystemMetaObject() {
-    // Prevent Instantiation of Static Class
   }
 
+  /**
+   * 内部类，适用于值为null的对象
+   */
   private static class NullObject {
   }
 

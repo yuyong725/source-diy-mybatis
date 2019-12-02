@@ -32,11 +32,17 @@ public class MethodInvoker implements Invoker {
 
 	}
 
+	/**
+	 *  执行调用
+	 */
 	@Override
 	public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
 		return method.invoke(target, args);
 	}
 
+	/**
+	 * 获取类型，可能是参数类型，也可能是返回值类型等，取决了具体实现类初始化是是 get还是set方法
+	 */
 	@Override
 	public Class<?> getType() {
 		return type;

@@ -7,12 +7,18 @@ import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
 /**
  * @author 余勇
  * @date 2019年11月30日 02:25:00
- * 属性名相关测操作方法。
+ * 属性名相关操作方法。
  */
 public class PropertyNamer {
 
 	/**
 	 * 关闭默认构造
+	 */
+	private PropertyNamer() {
+	}
+
+	/**
+	 * 抽离 get/set 方法名中的属性，如GetName，则返回name
 	 */
 	public static String methodToProperty(String name) {
 		// is,get/set 方法的处理，其他的直接抛错
@@ -32,5 +38,33 @@ public class PropertyNamer {
 
 		return name;
 	}
+
+	/**
+	 * 判断是否为 is、get、set 方法，简单点说，是否是 读取对象属性的方法
+	 *
+	 * @param name 方法名
+	 */
+	public static boolean isProperty(String name) {
+		return name.startsWith("get") || name.startsWith("set") || name.startsWith("is");
+	}
+
+	/**
+	 * 判断是否为 get、is 方法
+	 *
+	 * @param name 方法名
+	 */
+	public static boolean isGetter(String name) {
+		return name.startsWith("get") || name.startsWith("is");
+	}
+
+	/**
+	 * 判断是否为 set 方法
+	 *
+	 * @param name 方法名
+	 */
+	public static boolean isSetter(String name) {
+		return name.startsWith("set");
+	}
+
 
 }

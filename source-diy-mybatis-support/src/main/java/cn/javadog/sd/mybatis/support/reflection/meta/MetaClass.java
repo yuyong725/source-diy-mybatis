@@ -18,13 +18,24 @@ import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
  * @author: 余勇
  * @date: 2019-12-01 18:10
  *
- * 类的元数据，基于 Reflector 和 PropertyTokenizer ，提供对指定类的各种骚操作
+ * 类的元数据，基于 Reflector 和 PropertyTokenizer ，提供对指定类的各种骚操作。
+ * note 这是个工具类，Reflector通过它暴露给外界使用
  */
 public class MetaClass {
 
+  /**
+   * Reflector工厂
+   */
   private final ReflectorFactory reflectorFactory;
+
+  /**
+   * 指定类的反射器，由reflectorFactory创建
+   */
   private final Reflector reflector;
 
+  /**
+   * 没有暴露在外面，由静态方法调用
+   */
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
     this.reflectorFactory = reflectorFactory;
     this.reflector = reflectorFactory.findForClass(type);
@@ -53,6 +64,7 @@ public class MetaClass {
 
   /**
    * 根据表达式，获得属性
+   * TODO 有问题，如 students[5].name，实际拿到的是students. ,取不到name
    */
   public String findProperty(String name, boolean useCamelCaseMapping) {
     // <1> 下划线转驼峰

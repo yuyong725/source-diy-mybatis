@@ -21,26 +21,43 @@ import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 public class BeanWrapper extends BaseWrapper {
 
   /**
-   * 普通对象
+   * 要被包装的对象
    */
   private final Object object;
+
+  /**
+   * 对象的元信息，大部分工作由它完成
+   */
   private final MetaClass metaClass;
 
+  /**
+   * 构造函数
+   */
   public BeanWrapper(MetaObject metaObject, Object object) {
     super(metaObject);
     this.object = object;
     this.metaClass = MetaClass.forClass(object.getClass(), metaObject.getReflectorFactory());
   }
 
+  /**
+   * TODO 这个方法处理不了嵌套的逻辑！！！
+   * 获取当前对象指定 PropertyTokenizer 的值
+   * note 注意这里的调用流程，如 a[1].b.c[2].d['id']
+   *     1. 它会先调用 {@link BaseWrapper#resolveCollection(PropertyTokenizer, Object)}，
+   *     2. 进入到 {@link MetaObject#getValue(String)},
+   *     3. 由于是简单属性 'a'，最终会回到当前的 {@link BeanWrapper#get(PropertyTokenizer)}
+   *     4. 进一步进入到 #{@link BeanWrapper#getBeanProperty(PropertyTokenizer, Object)}
+   *     5. 这个时候 #{@link BeanWrapper#resolveCollection(PropertyTokenizer, Object)} 才走完，获取到了 'a' 的值
+   *     6. 调用  #{@link BeanWrapper#getCollectionValue(PropertyTokenizer, Object)} 获取 'a[1]' 的值
+   *
+   */
   @Override
   public Object get(PropertyTokenizer prop) {
-    // <1> 获得集合类型的属性的指定位置的值
-    if (prop.getIndex() != null) {// 如学生对象的成绩列表
-      // 获得集合类型的属性 获得成绩列表
+    if (prop.getIndex() != null) {
+      // 获得集合类型的属性的指定位置的值，如学生对象的成绩列表
       Object collection = resolveCollection(prop, object);
       // 获得指定位置的值 获得指定的一次成绩
       return getCollectionValue(prop, collection);
-    // <2> 获得属性的值
     } else {
       // 普通属性的话，直接取即可
       return getBeanProperty(prop, object);
@@ -48,7 +65,7 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   /**
-   * 设置指定属性的值
+   * 设置指定属性的值，逻辑和 get 类似
    */
   @Override
   public void set(PropertyTokenizer prop, Object value) {
@@ -58,31 +75,44 @@ public class BeanWrapper extends BaseWrapper {
       Object collection = resolveCollection(prop, object);
       // 设置指定位置的值
       setCollectionValue(prop, collection, value);
-    // 设置属性的值
     } else {
+      // 设置属性的值
       setBeanProperty(prop, object, value);
     }
   }
 
+  /**
+   * TODO {@link MetaClass#findProperty(String)}
+   */
   @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
     return metaClass.findProperty(name, useCamelCaseMapping);
   }
 
+  /**
+   * 获取可读属性列表
+   */
   @Override
   public String[] getGetterNames() {
     return metaClass.getGetterNames();
   }
 
+  /**
+   * 获取可写属性列表
+   */
   @Override
   public String[] getSetterNames() {
     return metaClass.getSetterNames();
   }
 
+  /**
+   * TODO 貌似根本没考虑复杂的情形
+   */
   @Override
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
+      //
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return metaClass.getSetterType(name);
@@ -197,10 +227,12 @@ public class BeanWrapper extends BaseWrapper {
    */
   private Object getBeanProperty(PropertyTokenizer prop, Object object) {
     try {
+      // 获取指定字段的invoker去调用即可
       Invoker method = metaClass.getGetInvoker(prop.getName());
       try {
         return method.invoke(object, NO_ARGUMENTS);
       } catch (Throwable t) {
+        // 抛出异常并在以后捕捉
         throw ExceptionUtil.unwrapThrowable(t);
       }
     } catch (RuntimeException e) {

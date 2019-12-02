@@ -22,21 +22,33 @@ import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
  */
 public class DefaultObjectFactory implements ObjectFactory {
 
+	/**
+	 * 创建指定类的对象，使用默认构造方法
+	 */
 	@Override
 	public <T> T create(Class<T> type) {
 		return create(type, null, null);
 	}
 
+	/**
+	 *  创建指定类的对象，使用特定的构造方法
+	 *
+	 * @param type 要创建的对象的类型
+	 * @param constructorArgTypes 使用的构造函数的参数的类型
+	 * @param constructorArgs 使用的构造函数的参数值
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-		// <1> 获得需要创建的类
+		// 获得需要创建的类，其实就是具象化，比如你要List，我这边限制死就是 ArrayList
 		Class<?> classToCreate = resolveInterface(type);
-		// we know types are assignable
-		// <2> 创建指定类的对象
+		// 创建指定类的对象
 		return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
 	}
 
+	/**
+	 * 设置 Properties 属性，空实现，啥也没干，用于扩展吧
+	 */
 	@Override
 	public void setProperties(Properties properties) {
 	}
@@ -47,21 +59,23 @@ public class DefaultObjectFactory implements ObjectFactory {
 	private  <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
 		try {
 			Constructor<T> constructor;
-			// <x1> 通过无参构造方法，创建指定类的对象
+			// 通过无参构造方法，创建指定类的对象
 			if (constructorArgTypes == null || constructorArgs == null) {
+				// 获取无参构造，即使是private
 				constructor = type.getDeclaredConstructor();
 				if (!constructor.isAccessible()) {
 					constructor.setAccessible(true);
 				}
 				return constructor.newInstance();
 			}
-			// <x2> 使用特定构造方法，创建指定类的对象
+			// 使用特定构造方法，创建指定类的对象
 			constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
 			if (!constructor.isAccessible()) {
 				constructor.setAccessible(true);
 			}
 			return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
 		} catch (Exception e) {
+			//  注意下面这么一大堆拼接，只是为了抛错的时候信息全一点；主要错误就是找不到指定类型的构造函数
 			// 拼接 argTypes
 			StringBuilder argTypes = new StringBuilder();
 			if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {
@@ -69,16 +83,18 @@ public class DefaultObjectFactory implements ObjectFactory {
 					argTypes.append(argType.getSimpleName());
 					argTypes.append(",");
 				}
-				argTypes.deleteCharAt(argTypes.length() - 1); // remove trailing ,
+				// 去掉最后一个 ','
+				argTypes.deleteCharAt(argTypes.length() - 1);
 			}
 			// 拼接 argValues
 			StringBuilder argValues = new StringBuilder();
 			if (constructorArgs != null && !constructorArgs.isEmpty()) {
 				for (Object argValue : constructorArgs) {
-					argValues.append(String.valueOf(argValue));
+					argValues.append(argValue);
 					argValues.append(",");
 				}
-				argValues.deleteCharAt(argValues.length() - 1); // remove trailing ,
+				// 去掉最后一个 ','
+				argValues.deleteCharAt(argValues.length() - 1);
 			}
 			// 抛出 ReflectionException 异常
 			throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
@@ -95,7 +111,7 @@ public class DefaultObjectFactory implements ObjectFactory {
 			classToCreate = ArrayList.class;
 		} else if (type == Map.class) {
 			classToCreate = HashMap.class;
-		} else if (type == SortedSet.class) { // issue #510 Collections Support
+		} else if (type == SortedSet.class) {
 			classToCreate = TreeSet.class;
 		} else if (type == Set.class) {
 			classToCreate = HashSet.class;
