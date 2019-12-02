@@ -6,12 +6,14 @@ import java.lang.reflect.UndeclaredThrowableException;
 /**
  * @author: 余勇
  * @date: 2019-12-01 18:08
- * 异常工具类
+ * 异常工厂，其实是个工具类
  */
-public class ExceptionUtil {
+public class ExceptionFactory {
 
-  private ExceptionUtil() {
-    // Prevent Instantiation
+  /**
+   * 关闭构造
+   */
+  private ExceptionFactory() {
   }
 
   /**
@@ -31,6 +33,19 @@ public class ExceptionUtil {
         return unwrapped;
       }
     }
+  }
+
+  /**
+   * 包装异常成 BaseException
+   *
+   * @param message 消息
+   * @param e 发生的异常
+   * @return BaseException
+   */
+  public static RuntimeException wrapException(String message, Exception e) {
+    // TODO ErrorContext
+    return null;
+    // return new BaseException(ErrorContext.instance().message(message).cause(e).toString(), e);
   }
 
 }
