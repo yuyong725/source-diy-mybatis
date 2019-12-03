@@ -12,4 +12,7 @@
     <artifactId>source-diy-mybatis-support</artifactId>
     <description>基础支持层</description>
 
+    <dependencies>
+
+    </dependencies>
 </project>

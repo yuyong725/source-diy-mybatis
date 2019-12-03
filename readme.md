@@ -66,3 +66,10 @@
 ##### 反射模块
 * `Reflector`等反射操作的安全验证
     * 源码可以参见mybatis的`Reflector#canControlMemberAccessible`方法
+    
+##### 数据源模块
+* `JndiDataSourceFactory` 不支持
+
+##### 日志模块
+* `LogFactory` 只支持 slf4j
+    * 加入其他日志的支持很简单，只是不想引入太多的jar
