@@ -69,10 +69,16 @@ public class PoolState {
    */
   protected long badConnectionCount = 0;
 
+  /**
+   * 构造
+   */
   public PoolState(PooledDataSource dataSource) {
     this.dataSource = dataSource;
   }
 
+  /**
+   * get方法，都加锁
+   */
   public synchronized long getRequestCount() {
     return requestCount;
   }
@@ -115,6 +121,9 @@ public class PoolState {
     return activeConnections.size();
   }
 
+  /**
+   * 重写toString，打印
+   */
   @Override
   public synchronized String toString() {
     StringBuilder builder = new StringBuilder();

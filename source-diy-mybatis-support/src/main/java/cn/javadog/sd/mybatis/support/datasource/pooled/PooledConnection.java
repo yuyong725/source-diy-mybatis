@@ -17,7 +17,7 @@ import cn.javadog.sd.mybatis.support.exceptions.ExceptionFactory;
 class PooledConnection implements InvocationHandler {
 
   /**
-   * 关闭 Connection 方法名
+   * 关闭 Connection的 方法名
    */
   private static final String CLOSE = "close";
 
@@ -90,160 +90,100 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
-   * Invalidates the connection
-   */
-  /**
-   * 标记连接非法
+   * 标记连接非法, 只是一个标记，判断合法还要看能否ping的通
    */
   public void invalidate() {
     valid = false;
   }
 
   /**
-   * Method to see if the connection is usable
-   *
-   * @return True if the connection is usable
+   * 判断连接是否可用
    */
   public boolean isValid() {
     return valid && realConnection != null && dataSource.pingConnection(this);
   }
 
   /**
-   * Getter for the *real* connection that this wraps
-   *
-   * @return The connection
+   * 一些get方法
    */
   public Connection getRealConnection() {
     return realConnection;
   }
 
-  /**
-   * Getter for the proxy for the connection
-   *
-   * @return The proxy
-   */
   public Connection getProxyConnection() {
     return proxyConnection;
   }
 
-  /**
-   * Gets the hashcode of the real connection (or 0 if it is null)
-   *
-   * @return The hashcode of the real connection (or 0 if it is null)
-   */
   public int getRealHashCode() {
     return realConnection == null ? 0 : realConnection.hashCode();
   }
 
-  /**
-   * Getter for the connection type (based on url + user + password)
-   *
-   * @return The connection type
-   */
   public int getConnectionTypeCode() {
     return connectionTypeCode;
   }
 
-  /**
-   * Setter for the connection type
-   *
-   * @param connectionTypeCode - the connection type
-   */
-  public void setConnectionTypeCode(int connectionTypeCode) {
-    this.connectionTypeCode = connectionTypeCode;
+  public long getLastUsedTimestamp() {
+    return lastUsedTimestamp;
   }
 
-  /**
-   * Getter for the time that the connection was created
-   *
-   * @return The creation timestamp
-   */
   public long getCreatedTimestamp() {
     return createdTimestamp;
   }
 
+  public void setConnectionTypeCode(int connectionTypeCode) {
+    this.connectionTypeCode = connectionTypeCode;
+  }
+
+  public long getCheckoutTimestamp() {
+    return checkoutTimestamp;
+  }
+
   /**
-   * Setter for the time that the connection was created
-   *
-   * @param createdTimestamp - the timestamp
+   * 一些set方法
    */
   public void setCreatedTimestamp(long createdTimestamp) {
     this.createdTimestamp = createdTimestamp;
   }
 
-  /**
-   * Getter for the time that the connection was last used
-   *
-   * @return - the timestamp
-   */
-  public long getLastUsedTimestamp() {
-    return lastUsedTimestamp;
-  }
-
-  /**
-   * Setter for the time that the connection was last used
-   *
-   * @param lastUsedTimestamp - the timestamp
-   */
   public void setLastUsedTimestamp(long lastUsedTimestamp) {
     this.lastUsedTimestamp = lastUsedTimestamp;
   }
 
+  public void setCheckoutTimestamp(long timestamp) {
+    this.checkoutTimestamp = timestamp;
+  }
+
   /**
-   * Getter for the time since this connection was last used
-   *
-   * @return - the time since the last use
+   * 获取连接多久没使用了
    */
   public long getTimeElapsedSinceLastUse() {
     return System.currentTimeMillis() - lastUsedTimestamp;
   }
 
   /**
-   * Getter for the age of the connection
-   *
-   * @return the age
+   * 获取连接创建的时间
    */
   public long getAge() {
     return System.currentTimeMillis() - createdTimestamp;
   }
 
   /**
-   * Getter for the timestamp that this connection was checked out
-   *
-   * @return the timestamp
-   */
-  public long getCheckoutTimestamp() {
-    return checkoutTimestamp;
-  }
-
-  /**
-   * Setter for the timestamp that this connection was checked out
-   *
-   * @param timestamp the timestamp
-   */
-  public void setCheckoutTimestamp(long timestamp) {
-    this.checkoutTimestamp = timestamp;
-  }
-
-  /**
-   * Getter for the time that this connection has been checked out
-   *
-   * @return the time
+   * 获取连接使用的时间
    */
   public long getCheckoutTime() {
     return System.currentTimeMillis() - checkoutTimestamp;
   }
 
+  /**
+   * 重写hashcode
+   */
   @Override
   public int hashCode() {
     return hashCode;
   }
 
   /**
-   * Allows comparing this connection to another
-   *
-   * @param obj - the other connection to test for equality
-   * @see Object#equals(Object)
+   * 重写equal，逻辑很简单
    */
   @Override
   public boolean equals(Object obj) {
@@ -262,26 +202,25 @@ class PooledConnection implements InvocationHandler {
    * Required for InvocationHandler implementation.
    *
    * @param proxy  - not used
-   * @param method - the method to be executed
+   * @param method - 要被执行的方法
    * @param args   - the parameters to be passed to the method
    * @see InvocationHandler#invoke(Object, Method, Object[])
    */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     String methodName = method.getName();
-    // <1> 判断是否为 CLOSE 方法，则将连接放回到连接池中，避免连接被关闭
+    // 判断是否为 CLOSE 方法，则将连接放回到连接池中，避免连接被关闭 note 标准的判断相等
     if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
       dataSource.pushConnection(this);
       return null;
     } else {
       try {
-        // <2.1> 判断非 Object 的方法，则先检查连接是否可用
+        // 判断非 Object 的方法，也就是Connection自己的方法，则先检查连接是否可用
         if (!Object.class.equals(method.getDeclaringClass())) {
-          // issue #579 toString() should never fail
-          // throw an SQLException instead of a Runtime
+          // 失败的话抛出SQLException，而不是runtime
           checkConnection();
         }
-        // <2.2> 反射调用对应的方法
+        // 反射调用对应的方法
         return method.invoke(realConnection, args);
       } catch (Throwable t) {
         throw ExceptionFactory.unwrapThrowable(t);
@@ -289,6 +228,9 @@ class PooledConnection implements InvocationHandler {
     }
   }
 
+  /**
+   * 检查连接，这里只判断valid
+   */
   private void checkConnection() throws SQLException {
     if (!valid) {
       throw new SQLException("Error accessing PooledConnection. Connection is invalid.");
