@@ -15,12 +15,16 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
-import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
  *
+ *
+ *
+ */
+/**
+ * @author: 余勇
+ * @date: 2019-12-06 17:07
  * 类型与别名的注册表
  * 通过别名，我们在 Mapper XML 中的 resultType 和 parameterType 属性，直接使用，而不用写全类名
  */
@@ -32,9 +36,10 @@ public class TypeAliasRegistry {
   private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
 
   /**
-   * 初始化默认的类型与别名
+   * 初始化时就注册别名，注意不是类加载时
    *
    * 另外，在 {@link org.apache.ibatis.session.Configuration} 构造方法中，也有默认的注册
+   * TODO 下划线的什么时候用到
    */
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -100,27 +105,25 @@ public class TypeAliasRegistry {
   /**
    * 获得别名对应的类型
    */
-  @SuppressWarnings("unchecked")
-  // throws class cast exception as well if types cannot be assigned
   public <T> Class<T> resolveAlias(String string) {
     try {
       if (string == null) {
         return null;
       }
-      // issue #748
-      // <1> 转换成小写
+      // 转换成小写
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
-      // <2.1> 首先，从 TYPE_ALIASES 中获取
+      // 首先，从 TYPE_ALIASES 中获取
       if (TYPE_ALIASES.containsKey(key)) {
         value = (Class<T>) TYPE_ALIASES.get(key);
-      // <2.2> 其次，直接获得对应类;所以，这个方法，同时处理了别名与全类名两种情况。
+      // 其次，直接获得对应类;所以，这个方法，同时处理了别名与全类名两种情况。
       } else {
+        // 这种就是类名全路径
         value = (Class<T>) Resources.classForName(string);
       }
       return value;
     } catch (ClassNotFoundException e) {
-      // <2.3> 最差，找不到对应的类，异常
+      // 最差，找不到对应的类，异常
       throw new TypeException("Could not resolve type alias '" + string + "'.  Cause: " + e, e);
     }
   }

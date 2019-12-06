@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Clinton Begin
- *
- * 简单类型注册表
+ * @author: 余勇
+ * @date: 2019-12-06 16:59
+ * 简单类型注册表。功能很简单，就暴露一个方法，谈不上注册表
  */
 public class SimpleTypeRegistry {
 
@@ -18,7 +18,9 @@ public class SimpleTypeRegistry {
    */
   private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<>();
 
-  // 初始化常用类到 SIMPLE_TYPE_SET 中
+  /**
+   * 类加载时就初始化常用类到 SIMPLE_TYPE_SET 中
+   */
   static {
     SIMPLE_TYPE_SET.add(String.class);
     SIMPLE_TYPE_SET.add(Byte.class);
@@ -35,15 +37,14 @@ public class SimpleTypeRegistry {
     SIMPLE_TYPE_SET.add(BigDecimal.class);
   }
 
+  /**
+   * 关掉构造
+   */
   private SimpleTypeRegistry() {
-    // Prevent Instantiation
   }
 
-  /*
-   * Tells us if the class passed in is a known common type
-   *
-   * @param clazz The class to check
-   * @return True if the class is known
+  /**
+   * 查看某个类是不是基础类型
    */
   public static boolean isSimpleType(Class<?> clazz) {
     return SIMPLE_TYPE_SET.contains(clazz);
