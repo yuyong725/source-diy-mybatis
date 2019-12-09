@@ -6,7 +6,7 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import cn.javadog.sd.mybatis.support.exceptions.ExceptionFactory;
+import cn.javadog.sd.mybatis.support.util.ExceptionFactory;
 
 
 /**

@@ -1,4 +1,4 @@
-package cn.javadog.sd.mybatis.support.exceptions;
+package cn.javadog.sd.mybatis.support.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -6,14 +6,14 @@ import java.lang.reflect.UndeclaredThrowableException;
 /**
  * @author: 余勇
  * @date: 2019-12-01 18:08
- * 异常工厂，其实是个工具类
+ * 异常工具类
  */
-public class ExceptionFactory {
+public class ExceptionUtil {
 
   /**
    * 关闭构造
    */
-  private ExceptionFactory() {
+  private ExceptionUtil() {
   }
 
   /**
