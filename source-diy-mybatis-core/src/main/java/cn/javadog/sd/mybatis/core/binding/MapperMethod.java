@@ -9,7 +9,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import cn.javadog.sd.mybatis.support.annotations.Flush;
+import cn.javadog.sd.mybatis.support.annotations.MapKey;
+import cn.javadog.sd.mybatis.support.base.cursor.Cursor;
+import cn.javadog.sd.mybatis.support.base.mapping.IMappedStatement;
+import cn.javadog.sd.mybatis.support.base.mapping.SqlCommandType;
+import cn.javadog.sd.mybatis.support.base.mapping.StatementType;
+import cn.javadog.sd.mybatis.support.base.session.IConfiguration;
+import cn.javadog.sd.mybatis.support.base.session.ResultHandler;
+import cn.javadog.sd.mybatis.support.base.session.RowBounds;
+import cn.javadog.sd.mybatis.support.base.session.SqlSession;
 import cn.javadog.sd.mybatis.support.exceptions.BindingException;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.reflection.resolver.ParamNameResolver;
+import cn.javadog.sd.mybatis.support.reflection.resolver.TypeParameterResolver;
 
 /**
  * @author: 余勇
@@ -29,7 +42,7 @@ public class MapperMethod {
    */
   private final MethodSignature method;
 
-  public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
+  public MapperMethod(Class<?> mapperInterface, Method method, IConfiguration config) {
     this.command = new SqlCommand(config, mapperInterface, method);
     this.method = new MethodSignature(config, mapperInterface, method);
   }
@@ -122,7 +135,7 @@ public class MapperMethod {
 
   private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
     // 获得 MappedStatement 对象
-    MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
+    IMappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
     if (!StatementType.CALLABLE.equals(ms.getStatementType()) // 校验存储过程的情况。不符合，抛出 BindingException 异常
             && void.class.equals(ms.getResultMaps().get(0).getType())) {
       throw new BindingException("method " + command.getName()
@@ -178,7 +191,7 @@ public class MapperMethod {
     return result;
   }
 
-  private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
+  private <E> Object convertToDeclaredCollection(IConfiguration config, List<E> list) {
     Object collection = config.getObjectFactory().create(method.getReturnType());
     MetaObject metaObject = config.newMetaObject(collection);
     metaObject.addAll(list);
@@ -231,7 +244,7 @@ public class MapperMethod {
   public static class SqlCommand {
 
     /**
-     * {@link MappedStatement#getId()}
+     * {@link IMappedStatement#getId()}
      */
     private final String name;
 
@@ -240,12 +253,12 @@ public class MapperMethod {
      */
     private final SqlCommandType type;
 
-    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
+    public SqlCommand(IConfiguration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
 
       // <1> 获得 MappedStatement 对象
-      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
+      IMappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
 
       // <2> 找不到 MappedStatement
@@ -283,8 +296,8 @@ public class MapperMethod {
     /**
      * 获得 MappedStatement 对象
      */
-    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
-        Class<?> declaringClass, Configuration configuration) {
+    private IMappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
+        Class<?> declaringClass, IConfiguration configuration) {
       // <1> 获得编号
       String statementId = mapperInterface.getName() + "." + methodName;
       // <2> 如果有，获得 MappedStatement 对象，并返回
@@ -297,7 +310,7 @@ public class MapperMethod {
       // 遍历父接口，继续获得 MappedStatement 对象
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
-          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
+          IMappedStatement ms = resolveMappedStatement(superInterface, methodName,
               declaringClass, configuration);
           if (ms != null) {
             return ms;
@@ -330,7 +343,7 @@ public class MapperMethod {
     private final boolean returnsVoid;
 
     /**
-     * 返回类型是否为 {@link org.apache.ibatis.cursor.Cursor}
+     * 返回类型是否为 {@link Cursor}
      */
     private final boolean returnsCursor;
 
@@ -368,7 +381,7 @@ public class MapperMethod {
      */
     private final ParamNameResolver paramNameResolver;
 
-    public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
+    public MethodSignature(IConfiguration configuration, Class<?> mapperInterface, Method method) {
       // 初始化 returnType 属性
       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
       // 普通类

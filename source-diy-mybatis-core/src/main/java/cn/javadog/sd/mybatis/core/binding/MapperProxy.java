@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
+import cn.javadog.sd.mybatis.support.base.session.SqlSession;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**

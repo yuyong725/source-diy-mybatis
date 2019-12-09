@@ -5,6 +5,8 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.javadog.sd.mybatis.support.base.session.SqlSession;
+
 /**
  * @author: 余勇
  * @date: 2019-12-09 16:07

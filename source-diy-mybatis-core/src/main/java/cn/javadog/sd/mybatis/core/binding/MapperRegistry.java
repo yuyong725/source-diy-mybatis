@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import cn.javadog.sd.mybatis.support.base.builder.annotation.IMapperAnnotationBuilder;
+import cn.javadog.sd.mybatis.support.base.session.IConfiguration;
+import cn.javadog.sd.mybatis.support.base.session.SqlSession;
 import cn.javadog.sd.mybatis.support.exceptions.BindingException;
 import cn.javadog.sd.mybatis.support.util.ResolverUtil;
 
@@ -20,7 +23,7 @@ public class MapperRegistry {
   /**
    * MyBatis Configuration 对象
    */
-  private final Configuration config;
+  private final IConfiguration config;
 
   /**
    * MapperProxyFactory 的映射
@@ -29,7 +32,7 @@ public class MapperRegistry {
    */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
-  public MapperRegistry(Configuration config) {
+  public MapperRegistry(IConfiguration config) {
     this.config = config;
   }
 
@@ -75,7 +78,7 @@ public class MapperRegistry {
         // otherwise the binding may automatically be attempted by the
         // mapper parser. If the type is already known, it won't try.
         // <4> 解析 Mapper 的注解配置
-        MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
+        IMapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
         parser.parse();
         // <5> 标记加载完成
         loadCompleted = true;
