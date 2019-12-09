@@ -3,9 +3,6 @@ package cn.javadog.sd.mybatis.support.util;
 import java.util.Arrays;
 
 /**
- * Provides hashCode, equals and toString methods that can handle array.
- */
-/**
  * @author: 余勇
  * @date: 2019-12-04 21:36
  * 数组工具。用于处理数组的hashCode, equals 和 toString 方法

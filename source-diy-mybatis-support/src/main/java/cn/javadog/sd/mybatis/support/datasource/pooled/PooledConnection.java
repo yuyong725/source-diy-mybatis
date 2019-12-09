@@ -6,7 +6,7 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import cn.javadog.sd.mybatis.support.util.ExceptionFactory;
+import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 
 /**
@@ -223,7 +223,7 @@ class PooledConnection implements InvocationHandler {
         // 反射调用对应的方法
         return method.invoke(realConnection, args);
       } catch (Throwable t) {
-        throw ExceptionFactory.unwrapThrowable(t);
+        throw ExceptionUtil.unwrapThrowable(t);
       }
     }
   }

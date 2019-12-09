@@ -11,5 +11,12 @@
 
     <artifactId>source-diy-mybatis-core</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.javadog</groupId>
+            <artifactId>source-diy-mybatis-support</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

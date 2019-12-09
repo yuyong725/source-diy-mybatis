@@ -2,7 +2,6 @@ package cn.javadog.sd.mybatis.support.reflection.wrapper;
 
 import java.util.List;
 
-import cn.javadog.sd.mybatis.support.exceptions.ExceptionUtil;
 import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.reflection.invoker.Invoker;
@@ -10,6 +9,7 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaClass;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.meta.SystemMetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
+import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**
  * @author: 余勇
