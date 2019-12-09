@@ -21,9 +21,9 @@ public abstract class VFS {
   private static final Log log = LogFactory.getLog(VFS.class);
 
   /**
-   * 内置的 VFS 实现类的数组
+   * 内置的 VFS 实现类的数组，源码里还有JBoss6VFS，这里移掉
    */
-  public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
+  public static final Class<?>[] IMPLEMENTATIONS = { DefaultVFS.class };
 
   /**
    * 自定义的 VFS 实现类的数组

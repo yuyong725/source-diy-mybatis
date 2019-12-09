@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
+import cn.javadog.sd.mybatis.support.io.Resources;
 import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
@@ -170,9 +171,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
     try {
       // 从 ResultSetMetaData 中，获得字段类型
       // 获得 Java Type
-      // return Resources.classForName(rsmd.getColumnClassName(columnIndex));
-      return null;
-      // TODO 打开
+      return Resources.classForName(rsmd.getColumnClassName(columnIndex));
     } catch (Exception e) {
       return null;
     }

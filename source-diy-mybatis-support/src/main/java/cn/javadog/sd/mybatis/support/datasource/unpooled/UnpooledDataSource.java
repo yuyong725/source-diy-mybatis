@@ -13,6 +13,8 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import cn.javadog.sd.mybatis.support.io.Resources;
+
 /**
  * @author: 余勇
  * @date: 2019-12-02 23:11
@@ -272,9 +274,7 @@ public class UnpooledDataSource implements DataSource {
           // 使用指定的类加载器加载
           driverType = Class.forName(driver, true, driverClassLoader);
         } else {
-          // TODO Resources是IO模块的类，后续再打开
-          // driverType = Resources.classForName(driver);
-          driverType = null;
+          driverType = Resources.classForName(driver);
         }
         // 创建 Driver 对象，TODO 注释提到DriverManager需要driver通过系统的类加载器加载？
         Driver driverInstance = (Driver)driverType.newInstance();

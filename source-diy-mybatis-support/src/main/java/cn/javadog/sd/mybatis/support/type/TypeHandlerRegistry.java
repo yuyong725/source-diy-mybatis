@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
+import cn.javadog.sd.mybatis.support.io.Resources;
 import cn.javadog.sd.mybatis.support.type.handler.ArrayTypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.BigDecimalTypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.BigIntegerTypeHandler;
@@ -70,6 +71,7 @@ import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.YearMonthTypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.YearTypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.ZonedDateTimeTypeHandler;
+import cn.javadog.sd.mybatis.support.util.ResolverUtil;
 
 /**
  * @author: 余勇

@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
+import cn.javadog.sd.mybatis.support.io.Resources;
+import cn.javadog.sd.mybatis.support.util.ResolverUtil;
 
 /**
  * @author Clinton Begin

@@ -105,3 +105,4 @@
 
 ##### 文件加载模块
 * 移除`ExternalResources`，源码里这个类已废弃
+* 移除`JBoss6VFS`，不用JBoss，看起来也累
