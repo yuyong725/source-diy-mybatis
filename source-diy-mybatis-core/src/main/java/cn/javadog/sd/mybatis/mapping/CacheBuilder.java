@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.mapping;
 
 import java.lang.reflect.Constructor;
@@ -21,18 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.ibatis.builder.InitializingObject;
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.cache.decorators.BlockingCache;
-import org.apache.ibatis.cache.decorators.LoggingCache;
-import org.apache.ibatis.cache.decorators.LruCache;
-import org.apache.ibatis.cache.decorators.ScheduledCache;
-import org.apache.ibatis.cache.decorators.SerializedCache;
-import org.apache.ibatis.cache.decorators.SynchronizedCache;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
+import cn.javadog.sd.mybatis.builder.InitializingObject;
+import cn.javadog.sd.mybatis.support.cache.Cache;
+import cn.javadog.sd.mybatis.support.cache.decorators.BlockingCache;
+import cn.javadog.sd.mybatis.support.cache.decorators.LoggingCache;
+import cn.javadog.sd.mybatis.support.cache.decorators.LruCache;
+import cn.javadog.sd.mybatis.support.cache.decorators.ScheduledCache;
+import cn.javadog.sd.mybatis.support.cache.decorators.SynchronizedCache;
+import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
+import cn.javadog.sd.mybatis.support.exceptions.CacheException;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.reflection.meta.SystemMetaObject;
 
 /**
  * @author Clinton Begin
@@ -128,7 +112,8 @@ public class CacheBuilder {
         ((ScheduledCache) cache).setClearInterval(clearInterval);
       }
       if (readWrite) {
-        cache = new SerializedCache(cache);
+        // note 不做可序列化的实现
+        // cache = new SerializedCache(cache);
       }
       cache = new LoggingCache(cache);
       cache = new SynchronizedCache(cache);

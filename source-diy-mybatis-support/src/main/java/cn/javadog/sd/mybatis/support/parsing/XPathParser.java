@@ -7,6 +7,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +55,14 @@ public class XPathParser {
 	 */
 	private XPath xPath;
 
+	/*三种构造*/
+
 	public XPathParser(String xml, Properties variables) {
 		this.variables = variables;
 		this.document = createDocument(new InputSource(new StringReader(xml)));
 	}
 
-	public XPathParser(StringReader reader, Properties variables) {
+	public XPathParser(Reader reader, Properties variables) {
 		this.variables = variables;
 		this.document = createDocument(new InputSource(reader));
 	}
@@ -126,6 +129,8 @@ public class XPathParser {
 		}
 	}
 
+	/* 解析n中基本类型的数据，根源都是使用evalString */
+
 	public String evalString(String expression) {
 		return evalString(expression, document);
 	}
@@ -186,6 +191,8 @@ public class XPathParser {
 		return Float.valueOf(evalString(expression, root));
 	}
 
+	/* 解析node节点 */
+
 	public List<XNode> evalNodes(String expression){
 		return evalNodes(expression, document);
 	}
@@ -207,5 +214,12 @@ public class XPathParser {
 	public XNode evalNode(String expression, Object root){
 		Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
 		return new XNode(this, node, variables);
+	}
+
+	/**
+	 * 设置解析占位符用的变量
+	 */
+	public void setVariables(Properties variables) {
+		this.variables = variables;
 	}
 }

@@ -25,9 +25,35 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import cn.javadog.sd.mybatis.binding.MapperRegistry;
+import cn.javadog.sd.mybatis.builder.CacheRefResolver;
+import cn.javadog.sd.mybatis.builder.ResultMapResolver;
+import cn.javadog.sd.mybatis.builder.xml.XMLStatementBuilder;
+import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
+import cn.javadog.sd.mybatis.executor.loader.ProxyFactory;
+import cn.javadog.sd.mybatis.executor.loader.cglib.CglibProxyFactory;
+import cn.javadog.sd.mybatis.executor.loader.javassist.JavassistProxyFactory;
+import cn.javadog.sd.mybatis.mapping.Environment;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMap;
+import cn.javadog.sd.mybatis.mapping.ResultMap;
+import cn.javadog.sd.mybatis.plugin.Interceptor;
+import cn.javadog.sd.mybatis.scripting.LanguageDriver;
+import cn.javadog.sd.mybatis.scripting.LanguageDriverRegistry;
+import cn.javadog.sd.mybatis.scripting.xmltags.XMLLanguageDriver;
+import cn.javadog.sd.mybatis.support.cache.Cache;
+import cn.javadog.sd.mybatis.support.io.VFS;
+import cn.javadog.sd.mybatis.support.logging.Log;
+import cn.javadog.sd.mybatis.support.logging.LogFactory;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
+import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.reflection.wrapper.ObjectWrapperFactory;
+import cn.javadog.sd.mybatis.support.type.JdbcType;
+import cn.javadog.sd.mybatis.support.type.TypeAliasRegistry;
+import cn.javadog.sd.mybatis.support.type.TypeHandler;
+import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -106,19 +132,23 @@ public class Configuration {
   protected boolean mapUnderscoreToCamelCase;
   /**
    * 当开启时，任何方法的调用都会加载该对象的所有属性。否则，每个属性会按需加载（参考lazyLoadTriggerMethods)
+   * 参考：https://www.jianshu.com/p/57bf52d2dde1
    */
   protected boolean aggressiveLazyLoading;
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
+  /**
+   * 当查询的返回一行都是null的结果时，MyBatis会帮忙填充一个所有属性都是null的对象。
+   */
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
-  protected Class <? extends VFS> vfsImpl;
+  protected Class <? extends VFS> vfsImpl;//todo 感觉此属性意义不大
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   /**

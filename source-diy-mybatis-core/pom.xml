@@ -17,6 +17,15 @@
             <artifactId>source-diy-mybatis-support</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!--javassist 代理-->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.24.1-GA</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

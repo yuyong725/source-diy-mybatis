@@ -106,8 +106,7 @@ public class MetaClass {
       // 递归判断子表达式 children ，获得返回值的类型
       return metaProp.getGetterType(prop.getChildren());
     }
-    // issue #506. Resolve the type inside a Collection Object
-    // 直接获得返回值的类型
+    // 直接获得返回值的类型 issue #506.解决了集合类型的问题
     return getGetterType(prop);
   }
 

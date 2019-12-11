@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor.loader.javassist;
 
 import java.lang.reflect.Method;
@@ -24,26 +9,28 @@ import java.util.Set;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyFactory;
-import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
-import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
-import org.apache.ibatis.executor.loader.ResultLoaderMap;
-import org.apache.ibatis.executor.loader.WriteReplaceInterface;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.property.PropertyCopier;
-import org.apache.ibatis.reflection.property.PropertyNamer;
-import org.apache.ibatis.session.Configuration;
+
+import cn.javadog.sd.mybatis.executor.loader.AbstractEnhancedDeserializationProxy;
+import cn.javadog.sd.mybatis.executor.loader.AbstractSerialStateHolder;
+import cn.javadog.sd.mybatis.executor.loader.ResultLoaderMap;
+import cn.javadog.sd.mybatis.executor.loader.ResultLoaderMap.LoadPair;
+import cn.javadog.sd.mybatis.executor.loader.WriteReplaceInterface;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
+import cn.javadog.sd.mybatis.support.io.Resources;
+import cn.javadog.sd.mybatis.support.logging.Log;
+import cn.javadog.sd.mybatis.support.logging.LogFactory;
+import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
+import cn.javadog.sd.mybatis.support.reflection.property.PropertyCopier;
+import cn.javadog.sd.mybatis.support.reflection.property.PropertyNamer;
+import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**
  * @author Eduardo Macarron
  *
  * 基于 Javassist 的 ProxyFactory 实现类
  */
-public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.ProxyFactory {
+public class JavassistProxyFactory implements cn.javadog.sd.mybatis.executor.loader.ProxyFactory {
 
   private static final Log log = LogFactory.getLog(JavassistProxyFactory.class);
   private static final String FINALIZE_METHOD = "finalize";
@@ -66,7 +53,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
   /**
    * 创建支持反序列化的代理对象
    */
-  public Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  public Object createDeserializationProxy(Object target, Map<String, LoadPair> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 

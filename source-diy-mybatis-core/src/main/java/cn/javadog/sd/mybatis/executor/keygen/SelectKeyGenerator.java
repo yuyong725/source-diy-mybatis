@@ -18,6 +18,7 @@ package cn.javadog.sd.mybatis.executor.keygen;
 import java.sql.Statement;
 import java.util.List;
 
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;

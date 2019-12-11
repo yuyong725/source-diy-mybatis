@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 
+import cn.javadog.sd.mybatis.support.logging.Log;
+import cn.javadog.sd.mybatis.support.logging.LogFactory;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 

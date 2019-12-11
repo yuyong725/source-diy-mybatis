@@ -152,8 +152,6 @@ public class TypeAliasRegistry {
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     // 遍历，逐个注册类型与别名的注册表
     for(Class<?> type : typeSet){
-      // Ignore inner classes and interfaces (including package-info.java)
-      // Skip also inner classes. See issue #6
       // 排除匿名类 排除接口 排除内部类
       if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
         registerAlias(type);
@@ -165,14 +163,14 @@ public class TypeAliasRegistry {
    * 注册指定类
    */
   public void registerAlias(Class<?> type) {
-    // <1> 默认为，简单类名
+    // 默认为，简单类名
     String alias = type.getSimpleName();
-    // <2> 如果有注解，使用注册上的名字
+    // 如果有注解，使用注册上的名字
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
     }
-    // <3> 注册类型与别名的注册表
+    // 注册类型与别名的注册表
     registerAlias(alias, type);
   }
 
@@ -183,14 +181,13 @@ public class TypeAliasRegistry {
     if (alias == null) {
       throw new TypeException("The parameter alias cannot be null");
     }
-    // issue #748
-    // <1> 转换成小写 这样的话，无论我们在 Mapper XML 中，写 `String` 还是 `string` 甚至是 `STRING` ，都是对应的 String 类型。
+    // 转换成小写 这样的话，无论我们在 Mapper XML 中，写 `String` 还是 `string` 甚至是 `STRING` ，都是对应的 String 类型。
     String key = alias.toLowerCase(Locale.ENGLISH);
     if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
-      // <2> 冲突，抛出 TypeException 异常;如果已经注册，并且类型不一致，说明有冲突，抛出 TypeException 异常。
+      // 冲突，抛出 TypeException 异常;如果已经注册，并且类型不一致，说明有冲突，抛出 TypeException 异常。
       throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(key).getName() + "'.");
     }
-    // <3>添加到 `TYPE_ALIASES` 中。另外，`#registerAlias(String alias, String value)` 方法，也会调用该方法
+    // 添加到 `TYPE_ALIASES` 中。另外，`#registerAlias(String alias, String value)` 方法，也会调用该方法
     TYPE_ALIASES.put(key, value);
   }
 

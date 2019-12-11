@@ -18,20 +18,20 @@ package cn.javadog.sd.mybatis.builder.xml;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.ibatis.builder.BaseBuilder;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.keygen.NoKeyGenerator;
-import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.scripting.LanguageDriver;
-import org.apache.ibatis.session.Configuration;
+import cn.javadog.sd.mybatis.builder.BaseBuilder;
+import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
+import cn.javadog.sd.mybatis.executor.keygen.Jdbc3KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.NoKeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.SelectKeyGenerator;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ResultSetType;
+import cn.javadog.sd.mybatis.mapping.SqlCommandType;
+import cn.javadog.sd.mybatis.mapping.SqlSource;
+import cn.javadog.sd.mybatis.mapping.StatementType;
+import cn.javadog.sd.mybatis.scripting.LanguageDriver;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
 
 /**
  * @author Clinton Begin

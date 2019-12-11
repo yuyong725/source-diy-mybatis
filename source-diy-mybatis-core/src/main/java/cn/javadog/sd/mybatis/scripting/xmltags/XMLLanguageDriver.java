@@ -15,6 +15,14 @@
  */
 package cn.javadog.sd.mybatis.scripting.xmltags;
 
+import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.SqlSource;
+import cn.javadog.sd.mybatis.scripting.LanguageDriver;
+import cn.javadog.sd.mybatis.scripting.defaults.DefaultParameterHandler;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;

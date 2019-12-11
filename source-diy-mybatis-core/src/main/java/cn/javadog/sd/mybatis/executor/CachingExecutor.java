@@ -18,6 +18,7 @@ package cn.javadog.sd.mybatis.executor;
 import java.sql.SQLException;
 import java.util.List;
 
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;

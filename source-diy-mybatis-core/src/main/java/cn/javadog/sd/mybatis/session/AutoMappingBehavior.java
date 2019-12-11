@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session;
 
 /**
@@ -20,28 +5,30 @@ package cn.javadog.sd.mybatis.session;
  * 
  * @author Eduardo Macarron
  *
- * 自动映射行为的枚举
+ *
+ */
+/**
+ * @author: 余勇
+ * @date: 2019-12-11 13:10
+ * 自动映射行为的枚举。
+ * 自动映射：数据库字段与POJO类的字段的映射。
+ * 用于指定MyBatis是否开启自动映射，以及开启的程度。
+ * 可以参考：https://www.cnblogs.com/TheViper/p/4480765.html，不过写的也不是很详细
  */
 public enum AutoMappingBehavior {
 
   /**
-   * Disables auto-mapping.
-   *
    * 禁用自动映射的功能
    */
   NONE,
 
   /**
-   * Will only auto-map results with no nested result mappings defined inside.
-   *
-   * 开启部分映射的功能
+   * 开启部分映射的功能。也就是请求的结果没有复杂的嵌套，比如属性中有collection
    */
   PARTIAL,
 
   /**
-   * Will auto-map result mappings of any complexity (containing nested or otherwise).
-   *
-   * 开启全部映射的功能
+   * 开启全部映射的功能。即支持复杂的嵌套
    */
   FULL
 }

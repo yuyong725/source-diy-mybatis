@@ -52,18 +52,32 @@ public final class LogFactory {
     }
   }
 
+  /* 设置几种自定义的 Log 实现类 TODO 源码里写着全路径类名的意义是什么？*/
+
   /**
-   * 设置几种自定义的 Log 实现类
-   * TODO 源码里写着全路径类名的意义是什么？
+   * 使用自定义的实现
+   */
+  public static synchronized void useCustomLogging(Class<? extends Log> clazz) {
+    setImplementation(clazz);
+  }
+
+  /**
+   * 使用slf4j
    */
   public static synchronized void useSlf4jLogging() {
     setImplementation(Slf4jImpl.class);
   }
 
+  /**
+   * 使用控制台输出
+   */
   public static synchronized void useStdOutLogging() {
     setImplementation(StdOutImpl.class);
   }
 
+  /**
+   * 不打印
+   */
   public static synchronized void useNoLogging() {
     setImplementation(NoLoggingImpl.class);
   }

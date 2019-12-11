@@ -1,23 +1,21 @@
-/**
- *    Copyright 2009-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.mapping;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-11 20:55
+ *
+ * ResultMap标签下的两个属性。
+ * 这两个标签与 <result /> 标签效果一致。
  */
 public enum ResultFlag {
-  ID, CONSTRUCTOR
+  /**
+   * <id /> 标签
+   */
+  ID,
+
+  /**
+   * <constructor /> 标签
+   * 与<result />区别在于，一个是使用构造器，而一个使用的是set方法
+   */
+  CONSTRUCTOR
 }

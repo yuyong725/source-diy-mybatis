@@ -15,6 +15,9 @@
  */
 package cn.javadog.sd.mybatis.scripting;
 
+import cn.javadog.sd.mybatis.mapping.SqlSource;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;

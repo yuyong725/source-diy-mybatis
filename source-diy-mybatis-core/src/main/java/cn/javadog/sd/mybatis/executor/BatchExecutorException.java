@@ -18,6 +18,8 @@ package cn.javadog.sd.mybatis.executor;
 import java.sql.BatchUpdateException;
 import java.util.List;
 
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
+
 /**
  * This exception is thrown if a <code>java.sql.BatchUpdateException</code> is caught
  * during the execution of any nested batch.  The exception contains the

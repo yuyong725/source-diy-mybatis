@@ -1,31 +1,17 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.builder;
 
 import java.util.List;
 
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.session.Configuration;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
+import cn.javadog.sd.mybatis.mapping.SqlSource;
+import cn.javadog.sd.mybatis.session.Configuration;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-11 22:41
  *
- * 静态的 SqlSource 实现类
+ * 静态的 SqlSource 实现类。
  * StaticSqlSource 的静态，是相对于 DynamicSqlSource 和 RawSqlSource 来说呢。实际上，StaticSqlSource.sql 属性，上面还是可能包括 ? 占位符。
  */
 public class StaticSqlSource implements SqlSource {

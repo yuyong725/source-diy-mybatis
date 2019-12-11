@@ -18,6 +18,7 @@ package cn.javadog.sd.mybatis.executor;
 import java.lang.reflect.Array;
 import java.util.List;
 
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;

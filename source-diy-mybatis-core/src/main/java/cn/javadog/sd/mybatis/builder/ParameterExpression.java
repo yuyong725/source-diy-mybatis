@@ -17,6 +17,8 @@ package cn.javadog.sd.mybatis.builder;
 
 import java.util.HashMap;
 
+import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+
 /**
  * Inline parameter expression parser. Supported grammar (simplified):
  * 

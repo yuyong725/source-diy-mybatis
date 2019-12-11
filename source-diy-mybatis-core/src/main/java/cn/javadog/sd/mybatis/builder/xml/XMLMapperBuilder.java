@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.builder.xml;
 
 import java.io.InputStream;
@@ -26,26 +11,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.ibatis.builder.BaseBuilder;
-import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.CacheRefResolver;
-import org.apache.ibatis.builder.IncompleteElementException;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.builder.ResultMapResolver;
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.parsing.XPathParser;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
+import cn.javadog.sd.mybatis.builder.BaseBuilder;
+import cn.javadog.sd.mybatis.builder.CacheRefResolver;
+import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
+import cn.javadog.sd.mybatis.builder.ResultMapResolver;
+import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.mapping.Discriminator;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
+import cn.javadog.sd.mybatis.mapping.ParameterMode;
+import cn.javadog.sd.mybatis.mapping.ResultFlag;
+import cn.javadog.sd.mybatis.mapping.ResultMap;
+import cn.javadog.sd.mybatis.mapping.ResultMapping;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.cache.Cache;
+import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.IncompleteElementException;
+import cn.javadog.sd.mybatis.support.io.Resources;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
+import cn.javadog.sd.mybatis.support.parsing.XPathParser;
+import cn.javadog.sd.mybatis.support.type.JdbcType;
+import cn.javadog.sd.mybatis.support.type.TypeHandler;
 
 /**
  * @author Clinton Begin
@@ -86,7 +71,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
-    this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()),
+    this(new XPathParser(reader, configuration.getVariables()),
         configuration, resource, sqlFragments);
   }
 
@@ -96,7 +81,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
-    this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()),
+    this(new XPathParser(inputStream, configuration.getVariables()),
         configuration, resource, sqlFragments);
   }
 

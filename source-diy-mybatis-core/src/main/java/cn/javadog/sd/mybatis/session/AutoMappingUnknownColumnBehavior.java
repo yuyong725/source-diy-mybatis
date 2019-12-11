@@ -1,34 +1,24 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.support.exceptions.SqlSessionException;
+import cn.javadog.sd.mybatis.support.logging.Log;
+import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+ * @author: 余勇
+ * @date: 2019-12-11 13:19
  *
- * @since 3.4.0
- * @author Kazuki Shimizu
+ * 指定 当resultMap对应的POJO中，
+ * 没有对应的属性(比如 select * 查出来10列，但POJO只有9个属性)；
+ * 或者有属性未映射到(比如 select * 查出来10列，但POJO只有11个属性)
+ *
+ * TODO 不确定上面的解释对不对，还是仅仅指
  */
 public enum AutoMappingUnknownColumnBehavior {
 
   /**
-   * Do nothing (Default).
+   * 啥事也不干
    */
   NONE {
     @Override
@@ -38,19 +28,19 @@ public enum AutoMappingUnknownColumnBehavior {
   },
 
   /**
-   * Output warning log.
-   * Note: The log level of {@code 'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'} must be set to {@code WARN}.
+   * 输出 warn 级别的日志
+   * note：源码里提到这个日志级别必须是WARN
    */
   WARNING {
     @Override
     public void doAction(MappedStatement mappedStatement, String columnName, String property, Class<?> propertyType) {
+      // 打印warn级别的日志
       log.warn(buildMessage(mappedStatement, columnName, property, propertyType));
     }
   },
 
   /**
-   * Fail mapping.
-   * Note: throw {@link SqlSessionException}.
+   * 直接映射失败的错
    */
   FAILING {
     @Override
@@ -60,21 +50,21 @@ public enum AutoMappingUnknownColumnBehavior {
   };
 
   /**
-   * Logger
+   * Logger，注意这个必须写在枚举实例的后面
    */
   private static final Log log = LogFactory.getLog(AutoMappingUnknownColumnBehavior.class);
 
   /**
-   * Perform the action when detects an unknown column (or unknown property type) of automatic mapping target.
-   * @param mappedStatement current mapped statement
-   * @param columnName column name for mapping target
-   * @param propertyName property name for mapping target
-   * @param propertyType property type for mapping target (If this argument is not null, {@link org.apache.ibatis.type.TypeHandler} for property type is not registered)
-     */
+   * 当出现类名或者字段名匹配不上是的行为
+   * @param mappedStatement 当前的mappedStatement，一个语句对应一个mappedStatement
+   * @param columnName 映射的数据库字段名
+   * @param propertyName 映射的POJO字段名
+   * @param propertyType 映射的POJO字段类型 (如果这个参数不为空，对应此类型TypeHandler也没有注册) TODO 然后呢，这个英文注释很懵逼
+   */
   public abstract void doAction(MappedStatement mappedStatement, String columnName, String propertyName, Class<?> propertyType);
 
   /**
-   * build error message.
+   * 构建错误信息
    */
   private static String buildMessage(MappedStatement mappedStatement, String columnName, String property, Class<?> propertyType) {
     return new StringBuilder("Unknown column is detected on '")

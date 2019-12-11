@@ -17,6 +17,7 @@ package cn.javadog.sd.mybatis.mapping;
 
 import javax.sql.DataSource;
 
+import cn.javadog.sd.mybatis.support.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.TransactionFactory;
 
 /**

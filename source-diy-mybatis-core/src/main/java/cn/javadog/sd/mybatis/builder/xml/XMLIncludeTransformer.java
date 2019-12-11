@@ -1,42 +1,35 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.builder.xml;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.IncompleteElementException;
+import cn.javadog.sd.mybatis.support.parsing.PropertyParser;
+import cn.javadog.sd.mybatis.support.parsing.XNode;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.IncompleteElementException;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.session.Configuration;
 
 /**
- * @author Frank D. Martinez [mnesarco]
+ * @author: 余勇
+ * @date: 2019-12-11 16:07
  *
  * XML <include /> 标签的转换器，负责将 SQL 中的 <include /> 标签转换成对应的 <sql /> 的内容
  */
 public class XMLIncludeTransformer {
 
+  /**
+   * 全局配置
+   */
   private final Configuration configuration;
+
+  /**
+   * mapper构建工具🔧
+   */
   private final MapperBuilderAssistant builderAssistant;
 
   public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {

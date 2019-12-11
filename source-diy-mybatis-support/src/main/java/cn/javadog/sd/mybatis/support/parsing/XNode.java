@@ -1,5 +1,7 @@
 package cn.javadog.sd.mybatis.support.parsing;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.w3c.dom.CharacterData;
@@ -12,6 +14,8 @@ import org.w3c.dom.NodeList;
  * @author 余勇
  * @date 2019年11月29日 16:58:00
  * xml的节点描述，是对xpath解析出来的node的封装
+ *
+ * TODO 这个类丢失不少东西
  */
 public class XNode {
 
@@ -32,10 +36,13 @@ public class XNode {
 	private final String body;
 	private final Properties attributes;
 	private final Properties variables;
-	private final XPathParser xPathParser;
+	private final XPathParser xpathParser;
 
+	/**
+	 * 构造函数
+	 */
 	public XNode(XPathParser xPathParser, Node node, Properties variables){
-		this.xPathParser = xPathParser;
+		this.xpathParser = xPathParser;
 		this.node = node;
 		this.name = node.getNodeName();
 		this.variables = variables;
@@ -47,7 +54,7 @@ public class XNode {
 	 * 创建新节点
 	 */
 	public XNode newXNode(Node node){
-		return new XNode(xPathParser, node, variables);
+		return new XNode(xpathParser, node, variables);
 	}
 
 	public String getName() {
@@ -62,7 +69,7 @@ public class XNode {
 		if (parent == null || !(parent instanceof Element)){
 			return null;
 		}else {
-			return new XNode(xPathParser, parent, variables);
+			return new XNode(xpathParser, parent, variables);
 		}
 	}
 
@@ -75,7 +82,7 @@ public class XNode {
 	 * 首先获取 XNode node = parser.evalNode("/employee/height")，再调用此方法，返回的额值为：employee[${id_var}]_height
 	 * todo 作用
 	 */
-	public String getvaluebasedIdentifier() {
+	public String getValueBasedIdentifier() {
 		StringBuilder builder = new StringBuilder();
 		XNode current = this;
 		while (current != null){
@@ -100,12 +107,20 @@ public class XNode {
 	}
 
 	/**
+	 * 获取指定的属性
+	 */
+	public String getStringAttribute(String name) {
+		return getStringAttribute(name, null);
+	}
+
+	/**
 	 * 获取指定的属性，为空时使用默认值
 	 */
 	public String getStringAttribute(String name, String defaultValue) {
 		// 注意，这里attributes不会为空，不需要非空判断
 		return attributes.getProperty(name, defaultValue);
 	}
+
 
 	/**
 	 * 解析node节点的属性
@@ -161,5 +176,212 @@ public class XNode {
 		return null;
 	}
 
+	/* 调用xpathParser完成相应的解析 */
 
+	public String evalString(String expression) {
+		return xpathParser.evalString(expression, node);
+	}
+
+	public Boolean evalBoolean(String expression) {
+		return xpathParser.evalBoolean(expression, node);
+	}
+
+	public Double evalDouble(String expression) {
+		return xpathParser.evalDouble(expression, node);
+	}
+
+	public List<XNode> evalNodes(String expression) {
+		return xpathParser.evalNodes(expression, node);
+	}
+
+	public XNode evalNode(String expression) {
+		return xpathParser.evalNode(expression, node);
+	}
+
+	/**
+	 * 获取字节点
+	 */
+	public List<XNode> getChildren() {
+		List<XNode> children = new ArrayList<>();
+		NodeList nodeList = node.getChildNodes();
+		if (nodeList != null) {
+			for (int i = 0, n = nodeList.getLength(); i < n; i++) {
+				Node node = nodeList.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					children.add(new XNode(xpathParser, node, variables));
+				}
+			}
+		}
+		return children;
+	}
+
+	/**
+	 * 将字节点列表转成Properties
+	 */
+	public Properties getChildrenAsProperties() {
+		Properties properties = new Properties();
+		for (XNode child : getChildren()) {
+			String name = child.getStringAttribute("name");
+			String value = child.getStringAttribute("value");
+			if (name != null && value != null) {
+				properties.setProperty(name, value);
+			}
+		}
+		return properties;
+	}
+
+	/*获取各种属性*/
+	public Node getNode() {
+		return node;
+	}
+
+	public String getStringBody() {
+		return getStringBody(null);
+	}
+
+	public String getStringBody(String def) {
+		if (body == null) {
+			return def;
+		} else {
+			return body;
+		}
+	}
+
+	public Boolean getBooleanBody() {
+		return getBooleanBody(null);
+	}
+
+	public Boolean getBooleanBody(Boolean def) {
+		if (body == null) {
+			return def;
+		} else {
+			return Boolean.valueOf(body);
+		}
+	}
+
+	public Integer getIntBody() {
+		return getIntBody(null);
+	}
+
+	public Integer getIntBody(Integer def) {
+		if (body == null) {
+			return def;
+		} else {
+			return Integer.parseInt(body);
+		}
+	}
+
+	public Long getLongBody() {
+		return getLongBody(null);
+	}
+
+	public Long getLongBody(Long def) {
+		if (body == null) {
+			return def;
+		} else {
+			return Long.parseLong(body);
+		}
+	}
+
+	public Double getDoubleBody() {
+		return getDoubleBody(null);
+	}
+
+	public Double getDoubleBody(Double def) {
+		if (body == null) {
+			return def;
+		} else {
+			return Double.parseDouble(body);
+		}
+	}
+
+	public Float getFloatBody() {
+		return getFloatBody(null);
+	}
+
+	public Float getFloatBody(Float def) {
+		if (body == null) {
+			return def;
+		} else {
+			return Float.parseFloat(body);
+		}
+	}
+
+	public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name) {
+		return getEnumAttribute(enumType, name, null);
+	}
+
+	public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
+		String value = getStringAttribute(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Enum.valueOf(enumType, value);
+		}
+	}
+
+	public Boolean getBooleanAttribute(String name) {
+		return getBooleanAttribute(name, null);
+	}
+
+	public Boolean getBooleanAttribute(String name, Boolean def) {
+		String value = attributes.getProperty(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Boolean.valueOf(value);
+		}
+	}
+
+	public Integer getIntAttribute(String name) {
+		return getIntAttribute(name, null);
+	}
+
+	public Integer getIntAttribute(String name, Integer def) {
+		String value = attributes.getProperty(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Integer.parseInt(value);
+		}
+	}
+
+	public Long getLongAttribute(String name) {
+		return getLongAttribute(name, null);
+	}
+
+	public Long getLongAttribute(String name, Long def) {
+		String value = attributes.getProperty(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Long.parseLong(value);
+		}
+	}
+
+	public Double getDoubleAttribute(String name) {
+		return getDoubleAttribute(name, null);
+	}
+
+	public Double getDoubleAttribute(String name, Double def) {
+		String value = attributes.getProperty(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Double.parseDouble(value);
+		}
+	}
+
+	public Float getFloatAttribute(String name) {
+		return getFloatAttribute(name, null);
+	}
+
+	public Float getFloatAttribute(String name, Float def) {
+		String value = attributes.getProperty(name);
+		if (value == null) {
+			return def;
+		} else {
+			return Float.parseFloat(value);
+		}
+	}
 }
