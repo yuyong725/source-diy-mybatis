@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor.resultset;
 
 import java.lang.reflect.Constructor;
@@ -28,39 +13,38 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.AutomapConstructor;
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
-import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.cursor.defaults.DefaultCursor;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.executor.loader.ResultLoader;
-import org.apache.ibatis.executor.loader.ResultLoaderMap;
-import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.executor.result.DefaultResultContext;
-import org.apache.ibatis.executor.result.DefaultResultHandler;
-import org.apache.ibatis.executor.result.ResultMapException;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.reflection.MetaClass;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ReflectorFactory;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import cn.javadog.sd.mybatis.annotations.AutomapConstructor;
+import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.cursor.defaults.DefaultCursor;
+import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.executor.loader.ResultLoader;
+import cn.javadog.sd.mybatis.executor.loader.ResultLoaderMap;
+import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
+import cn.javadog.sd.mybatis.executor.result.DefaultResultContext;
+import cn.javadog.sd.mybatis.executor.result.DefaultResultHandler;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.Discriminator;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
+import cn.javadog.sd.mybatis.mapping.ParameterMode;
+import cn.javadog.sd.mybatis.mapping.ResultMap;
+import cn.javadog.sd.mybatis.mapping.ResultMapping;
+import cn.javadog.sd.mybatis.session.AutoMappingBehavior;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.ResultContext;
+import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.session.RowBounds;
+import cn.javadog.sd.mybatis.support.cache.CacheKey;
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
+import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
+import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaClass;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.type.JdbcType;
+import cn.javadog.sd.mybatis.support.type.ParamMap;
+import cn.javadog.sd.mybatis.support.type.TypeHandler;
+import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin

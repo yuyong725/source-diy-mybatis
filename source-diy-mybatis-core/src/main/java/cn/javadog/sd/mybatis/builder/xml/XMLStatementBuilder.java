@@ -34,7 +34,8 @@ import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.parsing.XNode;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-12 22:36
  *
  * 加载 Statement 配置
  * 继承 BaseBuilder 抽象类，Statement XML 配置构建器，主要负责解析 Statement 配置，即 <select />、<insert />、<update />、<delete /> 标签
@@ -68,16 +69,15 @@ public class XMLStatementBuilder extends BaseBuilder {
    * 执行 Statement 解析
    */
   public void parseStatementNode() {
-    // <1> 获得 id 属性，编号。
+    // 获得 id 属性，编号。
     String id = context.getStringAttribute("id");
-    // <2> 获得 databaseId ， 判断 databaseId 是否匹配
+    // 获得 databaseId ， 判断 databaseId 是否匹配
     String databaseId = context.getStringAttribute("databaseId");
-
+    // 不匹配的直接跳过，不会报错
     if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
       return;
     }
-
-    // <3> 获得各种属性
+    // 获得各种属性
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");
     String parameterMap = context.getStringAttribute("parameterMap");
@@ -86,54 +86,50 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
     String lang = context.getStringAttribute("lang");
-
-    // <4> 获得 lang 对应的 LanguageDriver 对象
+    // 获得 lang 对应的 LanguageDriver 对象
     LanguageDriver langDriver = getLanguageDriver(lang);
-
-    // <5> 获得 resultType 对应的类
+    // 获得 resultType 对应的类
     Class<?> resultTypeClass = resolveClass(resultType);
-    // <6> 获得 resultSet 对应的枚举值
+    // 获得 resultSet 对应的枚举值
     String resultSetType = context.getStringAttribute("resultSetType");
-    // <7> 获得 statementType 对应的枚举值
-    StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
-
-    // <8> 获得 SQL 对应的 SqlCommandType 枚举值
+    // 获得 statementType 对应的枚举值，默认是 PREPARED
+    StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
+    // 获得 SQL 对应的 SqlCommandType 枚举值，也就是说 SqlCommand 对应的值就是解析的节点的名字
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-    // <9> 获得各种属性
+    // 获得各种属性
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
-
-    // Include Fragments before parsing
-    // <10> 创建 XMLIncludeTransformer 对象，并替换 <include /> 标签相关的内容
+    // 正式解析之前，先创建 XMLIncludeTransformer 对象
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
+    // 替换 <include /> 标签相关的内容
     includeParser.applyIncludes(context.getNode());
-
-    // Parse selectKey after includes and remove them.
-    // <11> 解析 <selectKey /> 标签
+    // 解析 <selectKey /> 标签
     processSelectKeyNodes(id, parameterTypeClass, langDriver);
-    
-    // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)
-    // <12> 创建 SqlSource
+    // 创建 SqlSource
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
-    // <13> 获得 KeyGenerator 对象
+    // 获得 KeyGenerator 对象
     String resultSets = context.getStringAttribute("resultSets");
     String keyProperty = context.getStringAttribute("keyProperty");
     String keyColumn = context.getStringAttribute("keyColumn");
     KeyGenerator keyGenerator;
-    // <13.1> 优先，从 configuration 中获得 KeyGenerator 对象。如果存在，意味着是 <selectKey /> 标签配置的
+    // 优先，从 configuration 中获得 KeyGenerator 对象。
     String keyStatementId = id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
     keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);
+    // 意味着是 <selectKey /> 标签配置的，note 也侧面说明了 selectKey 的优先级是大于 useGeneratedKeys
     if (configuration.hasKeyGenerator(keyStatementId)) {
       keyGenerator = configuration.getKeyGenerator(keyStatementId);
-    // <13.2> 其次，根据标签属性的情况，判断是否使用对应的 Jdbc3KeyGenerator 或者 NoKeyGenerator 对象
-    } else {
-      // 优先，基于 useGeneratedKeys 属性判断
+    }
+    // 其次，根据标签属性的情况，判断是否使用对应的 Jdbc3KeyGenerator 或者 NoKeyGenerator 对象
+    else {
+      // 优先，基于 useGeneratedKeys 属性判断，
       keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
+          // 没有设置的话就用全局属性，并且要求是INSERT语句
           configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
+          // 符合条件就用Jdbc3KeyGenerator，否则用NoKeyGenerator
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
@@ -145,32 +141,37 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   /**
-   * 解析 <selectKey /> 标签
+   * 解析 <selectKey /> 标签，核心逻辑是👇的{@link #parseSelectKeyNodes(String, List, Class, LanguageDriver, String)}
    */
   private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
-    // <1> 获得 <selectKey /> 节点们
+    // 获得 <selectKey /> 节点们
     List<XNode> selectKeyNodes = context.evalNodes("selectKey");
-    // <2> 执行解析 <selectKey /> 节点们
+    // 执行解析 <selectKey /> 节点们
     if (configuration.getDatabaseId() != null) {
       parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
     }
     parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
-    // <3> 移除 <selectKey /> 节点们
+    // 移除 <selectKey /> 节点们
     removeSelectKeyNodes(selectKeyNodes);
   }
 
   /**
-   * 执行解析 <selectKey /> 子节点们
+   * 所有解析 <selectKey /> 节点.
+   * 该节点一般是用于拿插入后生成的主键。
+   * <selectKey resultType="java.lang.Integer" keyProperty="id">
+   *    CALL IDENTITY()
+   * </selectKey>
    */
   private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
-    // <1> 遍历 <selectKey /> 节点们
+    // 遍历 <selectKey /> 节点们
     for (XNode nodeToHandle : list) {
-      // <2> 获得完整 id ，格式为 `${id}!selectKey`
+      // 获得完整 id ，格式为 `${id}!selectKey`
       String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
-      // <3> 获得 databaseId ， 判断 databaseId 是否匹配
+      // 获得 databaseId ， 判断 databaseId 是否匹配
       String databaseId = nodeToHandle.getStringAttribute("databaseId");
+      // 校验databaseId
       if (databaseIdMatchesCurrent(id, databaseId, skRequiredDatabaseId)) {
-        // <4> 执行解析单个 <selectKey /> 节点
+        // 执行解析单个 <selectKey /> 节点
         parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver, databaseId);
       }
     }
@@ -180,16 +181,16 @@ public class XMLStatementBuilder extends BaseBuilder {
    * 执行解析单个 <selectKey /> 节点
    */
   private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
-    // <1.1> 获得各种属性和对应的类
+    // 获得各种属性和对应的类
     String resultType = nodeToHandle.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
+    // 获取StatementType，默认使用的是 PREPARED
     StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
     String keyColumn = nodeToHandle.getStringAttribute("keyColumn");
     boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order", "AFTER"));
 
-    //defaults
-    // <1.2> 创建 MappedStatement 需要用到的默认值
+    // 创建 MappedStatement 需要用到的默认值
     boolean useCache = false;
     boolean resultOrdered = false;
     KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
@@ -200,24 +201,28 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = null;
     ResultSetType resultSetTypeEnum = null;
 
-    // <1.3> 创建 SqlSource 对象
+    // 创建 SqlSource 对象
     SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
+    // 创建 SqlCommandType，自然是 SELECT
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    // <1.4> 创建 MappedStatement 对象
+    // 创建 MappedStatement 对象。属性真鸡儿多，看都不想看
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);
 
-    // <2.1> 获得 SelectKeyGenerator 的编号，格式为 `${namespace}.${id}`
+    // 获得 SelectKey 的编号，格式为 `${namespace}.${id}`
     id = builderAssistant.applyCurrentNamespace(id, false);
-    // <2.2> 获得 MappedStatement 对象
+    // 获得 MappedStatement 对象，就是上面的 builderAssistant.addMappedStatement 完成的
     MappedStatement keyStatement = configuration.getMappedStatement(id, false);
-    // <2.3> 创建 SelectKeyGenerator 对象，并添加到 configuration 中
+    // 创建 SelectKeyGenerator 对象，并添加到 configuration 中
     configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));
   }
 
+  /**
+   * 从dom树中移除所有 SelectKey 的标签
+   */
   private void removeSelectKeyNodes(List<XNode> selectKeyNodes) {
     for (XNode nodeToHandle : selectKeyNodes) {
       nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
@@ -225,7 +230,8 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   /**
-   * 判断 databaseId 是否匹配
+   * 判断 databaseId 是否匹配。
+   * 与 {@link XMLMapperBuilder#databaseIdMatchesCurrent(String, String, String)} 实现一模一样，干鸡儿不提到父类
    */
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
@@ -238,11 +244,11 @@ public class XMLStatementBuilder extends BaseBuilder {
       if (databaseId != null) {
         return false;
       }
-      // skip this statement if there is a previous one with a not null databaseId
       // 判断是否已经存在
       id = builderAssistant.applyCurrentNamespace(id, false);
       if (this.configuration.hasStatement(id, false)) {
-        MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2
+        // issue #2
+        MappedStatement previous = this.configuration.getMappedStatement(id, false);
         if (previous.getDatabaseId() != null) {
           // 若存在，则判断原有的 sqlFragment 是否 databaseId 为空。因为，当前 databaseId 为空，这样两者才能匹配。
           return false;

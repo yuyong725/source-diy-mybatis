@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session;
 
 import java.util.Arrays;
@@ -28,97 +13,64 @@ import java.util.Set;
 import cn.javadog.sd.mybatis.binding.MapperRegistry;
 import cn.javadog.sd.mybatis.builder.CacheRefResolver;
 import cn.javadog.sd.mybatis.builder.ResultMapResolver;
+import cn.javadog.sd.mybatis.builder.annotation.MethodResolver;
 import cn.javadog.sd.mybatis.builder.xml.XMLStatementBuilder;
+import cn.javadog.sd.mybatis.executor.BatchExecutor;
+import cn.javadog.sd.mybatis.executor.CachingExecutor;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.executor.ReuseExecutor;
+import cn.javadog.sd.mybatis.executor.SimpleExecutor;
 import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.executor.loader.ProxyFactory;
 import cn.javadog.sd.mybatis.executor.loader.cglib.CglibProxyFactory;
 import cn.javadog.sd.mybatis.executor.loader.javassist.JavassistProxyFactory;
+import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
+import cn.javadog.sd.mybatis.executor.resultset.DefaultResultSetHandler;
+import cn.javadog.sd.mybatis.executor.resultset.ResultSetHandler;
+import cn.javadog.sd.mybatis.executor.statement.RoutingStatementHandler;
+import cn.javadog.sd.mybatis.executor.statement.StatementHandler;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.Environment;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
 import cn.javadog.sd.mybatis.mapping.ParameterMap;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
+import cn.javadog.sd.mybatis.mapping.VendorDatabaseIdProvider;
 import cn.javadog.sd.mybatis.plugin.Interceptor;
+import cn.javadog.sd.mybatis.plugin.InterceptorChain;
 import cn.javadog.sd.mybatis.scripting.LanguageDriver;
 import cn.javadog.sd.mybatis.scripting.LanguageDriverRegistry;
+import cn.javadog.sd.mybatis.scripting.defaults.RawLanguageDriver;
 import cn.javadog.sd.mybatis.scripting.xmltags.XMLLanguageDriver;
 import cn.javadog.sd.mybatis.support.cache.Cache;
+import cn.javadog.sd.mybatis.support.cache.decorators.FifoCache;
+import cn.javadog.sd.mybatis.support.cache.decorators.LruCache;
+import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
+import cn.javadog.sd.mybatis.support.datasource.pooled.PooledDataSourceFactory;
+import cn.javadog.sd.mybatis.support.datasource.unpooled.UnpooledDataSourceFactory;
 import cn.javadog.sd.mybatis.support.io.VFS;
 import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
+import cn.javadog.sd.mybatis.support.logging.nologging.NoLoggingImpl;
+import cn.javadog.sd.mybatis.support.logging.slf4j.Slf4jImpl;
+import cn.javadog.sd.mybatis.support.logging.stdout.StdOutImpl;
 import cn.javadog.sd.mybatis.support.parsing.XNode;
+import cn.javadog.sd.mybatis.support.reflection.factory.DefaultObjectFactory;
+import cn.javadog.sd.mybatis.support.reflection.factory.DefaultReflectorFactory;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.reflection.wrapper.DefaultObjectWrapperFactory;
 import cn.javadog.sd.mybatis.support.reflection.wrapper.ObjectWrapperFactory;
+import cn.javadog.sd.mybatis.support.transaction.Transaction;
+import cn.javadog.sd.mybatis.support.transaction.jdbc.JdbcTransactionFactory;
+import cn.javadog.sd.mybatis.support.transaction.managed.ManagedTransactionFactory;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.type.TypeAliasRegistry;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
-import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.builder.CacheRefResolver;
-import org.apache.ibatis.builder.ResultMapResolver;
-import org.apache.ibatis.builder.annotation.MethodResolver;
-import org.apache.ibatis.builder.xml.XMLStatementBuilder;
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.decorators.FifoCache;
-import org.apache.ibatis.cache.decorators.LruCache;
-import org.apache.ibatis.cache.decorators.SoftCache;
-import org.apache.ibatis.cache.decorators.WeakCache;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.datasource.jndi.JndiDataSourceFactory;
-import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
-import org.apache.ibatis.executor.BatchExecutor;
-import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ReuseExecutor;
-import org.apache.ibatis.executor.SimpleExecutor;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.loader.ProxyFactory;
-import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
-import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
-import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
-import org.apache.ibatis.executor.resultset.ResultSetHandler;
-import org.apache.ibatis.executor.statement.RoutingStatementHandler;
-import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.io.VFS;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
-import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
-import org.apache.ibatis.logging.log4j.Log4jImpl;
-import org.apache.ibatis.logging.log4j2.Log4j2Impl;
-import org.apache.ibatis.logging.nologging.NoLoggingImpl;
-import org.apache.ibatis.logging.slf4j.Slf4jImpl;
-import org.apache.ibatis.logging.stdout.StdOutImpl;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMap;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
-import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.InterceptorChain;
-import org.apache.ibatis.reflection.DefaultReflectorFactory;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.ReflectorFactory;
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-import org.apache.ibatis.scripting.LanguageDriver;
-import org.apache.ibatis.scripting.LanguageDriverRegistry;
-import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
-import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeAliasRegistry;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import cn.javadog.sd.mybatis.support.type.handler.EnumTypeHandler;
+import sun.misc.SoftCache;
+import com.sun.beans.WeakCache;
 
 /**
  * @author Clinton Begin
@@ -219,7 +171,7 @@ public class Configuration {
     typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
     typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class);
 
-    typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class);
+    // typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class);
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
 
@@ -235,10 +187,6 @@ public class Configuration {
     typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class);
 
     typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class);
-    typeAliasRegistry.registerAlias("COMMONS_LOGGING", JakartaCommonsLoggingImpl.class);
-    typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class);
-    typeAliasRegistry.registerAlias("LOG4J2", Log4j2Impl.class);
-    typeAliasRegistry.registerAlias("JDK_LOGGING", Jdk14LoggingImpl.class);
     typeAliasRegistry.registerAlias("STDOUT_LOGGING", StdOutImpl.class);
     typeAliasRegistry.registerAlias("NO_LOGGING", NoLoggingImpl.class);
 
@@ -511,7 +459,7 @@ public class Configuration {
 
   /**
    * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * A default {@link TypeHandler} is {@link EnumTypeHandler}.
    * @param typeHandler a type handler class for {@link Enum}
    * @since 3.4.5
    */

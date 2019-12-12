@@ -7,15 +7,19 @@ import cn.javadog.sd.mybatis.mapping.ResultMap;
 import cn.javadog.sd.mybatis.mapping.ResultMapping;
 
 /**
- * @author Eduardo Macarron
- *
+ * @author: 余勇
+ * @date: 2019-12-12 14:26
  * ResultMap 解析器
  */
 public class ResultMapResolver {
+
+  /**
+   * MapperBuilderAssistant 对象，大部分解析工作由它完成
+   */
   private final MapperBuilderAssistant assistant;
 
   /**
-   * ResultMap 编号
+   * ResultMap 编号，由此可见，一个解析器对应一个 resultMap
    */
   private final String id;
 
@@ -25,7 +29,7 @@ public class ResultMapResolver {
   private final Class<?> type;
 
   /**
-   * 继承自哪个 ResultMap
+   * extend 属性，类比 Java类的继承
    */
   private final String extend;
 
@@ -44,6 +48,9 @@ public class ResultMapResolver {
    */
   private final Boolean autoMapping;
 
+  /**
+   * 构造函数
+   */
   public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, Boolean autoMapping) {
     this.assistant = assistant;
     this.id = id;
@@ -54,6 +61,9 @@ public class ResultMapResolver {
     this.autoMapping = autoMapping;
   }
 
+  /**
+   * 解析ResultMap，交给 assistant 完成
+   */
   public ResultMap resolve() {
     return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
   }

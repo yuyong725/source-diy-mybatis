@@ -1,21 +1,6 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor;
 
-import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
+import static cn.javadog.sd.mybatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,27 +8,26 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.executor.statement.StatementUtil;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
+import cn.javadog.sd.mybatis.mapping.ParameterMode;
+import cn.javadog.sd.mybatis.mapping.StatementType;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.LocalCacheScope;
+import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.session.RowBounds;
+import cn.javadog.sd.mybatis.support.cache.CacheKey;
+import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
 import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
-import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.executor.statement.StatementUtil;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.logging.jdbc.ConnectionLogger;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.LocalCacheScope;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import cn.javadog.sd.mybatis.support.logging.Log;
+import cn.javadog.sd.mybatis.support.logging.LogFactory;
+import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.transaction.Transaction;
+import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
@@ -247,7 +231,7 @@ public abstract class BaseExecutor implements Executor {
 
   /**
    * 延迟加载
-   * @see http://svip.iocoder.cn/MyBatis/executor-5/
+   * 详细参考 http://svip.iocoder.cn/MyBatis/executor-5/
    */
   @Override
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {

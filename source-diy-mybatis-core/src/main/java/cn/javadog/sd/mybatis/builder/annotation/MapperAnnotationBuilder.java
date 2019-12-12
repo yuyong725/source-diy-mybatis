@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.builder.annotation;
 
 import java.io.IOException;
@@ -35,67 +20,65 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
+import cn.javadog.sd.mybatis.annotations.Arg;
+import cn.javadog.sd.mybatis.annotations.CacheNamespace;
+import cn.javadog.sd.mybatis.annotations.CacheNamespaceRef;
+import cn.javadog.sd.mybatis.annotations.Case;
+import cn.javadog.sd.mybatis.annotations.ConstructorArgs;
+import cn.javadog.sd.mybatis.annotations.Delete;
+import cn.javadog.sd.mybatis.annotations.DeleteProvider;
+import cn.javadog.sd.mybatis.annotations.Insert;
+import cn.javadog.sd.mybatis.annotations.InsertProvider;
+import cn.javadog.sd.mybatis.annotations.Lang;
+import cn.javadog.sd.mybatis.annotations.MapKey;
+import cn.javadog.sd.mybatis.annotations.Options;
+import cn.javadog.sd.mybatis.annotations.Options.FlushCachePolicy;
+import cn.javadog.sd.mybatis.annotations.Property;
+import cn.javadog.sd.mybatis.annotations.Result;
+import cn.javadog.sd.mybatis.annotations.ResultMap;
+import cn.javadog.sd.mybatis.annotations.ResultType;
+import cn.javadog.sd.mybatis.annotations.Results;
+import cn.javadog.sd.mybatis.annotations.Select;
+import cn.javadog.sd.mybatis.annotations.SelectKey;
+import cn.javadog.sd.mybatis.annotations.SelectProvider;
+import cn.javadog.sd.mybatis.annotations.TypeDiscriminator;
+import cn.javadog.sd.mybatis.annotations.Update;
+import cn.javadog.sd.mybatis.annotations.UpdateProvider;
+import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
+import cn.javadog.sd.mybatis.builder.xml.XMLMapperBuilder;
+import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.executor.keygen.Jdbc3KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.NoKeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.SelectKeyGenerator;
+import cn.javadog.sd.mybatis.mapping.Discriminator;
+import cn.javadog.sd.mybatis.mapping.FetchType;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ResultFlag;
+import cn.javadog.sd.mybatis.mapping.ResultMapping;
+import cn.javadog.sd.mybatis.mapping.ResultSetType;
+import cn.javadog.sd.mybatis.mapping.SqlCommandType;
+import cn.javadog.sd.mybatis.mapping.SqlSource;
+import cn.javadog.sd.mybatis.mapping.StatementType;
+import cn.javadog.sd.mybatis.scripting.LanguageDriver;
 import cn.javadog.sd.mybatis.session.Configuration;
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.CacheNamespaceRef;
-import org.apache.ibatis.annotations.Case;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.DeleteProvider;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Lang;
-import org.apache.ibatis.annotations.MapKey;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Options.FlushCachePolicy;
-import org.apache.ibatis.annotations.Property;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.ResultMap;
-import org.apache.ibatis.annotations.ResultType;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectKey;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.TypeDiscriminator;
-import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.binding.MapperMethod.ParamMap;
-import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.IncompleteElementException;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.builder.xml.XMLMapperBuilder;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.keygen.NoKeyGenerator;
-import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.FetchType;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.reflection.TypeParameterResolver;
-import org.apache.ibatis.scripting.LanguageDriver;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.UnknownTypeHandler;
+import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.session.RowBounds;
+import cn.javadog.sd.mybatis.support.exceptions.BindingException;
+import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.IncompleteElementException;
+import cn.javadog.sd.mybatis.support.io.Resources;
+import cn.javadog.sd.mybatis.support.parsing.PropertyParser;
+import cn.javadog.sd.mybatis.support.reflection.resolver.TypeParameterResolver;
+import cn.javadog.sd.mybatis.support.type.JdbcType;
+import cn.javadog.sd.mybatis.support.type.ParamMap;
+import cn.javadog.sd.mybatis.support.type.TypeHandler;
+import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author Clinton Begin
- * @author Kazuki Shimizu
+ * @author: 余勇
+ * @date: 2019-12-12 22:37
  *
- * 加载注解配置
  * Mapper 注解构造器，负责解析 Mapper 接口上的注解
  */
 public class MapperAnnotationBuilder {
@@ -110,7 +93,14 @@ public class MapperAnnotationBuilder {
    */
   private static final Set<Class<? extends Annotation>> SQL_PROVIDER_ANNOTATION_TYPES = new HashSet<>();
 
+  /**
+   * 全局配置
+   */
   private final Configuration configuration;
+
+  /**
+   * 构建助手
+   */
   private final MapperBuilderAssistant assistant;
 
   /**
@@ -118,6 +108,9 @@ public class MapperAnnotationBuilder {
    */
   private final Class<?> type;
 
+  /**
+   * 类加载的时候就初始化上面的值。
+   */
   static {
     SQL_ANNOTATION_TYPES.add(Select.class);
     SQL_ANNOTATION_TYPES.add(Insert.class);
@@ -130,9 +123,13 @@ public class MapperAnnotationBuilder {
     SQL_PROVIDER_ANNOTATION_TYPES.add(DeleteProvider.class);
   }
 
+  /**
+   * 构造函数
+   */
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
-    // 创建 MapperBuilderAssistant 对象
+    // 将全类名改成路径的形式，note 我们debug的时候应该经常看到(best guess)
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
+    // 创建 MapperBuilderAssistant 对象
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
@@ -142,30 +139,30 @@ public class MapperAnnotationBuilder {
    * 解析注解
    */
   public void parse() {
-    // <1> 判断当前 Mapper 接口是否应加载过。
+    // 判断当前 Mapper 接口是否应加载过。
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
-      // <2> 加载对应的 XML Mapper
+      // 加载对应的 XML Mapper
       loadXmlResource();
-      // <3> 标记该 Mapper 接口已经加载过
+      // 标记该 Mapper 接口已经加载过，note 这是为了避免接口重复加载
       configuration.addLoadedResource(resource);
-      // <4> 设置 namespace 属性
+      // 设置 namespace 属性
       assistant.setCurrentNamespace(type.getName());
-      // <5> 解析 @CacheNamespace 注解
+      // 解析 @CacheNamespace 注解
       parseCache();
-      // <6> 解析 @CacheNamespaceRef 注解
+      // 解析 @CacheNamespaceRef 注解
       parseCacheRef();
-      // <7> 遍历每个方法，解析其上的注解
+      // 遍历每个方法，解析其上的注解
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
-          // issue #237
+          // 不处理桥接的方法
           if (!method.isBridge()) {
-            // <7.1> 执行解析
+            // 执行解析
             parseStatement(method);
           }
         } catch (IncompleteElementException e) {
-          // <7.2> 解析失败，添加到 configuration 中
+          // 解析失败，添加到 configuration 中
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
       }
@@ -195,38 +192,41 @@ public class MapperAnnotationBuilder {
    * 加载对应的 XML Mapper
    */
   private void loadXmlResource() {
-    // Spring may not know the real resource name so we check a flag
-    // to prevent loading again a resource twice
-    // this flag is set at XMLMapperBuilder#bindMapperForNamespace
-    // <1> 判断 Mapper XML 是否已经加载过，如果加载过，就不加载了。
+    // 判断 Mapper XML 是否已经加载过，如果加载过，就不加载了。
     // 此处，是为了避免和 XMLMapperBuilder#parse() 方法冲突，重复解析
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
-      // <2> 获得 InputStream 对象
+      // 获得 InputStream 对象，note 这里可以看出名字必须一致
       String xmlResource = type.getName().replace('.', '/') + ".xml";
       InputStream inputStream = null;
       try {
+        // 从classpath下拿的，TODO 印象里是从当前路径下拿的，没有给别的口子，忘了哪里看到的
         inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
       } catch (IOException e) {
-        // ignore, resource is not required
+        // 资源没找到就不管，并不去报错
       }
-      // <2> 创建 XMLMapperBuilder 对象，执行解析
+      // 创建 XMLMapperBuilder 对象，执行解析
       if (inputStream != null) {
+        // 也就是说，实际也是交给 XMLMapperBuilder 去解析
         XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
         xmlParser.parse();
       }
     }
   }
 
+  /**
+   * 解析 @CacheNamespace 注解
+   */
   private void parseCache() {
-    // <1> 获得类上的 @CacheNamespace 注解
+    // 获得类上的 @CacheNamespace 注解
     CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
-      // <2> 获得各种属性
+      // 获得 size 属性，这只在某些自定义的缓存装饰类，其需要size属性才会用到
       Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
+      // 注意，为0时，取null，即代表不会去包装定时清空的缓存装饰器，也就是不回去定时清空
       Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
-      // <3> 获得 Properties 属性
+      // 获得 Properties 属性
       Properties props = convertToProperties(cacheDomain.properties());
-      // <4> 创建 Cache 对象
+      // 创建 Cache 对象，可以看到其他属性的获取直接在方法调用上面，没有像上面单独拿出来一行，因为上面两个参数涉及到默认值的处理
       assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), props);
     }
   }
@@ -247,26 +247,27 @@ public class MapperAnnotationBuilder {
   }
 
   /**
-   * #parseCacheRef() 方法，解析 @CacheNamespaceRef 注解
+   * 解析 @CacheNamespaceRef 注解
    */
   private void parseCacheRef() {
     // 获得类上的 @CacheNamespaceRef 注解
     CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);
     if (cacheDomainRef != null) {
-      // <2> 获得各种属性
+      // 命名空间类，也就是mapper接口，而不是缓存类
       Class<?> refType = cacheDomainRef.value();
+      // 命名空间
       String refName = cacheDomainRef.name();
-      // <2> 校验，如果 refType 和 refName 都为空，则抛出 BuilderException 异常
+      // 校验，如果 refType 和 refName 都为空，则抛出 BuilderException 异常
       if (refType == void.class && refName.isEmpty()) {
         throw new BuilderException("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
       }
-      // <2> 校验，如果 refType 和 refName 都不为空，则抛出 BuilderException 异常
+      // 校验，如果 refType 和 refName 都不为空，则抛出 BuilderException 异常，呵呵
       if (refType != void.class && !refName.isEmpty()) {
         throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
-      // <2> 获得最终的 namespace 属性
+      // 获得最终的 namespace 属性。TODO 命名空间不应该是全类名吗
       String namespace = (refType != void.class) ? refType.getName() : refName;
-      // <3> 获得指向的 Cache 对象
+      // 获得指向的 Cache 对象
       assistant.useCacheRef(namespace);
     }
   }
@@ -385,11 +386,11 @@ public class MapperAnnotationBuilder {
    * 解析方法上的 SQL 操作相关的注解
    */
   void parseStatement(Method method) {
-    // <1> 获得参数的类型
+    // 获得参数的类型
     Class<?> parameterTypeClass = getParameterType(method);
-    // <2> 获得 LanguageDriver 对象
+    // 获得 LanguageDriver 对象
     LanguageDriver languageDriver = getLanguageDriver(method);
-    // <3> 获得 SqlSource 对象
+    // 获得 SqlSource 对象
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       // <4> 获得各种属性
@@ -500,7 +501,6 @@ public class MapperAnnotationBuilder {
     if (lang != null) {
       langClass = lang.value();
     }
-    // 获得 LanguageDriver 对象
     // 如果 langClass 为空，即无 @Lang 注解，则会使用默认 LanguageDriver 类型
     return assistant.getLanguageDriver(langClass);
   }
@@ -510,17 +510,16 @@ public class MapperAnnotationBuilder {
    */
   private Class<?> getParameterType(Method method) {
     Class<?> parameterType = null;
-    // 遍历参数类型数组
-    // 排除 RowBounds 和 ResultHandler 两种参数
-    // 1. 如果是多参数，则是 ParamMap 类型
-    // 2. 如果是单参数，则是该参数的类型
     Class<?>[] parameterTypes = method.getParameterTypes();
+    // 遍历参数类型数组
     for (Class<?> currentParameterType : parameterTypes) {
+      //// 排除 RowBounds 和 ResultHandler 两种参数
       if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
         if (parameterType == null) {
+          // 如果是多参数，则是 ParamMap 类型
           parameterType = currentParameterType;
         } else {
-          // issue #135
+          // 如果是单参数，则是该参数的类型
           parameterType = ParamMap.class;
         }
       }
@@ -617,20 +616,21 @@ public class MapperAnnotationBuilder {
    */
   private SqlSource getSqlSourceFromAnnotations(Method method, Class<?> parameterType, LanguageDriver languageDriver) {
     try {
-      // <1.1> <1.2> 获得方法上的 SQL_ANNOTATION_TYPES 和 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型
+      // 获得方法上的 SQL_ANNOTATION_TYPES 对应的类型
       Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
+      // 获得方法上的 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型，优先级低于 sqlAnnotationType
       Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
-      // <2> 如果 SQL_ANNOTATION_TYPES 对应的类型非空
+      // 如果 SQL_ANNOTATION_TYPES 对应的类型非空
       if (sqlAnnotationType != null) {
-        // 如果 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型非空，则抛出 BindingException 异常，因为冲突了。
+        // 如果 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型非空，则抛出 BindingException 异常，因为冲突了，不允许加两种类型的注解。
         if (sqlProviderAnnotationType != null) {
           throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
         }
-        // <2.1> 获得 SQL_ANNOTATION_TYPES 对应的注解
+        // 获得 SQL_ANNOTATION_TYPES 对应的注解
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
-        // <2.2> 获得 value 属性
+        // 获得 value 属性，也就是SQL语句
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
-        // <2.3> 创建 SqlSource 对象
+        // 创建 SqlSource 对象
         return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
       // <3> 如果 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型非空
       } else if (sqlProviderAnnotationType != null) {
@@ -696,7 +696,6 @@ public class MapperAnnotationBuilder {
    * 获得符合指定类型的注解类型
    *
    * @param method 方法
-   * @param types 指定类型
    * @return 查到的注解类型
    */
   private Class<? extends Annotation> getSqlAnnotationType(Method method) {
@@ -710,6 +709,9 @@ public class MapperAnnotationBuilder {
     return chooseAnnotationType(method, SQL_PROVIDER_ANNOTATION_TYPES);
   }
 
+  /**
+   * 选择方法上的注解类型，要求 types 里面有才行
+   */
   private Class<? extends Annotation> chooseAnnotationType(Method method, Set<Class<? extends Annotation>> types) {
     for (Class<? extends Annotation> type : types) {
       Annotation annotation = method.getAnnotation(type);

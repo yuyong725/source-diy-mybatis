@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.javadog.sd.mybatis.session.Configuration;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
-import org.apache.ibatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
  * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.

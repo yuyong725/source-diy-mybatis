@@ -18,6 +18,8 @@ package cn.javadog.sd.mybatis.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.javadog.sd.mybatis.support.exceptions.ScriptingException;
+
 /**
  * @author Frank D. Martinez [mnesarco]
  * LanguageDriver 注册表

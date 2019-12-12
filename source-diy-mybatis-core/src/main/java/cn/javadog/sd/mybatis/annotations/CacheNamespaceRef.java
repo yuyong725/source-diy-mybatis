@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.annotations;
 
 import java.lang.annotation.Documented;
@@ -21,15 +6,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
+import cn.javadog.sd.mybatis.builder.annotation.MapperAnnotationBuilder;
 
 /**
- * The annotation that reference a cache.
- * <p>
- * If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
- * </p>
- * @author Clinton Begin
- * @author Kazuki Shimizu
+ * @author: 余勇
+ * @date: 2019-12-12 23:12
  *
  * 指向指定命名空间的注解
  * 对应 XML 标签为 <cache-ref />
@@ -38,15 +19,15 @@ import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespaceRef {
+
   /**
+   * 命名空间(也就是mapper接口)的全类名，这个命名空间关联着一个缓存类
    * 见 {@link MapperAnnotationBuilder #parseCacheRef()} 方法
-   * A namespace type to reference a cache (the namespace name become a FQCN of specified type)
    */
   Class<?> value() default void.class;
 
   /**
    * 指向的命名空间
-   * A namespace name to reference a cache
    * @since 3.4.2
    */
   String name() default "";

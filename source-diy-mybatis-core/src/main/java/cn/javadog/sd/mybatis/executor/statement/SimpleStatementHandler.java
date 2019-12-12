@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor.statement;
 
 import java.sql.Connection;
@@ -21,16 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
+import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.executor.keygen.Jdbc3KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
+import cn.javadog.sd.mybatis.executor.keygen.SelectKeyGenerator;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ResultSetType;
+import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.session.RowBounds;
+
 
 /**
  * @author Clinton Begin

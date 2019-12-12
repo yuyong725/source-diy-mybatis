@@ -24,18 +24,31 @@ public class StaticSqlSource implements SqlSource {
    * ParameterMapping 集合
    */
   private final List<ParameterMapping> parameterMappings;
+
+  /**
+   * 全局配置
+   */
   private final Configuration configuration;
 
+  /**
+   * 构造函数
+   */
   public StaticSqlSource(Configuration configuration, String sql) {
     this(configuration, sql, null);
   }
 
+  /**
+   * 构造函数
+   */
   public StaticSqlSource(Configuration configuration, String sql, List<ParameterMapping> parameterMappings) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.configuration = configuration;
   }
 
+  /**
+   * 获取BoundSql
+   */
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
     // 创建 BoundSql 对象

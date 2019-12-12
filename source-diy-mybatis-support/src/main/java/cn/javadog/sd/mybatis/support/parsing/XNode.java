@@ -80,7 +80,6 @@ public class XNode {
  	 * 	<height units="ft">5.8</height>
 	 * </employee>
 	 * 首先获取 XNode node = parser.evalNode("/employee/height")，再调用此方法，返回的额值为：employee[${id_var}]_height
-	 * todo 作用
 	 */
 	public String getValueBasedIdentifier() {
 		StringBuilder builder = new StringBuilder();
