@@ -1,44 +1,30 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-13 16:19
  *
  * 结果上下文接口
  */
 public interface ResultContext<T> {
 
   /**
-   * @return 当前结果对象
+   * 获取 当前结果对象
    */
   T getResultObject();
 
   /**
-   * @return 总的结果对象的数量
+   * 获取 总的结果对象的数量
    */
   int getResultCount();
 
   /**
-   * @return 是否暂停
+   *  是否已经停止对结果的解析
    */
   boolean isStopped();
 
   /**
-   * 暂停
+   * 停止结果解析
    */
   void stop();
 

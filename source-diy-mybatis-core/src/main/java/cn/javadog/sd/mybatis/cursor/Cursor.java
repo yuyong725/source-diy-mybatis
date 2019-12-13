@@ -1,52 +1,36 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.cursor;
 
 import java.io.Closeable;
 
 /**
- * Cursor contract to handle fetching items lazily using an Iterator.
- * Cursors are a perfect fit to handle millions of items queries that would not normally fits in memory.
- * Cursor SQL queries must be ordered (resultOrdered="true") using the id columns of the resultMap.
+ * @author: 余勇
+ * @date: 2019-12-13 15:27
  *
- * @author Guillaume Darmont / guillaume@dropinocean.com
+ * 继承 Closeable、Iterable 接口，游标接口。
+ * 这个类用于处理懒加载时，获取关联的列表，对应 @many或<association />。
+ * 我们知道，对于N+1查询，即先查出n条结果(1次查询)，再对每一条结果去查关联的列表(n次查询)，性能会非常糟糕，这就是懒加载和Cursor的意义。这个方案
+ * 完美的避免了海量的查询。
+ * 其进行关联SQL查询，就是上面的n，是根据前面结果的resultMap的ID列，遍历的时候按此顺序，再去进行后面的关联查询操作
  *
- * 继承 Closeable、Iterable 接口，游标接口
+ * resultOrdered：这个设置仅针对嵌套结果 select 语句适用；
+ * 如果为 true，就是假设包含了嵌套结果集或是分组，这样的话当返回一个主结果行的时候，就不会发生有对前面结果集的引用的情况。
+ * 这就使得在获取嵌套的结果集的时候不至于导致内存不够用。默认值：false。
  */
 public interface Cursor<T> extends Closeable, Iterable<T> {
 
     /**
-     * 是否处于打开状态
-     *
-     * @return true if the cursor has started to fetch items from database.
+     * 是否处于打开状态，也就是是否开始遍历进行子查询
      */
     boolean isOpen();
 
     /**
-     * 是否全部消费完成
-     *
-     * @return true if the cursor is fully consumed and has returned all elements matching the query.
+     * 是否全部查询完成
      */
     boolean isConsumed();
 
     /**
-     * 获得当前索引
-     *
-     * Get the current item index. The first item has the index 0.
-     * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
+     * 获得当前索引，从0开始
+     * 如果已经开始遍历子查询，但第一条结果都还没有返回，那么此时返回-1。
      */
     int getCurrentIndex();
 

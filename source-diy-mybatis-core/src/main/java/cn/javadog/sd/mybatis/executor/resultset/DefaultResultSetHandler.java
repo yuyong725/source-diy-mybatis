@@ -37,6 +37,7 @@ import cn.javadog.sd.mybatis.session.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.cache.CacheKey;
 import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
+import cn.javadog.sd.mybatis.support.exceptions.ResultMapException;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaClass;
@@ -850,7 +851,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
    */
   private Constructor<?> findDefaultConstructor(final Constructor<?>[] constructors) {
     // 构造方法只有一个，直接返回
-    if (constructors.length == 1) return constructors[0];
+    if (constructors.length == 1) {
+      return constructors[0];
+    }
     // 获得使用 @AutomapConstructor 注解的构造方法
     for (final Constructor<?> constructor : constructors) {
       if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
@@ -866,7 +869,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
     final Class<?>[] parameterTypes = constructor.getParameterTypes();
     // 结果集的返回字段的数量，要和构造方法的参数数量，一致
-    if (parameterTypes.length != jdbcTypes.size()) return false;
+    if (parameterTypes.length != jdbcTypes.size()) {
+      return false;
+    }
     // 每个构造方法的参数，和对应的返回字段，都要有对应的 TypeHandler 对象
     for (int i = 0; i < parameterTypes.length; i++) {
       if (!typeHandlerRegistry.hasTypeHandler(parameterTypes[i], jdbcTypes.get(i))) {

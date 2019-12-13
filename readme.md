@@ -90,6 +90,8 @@
     * builder模块还有一点点就完成了，撑不下去了，明天再搞
  * 12.13
     * 完成builder模块，啃完了也清晰很多
+    * 完成cursor模块，就俩类
+    * 完成mapping模块，奥力给
 
 #### 各个模块的删减部分
 > 都是与主功能无关，且我不懂的地方，比如xml文件的DTD验证，反射的SecurityManager安全管理
@@ -122,3 +124,6 @@
 ##### 文件加载模块
 * 移除`ExternalResources`，源码里这个类已废弃
 * 移除`JBoss6VFS`，不用JBoss，看起来也累
+
+##### mapping模块
+* 移除`DefaultDatabaseIdProvider`，本就已废弃

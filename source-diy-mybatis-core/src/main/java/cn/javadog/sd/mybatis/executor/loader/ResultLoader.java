@@ -1,37 +1,23 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor.loader;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.executor.ResultExtractor;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionFactory;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.executor.ResultExtractor;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.Environment;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.ExecutorType;
+import cn.javadog.sd.mybatis.session.RowBounds;
+import cn.javadog.sd.mybatis.support.cache.CacheKey;
+import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
+import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
+import cn.javadog.sd.mybatis.support.transaction.Transaction;
+import cn.javadog.sd.mybatis.support.transaction.TransactionFactory;
+
 
 /**
  * @author Clinton Begin

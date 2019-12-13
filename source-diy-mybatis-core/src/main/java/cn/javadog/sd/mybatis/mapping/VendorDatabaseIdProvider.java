@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.mapping;
 
 import javax.sql.DataSource;
@@ -24,8 +9,6 @@ import java.util.Properties;
 
 import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 
 /**
  * Vendor DatabaseId provider
@@ -38,14 +21,31 @@ import org.apache.ibatis.logging.LogFactory;
  * 
  * @author Eduardo Macarron
  *
- * 实现 DatabaseIdProvider 接口，供应商数据库标识提供器实现类
+ *
+ */
+/**
+ * @author: 余勇
+ * @date: 2019-12-13 20:14
+ *
+ * 实现 DatabaseIdProvider 接口，供应商数据库标识提供器实现类。
+ * 主要作用就是返回数据库的标示，当然，如果你提供类一个别名映射，它会拿厂商返回的标示去别名映射里面找别名。
+ * 如 厂商返回的是"Microsoft SQL Server", 而命名映射里有那个key，对应的value是"ms"，那么就会返回 "ms"
  */
 public class VendorDatabaseIdProvider implements DatabaseIdProvider {
-  
+
+  /**
+   * 日志
+   */
   private static final Log log = LogFactory.getLog(VendorDatabaseIdProvider.class);
 
+  /**
+   * 别名properties
+   */
   private Properties properties;
 
+  /**
+   * 获取指定数据库的标示
+   */
   @Override
   public String getDatabaseId(DataSource dataSource) {
     if (dataSource == null) {
@@ -60,13 +60,19 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
     return null;
   }
 
+  /**
+   * 设置 properties
+   */
   @Override
   public void setProperties(Properties p) {
     this.properties = p;
   }
 
+  /**
+   * 获取指定数据库的名称，Properties中有别名就会替换
+   */
   private String getDatabaseName(DataSource dataSource) throws SQLException {
-    // <1> 获得数据库产品名
+    // 获得数据库产品名
     String productName = getDatabaseProductName(dataSource);
     if (this.properties != null) {
       for (Map.Entry<Object, Object> property : properties.entrySet()) {
@@ -75,13 +81,16 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
           return (String) property.getValue();
         }
       }
-      // no match, return null
+      // 有 properties，但没匹配到，就返回null
       return null;
     }
-    // <3> 不存在 properties ，则直接返回
+    // 不存在 properties ，则直接返回
     return productName;
   }
 
+  /**
+   * 获得数据库产品名
+   */
   private String getDatabaseProductName(DataSource dataSource) throws SQLException {
     Connection con = null;
     try {
@@ -95,7 +104,7 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
         try {
           con.close();
         } catch (SQLException e) {
-          // ignored
+          // 无视
         }
       }
     }

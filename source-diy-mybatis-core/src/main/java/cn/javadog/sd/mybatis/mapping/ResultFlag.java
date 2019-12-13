@@ -8,6 +8,7 @@ package cn.javadog.sd.mybatis.mapping;
  * 这两个标签与 <result /> 标签效果一致。
  */
 public enum ResultFlag {
+
   /**
    * <id /> 标签
    */

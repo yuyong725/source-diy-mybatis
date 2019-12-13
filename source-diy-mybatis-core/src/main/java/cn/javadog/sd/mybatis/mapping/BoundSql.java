@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.mapping;
 
 import java.util.HashMap;
@@ -24,16 +9,15 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
- * The SQL may have SQL placeholders "?" and an list (ordered) of an parameter mappings 
- * with the additional information for each parameter (at least the property name of the input object to read 
- * the value from).
- * <p>
- * Can also have additional parameters that are created by the dynamic language (for loops, bind...).
+ * @author: 余勇
+ * @date: 2019-12-13 18:02
  *
- * @author Clinton Begin
+ * 封装所有信息的SQL
  *
- * 一次可执行的 SQL 封装
+ * 通过 {@link SqlSource} 处理掉所有动态内容(替换掉 ${})后的完整 SQL 语句，
+ * 这个 SQL 依然可能有 '?' 占位符号，与之对应的自然还有 参数映射关系(参数名，参数值怎么取)。
+ * 当然也有一些全局的参数，用于替换占位符。存在于 {@link #additionalParameters}
+ *
  */
 public class BoundSql {
 
@@ -41,52 +25,81 @@ public class BoundSql {
    * SQL 语句
    */
   private final String sql;
+
   /**
-   * ParameterMapping 数组
+   * ParameterMapping 数组，记录parameterObject的key值与 调用方法的参数名的对应关系
    */
   private final List<ParameterMapping> parameterMappings;
+
   /**
    * 参数对象
    */
   private final Object parameterObject;
+
   /**
    * 附加的参数集合
    */
   private final Map<String, Object> additionalParameters;
+
   /**
    * {@link #additionalParameters} 的 MetaObject 对象
    */
   private final MetaObject metaParameters;
 
+  /**
+   * 构造函数
+   */
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
+    // 默认是空
     this.additionalParameters = new HashMap<>();
+    // 初始化
     this.metaParameters = configuration.newMetaObject(additionalParameters);
   }
 
+  /**
+   * 获取 SQL 语句，带占位符的
+   */
   public String getSql() {
     return sql;
   }
 
+  /**
+   * 获取ParameterMapping 数组
+   */
   public List<ParameterMapping> getParameterMappings() {
     return parameterMappings;
   }
 
+  /**
+   * 获取参数对象
+   */
   public Object getParameterObject() {
     return parameterObject;
   }
 
+  /**
+   * 补充参数里，是否包含 指定字段
+   */
   public boolean hasAdditionalParameter(String name) {
+    // 解析 name，因为这个name一般就是 #{name} ，可能名称符合特定的语法，如'list[1].name' ，这里解析后就是list
     String paramName = new PropertyTokenizer(name).getName();
     return additionalParameters.containsKey(paramName);
   }
 
+  /**
+   * 添加补充参数。使用元对象
+   * TODO 为鸡儿要使用元对象，还涉及到反射，直接 put 不好吗
+   */
   public void setAdditionalParameter(String name, Object value) {
     metaParameters.setValue(name, value);
   }
 
+  /**
+   * 获取指定 名称 在 additionalParameters 中对应的值
+   */
   public Object getAdditionalParameter(String name) {
     return metaParameters.getValue(name);
   }
