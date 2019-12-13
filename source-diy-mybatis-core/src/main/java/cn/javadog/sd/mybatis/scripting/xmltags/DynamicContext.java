@@ -5,7 +5,10 @@ import java.util.Map;
 
 import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
-import com.sun.xml.internal.ws.spi.db.PropertyAccessor;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 
 /**
  * @author Clinton Begin

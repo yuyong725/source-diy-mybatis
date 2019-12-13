@@ -1,13 +1,6 @@
 package cn.javadog.sd.mybatis.session;
 
 /**
- * Specifies if and how MyBatis should automatically map columns to fields/properties.
- * 
- * @author Eduardo Macarron
- *
- *
- */
-/**
  * @author: 余勇
  * @date: 2019-12-11 13:10
  * 自动映射行为的枚举。

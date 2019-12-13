@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session.defaults;
 
 import java.io.IOException;
@@ -24,20 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.apache.ibatis.executor.BatchResult;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.result.DefaultMapResultHandler;
-import org.apache.ibatis.executor.result.DefaultResultContext;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
+import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.executor.BatchResult;
+import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.executor.result.DefaultMapResultHandler;
+import cn.javadog.sd.mybatis.executor.result.DefaultResultContext;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.session.RowBounds;
+import cn.javadog.sd.mybatis.session.SqlSession;
+import cn.javadog.sd.mybatis.support.exceptions.BindingException;
+import cn.javadog.sd.mybatis.support.exceptions.TooManyResultsException;
+import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
+
 
 /**
  *
@@ -149,7 +135,7 @@ public class DefaultSqlSession implements SqlSession {
       registerCursor(cursor);
       return cursor;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -173,7 +159,7 @@ public class DefaultSqlSession implements SqlSession {
       // <2> 执行查询
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -200,7 +186,7 @@ public class DefaultSqlSession implements SqlSession {
       // 执行查询
       executor.query(ms, wrapCollection(parameter), rowBounds, handler);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -231,7 +217,7 @@ public class DefaultSqlSession implements SqlSession {
       // <3> 执行更新操作
       return executor.update(ms, wrapCollection(parameter));
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error updating database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -260,7 +246,7 @@ public class DefaultSqlSession implements SqlSession {
       // 标记 dirty 为 false
       dirty = false;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error committing transaction.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -279,7 +265,7 @@ public class DefaultSqlSession implements SqlSession {
       // 标记 dirty 为 false
       dirty = false;
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error rolling back transaction.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -290,7 +276,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       return executor.flushStatements();
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error flushing statements.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -316,7 +302,7 @@ public class DefaultSqlSession implements SqlSession {
         try {
           cursor.close();
         } catch (IOException e) {
-          throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
+          throw ExceptionUtil.wrapException("Error closing cursor.  Cause: " + e, e);
         }
       }
       cursorList.clear();
@@ -338,7 +324,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       return executor.getTransaction().getConnection();
     } catch (SQLException e) {
-      throw ExceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error getting a new connection.  Cause: " + e, e);
     }
   }
 

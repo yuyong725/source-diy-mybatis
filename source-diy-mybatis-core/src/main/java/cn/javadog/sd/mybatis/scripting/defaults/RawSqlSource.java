@@ -6,6 +6,7 @@ import cn.javadog.sd.mybatis.builder.SqlSourceBuilder;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.scripting.xmltags.DynamicContext;
+import cn.javadog.sd.mybatis.scripting.xmltags.DynamicSqlSource;
 import cn.javadog.sd.mybatis.scripting.xmltags.SqlNode;
 import cn.javadog.sd.mybatis.session.Configuration;
 
@@ -13,7 +14,7 @@ import cn.javadog.sd.mybatis.session.Configuration;
 /**
  * 原始的 SqlSource 实现类
  *
- * Static SqlSource. It is faster than {@link DynamicSqlSource} because mappings are 
+ * Static SqlSource. It is faster than {@link DynamicSqlSource} because mappings are
  * calculated during startup.
  * 
  * @since 3.2.0

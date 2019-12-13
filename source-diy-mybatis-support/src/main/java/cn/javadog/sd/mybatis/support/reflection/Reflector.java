@@ -8,6 +8,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.ReflectPermission;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -627,6 +628,24 @@ public class Reflector {
 	 */
 	public String findPropertyName(String name) {
 		return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
+	}
+
+	/**
+	 * 判断，是否可以修改可访问性。note 这个我是不懂的，也不去深入了，其实删除了不少此方法的引用
+	 * https://benjaminwhx.com/2018/06/17/Java%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E5%99%A8-SecurityManager/
+	 *
+	 * @since 3.5.0
+	 */
+	public static boolean canControlMemberAccessible() {
+		try {
+			SecurityManager securityManager = System.getSecurityManager();
+			if (null != securityManager) {
+				securityManager.checkPermission(new ReflectPermission("suppressAccessChecks"));
+			}
+		} catch (SecurityException e) {
+			return false;
+		}
+		return true;
 	}
 }
 

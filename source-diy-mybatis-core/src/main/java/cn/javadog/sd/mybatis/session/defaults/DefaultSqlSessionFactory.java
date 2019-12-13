@@ -1,35 +1,21 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.session.defaults;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.TransactionIsolationLevel;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.executor.Executor;
+import cn.javadog.sd.mybatis.mapping.Environment;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.ExecutorType;
+import cn.javadog.sd.mybatis.session.SqlSession;
+import cn.javadog.sd.mybatis.session.SqlSessionFactory;
+import cn.javadog.sd.mybatis.support.transaction.Transaction;
+import cn.javadog.sd.mybatis.support.transaction.TransactionFactory;
+import cn.javadog.sd.mybatis.support.transaction.TransactionIsolationLevel;
+import cn.javadog.sd.mybatis.support.transaction.managed.ManagedTransactionFactory;
+import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
+
 
 /**
  * @author Clinton Begin
@@ -107,7 +93,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     } catch (Exception e) {
       // 如果发生异常，则关闭 Transaction 对象
       closeTransaction(tx); // may have fetched a connection so lets call close()
-      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }
@@ -137,7 +123,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       // 创建 DefaultSqlSession 对象
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
+      throw ExceptionUtil.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }

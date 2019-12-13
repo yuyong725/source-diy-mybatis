@@ -11,9 +11,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import cn.javadog.sd.mybatis.binding.MapperRegistry;
+import cn.javadog.sd.mybatis.builder.annotation.MethodResolver;
 import cn.javadog.sd.mybatis.builder.xml.CacheRefResolver;
 import cn.javadog.sd.mybatis.builder.xml.ResultMapResolver;
-import cn.javadog.sd.mybatis.builder.annotation.MethodResolver;
 import cn.javadog.sd.mybatis.builder.xml.XMLStatementBuilder;
 import cn.javadog.sd.mybatis.executor.BatchExecutor;
 import cn.javadog.sd.mybatis.executor.CachingExecutor;
@@ -69,8 +69,6 @@ import cn.javadog.sd.mybatis.support.type.TypeAliasRegistry;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 import cn.javadog.sd.mybatis.support.type.handler.EnumTypeHandler;
-import sun.misc.SoftCache;
-import com.sun.beans.WeakCache;
 
 /**
  * @author Clinton Begin
@@ -178,8 +176,8 @@ public class Configuration {
     typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class);
     typeAliasRegistry.registerAlias("FIFO", FifoCache.class);
     typeAliasRegistry.registerAlias("LRU", LruCache.class);
-    typeAliasRegistry.registerAlias("SOFT", SoftCache.class);
-    typeAliasRegistry.registerAlias("WEAK", WeakCache.class);
+//    typeAliasRegistry.registerAlias("SOFT", SoftCache.class);
+//    typeAliasRegistry.registerAlias("WEAK", WeakCache.class);
 
     typeAliasRegistry.registerAlias("DB_VENDOR", VendorDatabaseIdProvider.class);
 
