@@ -53,8 +53,6 @@ public class DefaultCursor<T> implements Cursor<T> {
 
   /**
    * 是否开始迭代
-   *
-   * {@link #iterator()}
    */
   private boolean iteratorRetrieved;
 
