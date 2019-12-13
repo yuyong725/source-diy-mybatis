@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 import cn.javadog.sd.mybatis.mapping.FetchType;
 
-
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-13 12:59
  *
- * 复杂类型的集合属性值的注解
+ * 关联查询，一对多的结果。功能类似 xml 中的 <collection />
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

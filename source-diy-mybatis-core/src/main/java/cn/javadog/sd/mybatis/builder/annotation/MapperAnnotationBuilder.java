@@ -80,6 +80,8 @@ import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
  * @date: 2019-12-12 22:37
  *
  * Mapper 注解构造器，负责解析 Mapper 接口上的注解
+ *
+ * note 这里涉及的标示拼接，如resultMapId，statementId, 不会加上namespace，命名空间的添加都是在 assistant 完成的
  */
 public class MapperAnnotationBuilder {
 
@@ -167,10 +169,13 @@ public class MapperAnnotationBuilder {
         }
       }
     }
-    // <8> 解析待定的方法
+    // 解析待定的方法，也就是之前解析失败的方法
     parsePendingMethods();
   }
 
+  /**
+   * 解析待定的方法，也就是之前解析失败的方法
+   */
   private void parsePendingMethods() {
     // 获得 MethodResolver 集合，并遍历进行处理
     Collection<MethodResolver> incompleteMethods = configuration.getIncompleteMethods();
@@ -182,7 +187,7 @@ public class MapperAnnotationBuilder {
           iter.next().resolve();
           iter.remove();
         } catch (IncompleteElementException e) {
-          // This method is still missing a resource
+          // 依然报错，不做处理，也不会移除 incompleteMethods。TODO 是会在启动完毕检查，还是不管
         }
       }
     }
@@ -241,6 +246,7 @@ public class MapperAnnotationBuilder {
     Properties props = new Properties();
     for (Property property : properties) {
       props.setProperty(property.name(),
+          // value是允许包含占位符的，因此先解析一下
           PropertyParser.parse(property.value(), configuration.getVariables()));
     }
     return props;
@@ -276,15 +282,15 @@ public class MapperAnnotationBuilder {
    * 解析其它注解，返回 resultMapId 属性
    */
   private String parseResultMap(Method method) {
-    // <1> 获得返回类型
+    // 获得返回类型
     Class<?> returnType = getReturnType(method);
-    // <2> 获得 @ConstructorArgs、@Results、@TypeDiscriminator 注解
+    // 获得 @ConstructorArgs、@Results、@TypeDiscriminator 注解
     ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
     Results results = method.getAnnotation(Results.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
-    // <3> 生成 resultMapId
+    // 生成 resultMapId
     String resultMapId = generateResultMapName(method);
-    // <4> 生成 ResultMap 对象
+    // 生成 ResultMap 对象
     applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
     return resultMapId;
   }
@@ -295,6 +301,7 @@ public class MapperAnnotationBuilder {
   private String generateResultMapName(Method method) {
     // 第一种情况，已经声明
     // 如果有 @Results 注解，并且有设置 id 属性，则直接返回。格式为：`${type.name}.${Results.id}` 。
+    // note 这里没有拼接命名空间，命名空间的拼接在 builderAssistant 里面完成
     Results results = method.getAnnotation(Results.class);
     if (results != null && !results.id().isEmpty()) {
       return type.getName() + "." + results.id();
@@ -317,18 +324,18 @@ public class MapperAnnotationBuilder {
    * 创建 ResultMap 对象
    */
   private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
-    // <1> 创建 ResultMapping 数组
+    // 创建 ResultMapping 数组
     List<ResultMapping> resultMappings = new ArrayList<>();
-    // <2> 将 @Arg[] 注解数组，解析成对应的 ResultMapping 对象们，并添加到 resultMappings 中。
+    // 将 @Arg[] 注解数组，解析成对应的 ResultMapping 对象们，并添加到 resultMappings 中。
     applyConstructorArgs(args, returnType, resultMappings);
-    // <3> 将 @Result[] 注解数组，解析成对应的 ResultMapping 对象们，并添加到 resultMappings 中。
+    // 将 @Result[] 注解数组，解析成对应的 ResultMapping 对象们，并添加到 resultMappings 中。
     applyResults(results, returnType, resultMappings);
-    // <4> 创建 Discriminator 对象
+    // 创建 Discriminator 对象
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-    // TODO add AutoMappingBehaviour
-    // <5> ResultMap 对象
+    // TODO add AutoMappingBehaviour。额，这是源码里面的
+    // ResultMap 对象
     assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null);
-    // <6> 创建 Discriminator 的 ResultMap 对象们
+    // 创建 Discriminator 的 ResultMap 对象们，note，很奇怪，这里并没有用到上面创建的 Discriminator 对象，似乎上面创建的只是为了上面一级的ResultMap用的
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -348,8 +355,8 @@ public class MapperAnnotationBuilder {
         applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
         // 将 @Result[] 注解数组，解析成对应的 ResultMapping 对象们，并添加到 resultMappings 中。
         applyResults(c.results(), resultType, resultMappings);
-        // TODO add AutoMappingBehaviour
-        // 创建 ResultMap 对象
+        // TODO add AutoMappingBehaviour。额，这是源码里面的
+        // 创建 ResultMap 对象，每一个 case 都是一个 ResultMap
         assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
       }
     }
@@ -373,6 +380,7 @@ public class MapperAnnotationBuilder {
       Map<String, String> discriminatorMap = new HashMap<>();
       for (Case c : cases) {
         String value = c.value();
+        // 拼接 resultMapId
         String caseResultMapId = resultMapId + "-" + value;
         discriminatorMap.put(value, caseResultMapId);
       }
@@ -383,7 +391,7 @@ public class MapperAnnotationBuilder {
   }
 
   /**
-   * 解析方法上的 SQL 操作相关的注解
+   * 解析方法上的 SQL 操作相关的注解，最终构建成 MappedStatement 对象
    */
   void parseStatement(Method method) {
     // 获得参数的类型
@@ -393,43 +401,49 @@ public class MapperAnnotationBuilder {
     // 获得 SqlSource 对象
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
-      // <4> 获得各种属性
+      // 获得各种属性
       Options options = method.getAnnotation(Options.class);
+      // 拼接 mappedStatementId
       final String mappedStatementId = type.getName() + "." + method.getName();
+      // 设置一些默认值
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = null;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+      // 查询语句就不刷新缓存，通俗点说，更新语句就会删除缓存
       boolean flushCache = !isSelect;
+      // 查询语句就使用缓存
       boolean useCache = isSelect;
 
-      // <5> 获得 KeyGenerator 对象
+      // 获得 KeyGenerator 对象
       KeyGenerator keyGenerator;
       String keyProperty = null;
       String keyColumn = null;
+      // 处理新增更新，因为 SelectKey 不一定只是处理主键，还有可能将更新时间反写
       if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
-        // first check for SelectKey annotation - that overrides everything else
-        // <5.1> 如果有 @SelectKey 注解，则进行处理
+        // 获取 @SelectKey 注解
         SelectKey selectKey = method.getAnnotation(SelectKey.class);
         if (selectKey != null) {
+          // 处理@SelectKey 注解优先级最高
           keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
           keyProperty = selectKey.keyProperty();
-        // <5.2> 如果无 @Options 注解，则根据全局配置处理
         } else if (options == null) {
+          // 如果无 @Options 注解，则根据全局配置处理
           keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
-          // <5.3> 如果有 @Options 注解，则使用该注解的配置处理
         } else {
+          // 如果有 @Options 注解，则使用该注解的配置处理
           keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
           keyProperty = options.keyProperty();
           keyColumn = options.keyColumn();
         }
       } else {
+        // DELETE的清空不用主键
         keyGenerator = NoKeyGenerator.INSTANCE;
       }
 
-      // <6> 初始化各种属性
+      // 初始化各种属性，覆盖默认值
       if (options != null) {
         if (FlushCachePolicy.TRUE.equals(options.flushCache())) {
           flushCache = true;
@@ -437,17 +451,19 @@ public class MapperAnnotationBuilder {
           flushCache = false;
         }
         useCache = options.useCache();
-        fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
+        // issue #348 TODO 看起来很累赘
+        fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null;
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
       }
 
-      // <7> 获得 resultMapId 编号字符串
+      // 获得 resultMapId 编号字符串
       String resultMapId = null;
-      // <7.1> 如果有 @ResultMap 注解，使用该注解为 resultMapId 属性
+      // 如果有 @ResultMap 注解，使用该注解为 resultMapId 属性
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       if (resultMapAnnotation != null) {
+        // 这也可能是数组
         String[] resultMaps = resultMapAnnotation.value();
         StringBuilder sb = new StringBuilder();
         for (String resultMap : resultMaps) {
@@ -457,7 +473,7 @@ public class MapperAnnotationBuilder {
           sb.append(resultMap);
         }
         resultMapId = sb.toString();
-        // <7.2> 如果无 @ResultMap 注解，解析其它注解，作为 resultMapId 属性
+        // 如果无 @ResultMap 注解，且是查询语句，那解析其它注解，作为 resultMapId 属性
       } else if (isSelect) {
         resultMapId = parseResultMap(method);
       }
@@ -474,7 +490,8 @@ public class MapperAnnotationBuilder {
           null,
           parameterTypeClass,
           resultMapId,
-          getReturnType(method),// 获得返回类型
+          // 获得返回类型
+          getReturnType(method),
           resultSetType,
           flushCache,
           useCache,
@@ -542,20 +559,20 @@ public class MapperAnnotationBuilder {
       if (returnType.isArray()) {
         returnType = returnType.getComponentType();
       }
-      // gcode issue #508
-      // 如果返回类型是 void ，则尝试使用 @ResultType 注解
+      // 如果返回类型是 void ，则尝试使用 @ResultType 注解，可以看看 issue #508
       if (void.class.equals(returnType)) {
         ResultType rt = method.getAnnotation(ResultType.class);
         if (rt != null) {
           returnType = rt.value();
         }
       }
+    }
     // 如果 Type 是 ParameterizedType ，泛型
-    } else if (resolvedReturnType instanceof ParameterizedType) {
+    else if (resolvedReturnType instanceof ParameterizedType) {
       // 获得泛型 rawType
       ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
       Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-      // 如果是 Collection 或者 Cursor 类型时
+      // 如果rawType是 Collection 或者 Cursor 类型时
       if (Collection.class.isAssignableFrom(rawType) || Cursor.class.isAssignableFrom(rawType)) {
         // 获得 <> 中实际类型
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
@@ -565,38 +582,42 @@ public class MapperAnnotationBuilder {
           // 如果是 Class ，则直接使用 Class
           if (returnTypeParameter instanceof Class<?>) {
             returnType = (Class<?>) returnTypeParameter;
+          }
           // 如果是 ParameterizedType ，则获取 <> 中实际类型
-          } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (gcode issue #443) actual type can be a also a parameterized type
+          else if (returnTypeParameter instanceof ParameterizedType) {
+            // 这个类型依然有可能是 ParameterizedType，可以看看 issue #443
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          }
           // 如果是泛型数组类型，则获得 genericComponentType 对应的类
-          } else if (returnTypeParameter instanceof GenericArrayType) {
+          else if (returnTypeParameter instanceof GenericArrayType) {
             Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
-            // (gcode issue #525) support List<byte[]>
+            // 支持 List<byte[]> ，可以看看issue #525
             returnType = Array.newInstance(componentType, 0).getClass();
           }
         }
-      // 如果有 @MapKey 注解，并且是 Map 类型
-      } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
-        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
+      }
+      // 如果有 @MapKey 注解，并且是 Map 类型，如果没有MapKey 注解的话，即使返回类型是map也不管，因为加了这个注解，map的value才是POJO类，否则只是某个字段的值。
+      // 可以看看 issue 504
+      else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
         // 获得 <> 中实际类型
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-          // 如果 actualTypeArguments 的大小为 2 ，进一步处理。
-          // 为什么是 2 ，因为 Map<K, V> 呀，有 K、V 两个泛型
+          // 如果 actualTypeArguments 的大小为 2 ，进一步处理。为什么是 2 ，因为 Map<K, V> 呀，有 K、V 两个泛型
           if (actualTypeArguments != null && actualTypeArguments.length == 2) {
             // 处理 V 泛型
             Type returnTypeParameter = actualTypeArguments[1];
             // 如果 V 泛型为 Class ，则直接使用 Class
             if (returnTypeParameter instanceof Class<?>) {
               returnType = (Class<?>) returnTypeParameter;
+            }
             // 如果 V 泛型为 ParameterizedType ，则获取 <> 中实际类型
-            } else if (returnTypeParameter instanceof ParameterizedType) {
-              // (gcode issue 443) actual type can be a also a parameterized type
+            else if (returnTypeParameter instanceof ParameterizedType) {
+              // 这里拿到的rawType依然可能是个ParameterizedType，可以看看issue 443
               returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
             }
           }
+      }
       // 如果是 Optional 类型时
-      } else if (Optional.class.equals(rawType)) {
+      else if (Optional.class.equals(rawType)) {
         // 获得 <> 中实际类型
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         // 因为是 Optional<T> 类型，所以 actualTypeArguments 数组大小是一
@@ -628,18 +649,18 @@ public class MapperAnnotationBuilder {
         }
         // 获得 SQL_ANNOTATION_TYPES 对应的注解
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
-        // 获得 value 属性，也就是SQL语句
+        // 获得 value 属性，也就是SQL语句，note 是数组，也就是说支持多条sql
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
         // 创建 SqlSource 对象
         return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
       // <3> 如果 SQL_PROVIDER_ANNOTATION_TYPES 对应的类型非空
       } else if (sqlProviderAnnotationType != null) {
-        // <3.1> 获得 SQL_PROVIDER_ANNOTATION_TYPES 对应的注解
+        // 获得 SQL_PROVIDER_ANNOTATION_TYPES 对应的注解
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        // <3.2> 创建 ProviderSqlSource 对象
+        // 创建 ProviderSqlSource 对象
         return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
       }
-      // <4> 返回空
+      // 返回空
       return null;
     } catch (Exception e) {
       throw new BuilderException("Could not find value method on SQL annotation.  Cause: " + e, e);
@@ -650,13 +671,14 @@ public class MapperAnnotationBuilder {
    * 创建 SqlSource 对象
    */
   private SqlSource buildSqlSourceFromStrings(String[] strings, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
-    // <1> 拼接 SQL
+    // 拼接 SQL
     final StringBuilder sql = new StringBuilder();
     for (String fragment : strings) {
       sql.append(fragment);
+      // 这里只以空格分割，也就是如果有多条SQL的话， fragment 本身必须以 ';' 结尾
       sql.append(" ");
     }
-    // <2> 创建 SqlSource 对象
+    // 创建 SqlSource 对象，实现逻辑 在 script 模块
     return languageDriver.createSqlSource(configuration, sql.toString().trim(), parameterTypeClass);
   }
 
@@ -676,7 +698,7 @@ public class MapperAnnotationBuilder {
         return SqlCommandType.UNKNOWN;
       }
 
-      // 转换成对应的枚举
+      // 转换成对应的枚举，即使是Provider，转成对应的注解
       if (type == SelectProvider.class) {
         type = Select.class;
       } else if (type == InsertProvider.class) {
@@ -777,6 +799,7 @@ public class MapperAnnotationBuilder {
 
   /**
    * 判断是否懒加载
+   * 注解上有 @one，@many 才会去判断
    */
   private boolean isLazy(Result result) {
     // 判断是否开启懒加载
@@ -839,20 +862,29 @@ public class MapperAnnotationBuilder {
     }
   }
 
+  /**
+   * 如果字符串是空字符串或者为空，返回null
+   */
   private String nullOrEmpty(String value) {
     return value == null || value.trim().length() == 0 ? null : value;
   }
 
+  /**
+   * 判断 @Results 的 Result[] 属性是否设置，没设置的话，这里设置默认值为空数组。TODO 默认值不就是空数组吗？为毛这里还再去重新设置
+   */
   private Result[] resultsIf(Results results) {
     return results == null ? new Result[0] : results.value();
   }
 
+  /**
+   * 判断 @ConstructorArgs 的 Arg[] 属性是否设置，没设置的话，这里设置默认值为空数组。TODO 默认值不就是空数组吗？为毛这里还再去重新设置
+   */
   private Arg[] argsIf(ConstructorArgs args) {
     return args == null ? new Arg[0] : args.value();
   }
 
   /**
-   * 处理 @@SelectKey 注解，生成对应的 SelectKey 对象
+   * 处理 @SelectKey 注解，生成对应的 SelectKey 对象
    */
   private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId, Class<?> parameterTypeClass, LanguageDriver languageDriver) {
     // 获得各种属性和对应的类
@@ -863,7 +895,6 @@ public class MapperAnnotationBuilder {
     String keyColumn = selectKeyAnnotation.keyColumn();
     boolean executeBefore = selectKeyAnnotation.before();
 
-    // defaults
     // 创建 MappedStatement 需要用到的默认值
     boolean useCache = false;
     KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;

@@ -3,11 +3,10 @@ package cn.javadog.sd.mybatis.builder.annotation;
 import java.lang.reflect.Method;
 
 /**
- * ProviderSqlSource 的上下文
- * The context object for sql provider method.
+ * @author: 余勇
+ * @date: 2019-12-13 13:43
  *
- * @author Kazuki Shimizu
- * @since 3.4.5
+ * ProviderSqlSource 的上下文
  */
 public final class ProviderContext {
 
@@ -15,16 +14,14 @@ public final class ProviderContext {
    * Mapper 接口
    */
   private final Class<?> mapperType;
+
   /**
    * Mapper 的方法
    */
   private final Method mapperMethod;
 
   /**
-   * Constructor.
-   *
-   * @param mapperType A mapper interface type that specified provider
-   * @param mapperMethod A mapper method that specified provider
+   * 构造函数
    */
   ProviderContext(Class<?> mapperType, Method mapperMethod) {
     this.mapperType = mapperType;
@@ -32,18 +29,14 @@ public final class ProviderContext {
   }
 
   /**
-   * Get a mapper interface type that specified provider.
-   *
-   * @return A mapper interface type that specified provider
+   * 获取Provider所在的接口
    */
   public Class<?> getMapperType() {
     return mapperType;
   }
 
   /**
-   * Get a mapper method that specified provider.
-   *
-   * @return A mapper method that specified provider
+   * 获取Provider所加的方法上面
    */
   public Method getMapperMethod() {
     return mapperMethod;

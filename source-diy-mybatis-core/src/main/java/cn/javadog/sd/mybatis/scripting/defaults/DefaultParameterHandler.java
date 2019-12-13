@@ -19,18 +19,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeException;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
+import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
+import cn.javadog.sd.mybatis.mapping.ParameterMode;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.exceptions.TypeException;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import cn.javadog.sd.mybatis.support.type.JdbcType;
+import cn.javadog.sd.mybatis.support.type.TypeHandler;
+import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
+
 
 /**
  * @author Clinton Begin

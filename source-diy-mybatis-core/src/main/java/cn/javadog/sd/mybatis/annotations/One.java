@@ -12,6 +12,12 @@ import cn.javadog.sd.mybatis.mapping.FetchType;
  *
  * 复杂类型的单独属性值的注解
  */
+/**
+ * @author: 余勇
+ * @date: 2019-12-13 12:58
+ *
+ * 关联查询，一对一的结果。功能类似 xml 中的 <association />
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})

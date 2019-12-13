@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.annotations;
 
 import java.lang.annotation.Documented;
@@ -22,11 +7,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-13 11:52
+ *
+ * 新增语句 注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Insert {
+
+  /**
+   * SQL 语句数组
+   * note 支持多条语句一起插入，就像可以在 <insert /> 写多条sql一样，不过注意以';'分割
+   */
   String[] value();
 }

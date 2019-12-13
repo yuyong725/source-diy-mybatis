@@ -5,19 +5,13 @@ import java.util.HashMap;
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
 
 /**
- * Inline parameter expression parser. Supported grammar (simplified):
- * 
-
- *
- * @author Frank D. Martinez [mnesarco]
- */
-/**
  * @author: 余勇
  * @date: 2019-12-12 13:22
  *
  * 内联参数表达式解析器，支持一些简单的语法
  * 内联的含义可以看看：https://baike.baidu.com/item/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0，当然，这只是我的猜测
  * 举了一些我看不太懂的例子，TODO 遇到实际使用场景时再看，英文都没有注释
+ * note 暂时丢掉这部分的翻译，因为ParameterMap基本也废弃了，很少使用，官方文档对用法说明都删除了
  *
  * <pre>
  * inline-parameter = (propertyName | expression) oldJdbcType attributes

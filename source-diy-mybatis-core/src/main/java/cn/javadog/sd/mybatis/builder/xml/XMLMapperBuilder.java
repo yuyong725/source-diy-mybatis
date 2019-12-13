@@ -12,9 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import cn.javadog.sd.mybatis.builder.BaseBuilder;
-import cn.javadog.sd.mybatis.builder.CacheRefResolver;
 import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
-import cn.javadog.sd.mybatis.builder.ResultMapResolver;
 import cn.javadog.sd.mybatis.executor.ErrorContext;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
 import cn.javadog.sd.mybatis.mapping.ParameterMapping;

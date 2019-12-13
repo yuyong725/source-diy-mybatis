@@ -11,8 +11,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import cn.javadog.sd.mybatis.binding.MapperRegistry;
-import cn.javadog.sd.mybatis.builder.CacheRefResolver;
-import cn.javadog.sd.mybatis.builder.ResultMapResolver;
+import cn.javadog.sd.mybatis.builder.xml.CacheRefResolver;
+import cn.javadog.sd.mybatis.builder.xml.ResultMapResolver;
 import cn.javadog.sd.mybatis.builder.annotation.MethodResolver;
 import cn.javadog.sd.mybatis.builder.xml.XMLStatementBuilder;
 import cn.javadog.sd.mybatis.executor.BatchExecutor;

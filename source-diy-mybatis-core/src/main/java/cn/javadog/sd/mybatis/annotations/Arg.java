@@ -10,12 +10,19 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author Clinton Begin
+ * @author: 余勇
+ * @date: 2019-12-13 13:29
+ *
+ * @ConstructorArgs 的参数，sql查询结果的构造函数的字段。类比 xml 中的 <idArg /> 或 <arg />
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Arg {
+
+  /**
+   * 是否是ID列
+   */
   boolean id() default false;
 
   String column() default "";

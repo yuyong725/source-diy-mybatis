@@ -1,7 +1,8 @@
-package cn.javadog.sd.mybatis.builder;
+package cn.javadog.sd.mybatis.builder.xml;
 
 import java.util.List;
 
+import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
 import cn.javadog.sd.mybatis.mapping.ResultMapping;
@@ -9,7 +10,9 @@ import cn.javadog.sd.mybatis.mapping.ResultMapping;
 /**
  * @author: 余勇
  * @date: 2019-12-12 14:26
- * ResultMap 解析器
+ * ResultMap 解析器。
+ * 记录 xml 解析过程中出现失败的 resultMap，最后统一再解析一遍
+ * note 原本是在 builder 包下，但其功能和 {@link cn.javadog.sd.mybatis.builder.annotation.MethodResolver}，因此移到当前包下更合适
  */
 public class ResultMapResolver {
 

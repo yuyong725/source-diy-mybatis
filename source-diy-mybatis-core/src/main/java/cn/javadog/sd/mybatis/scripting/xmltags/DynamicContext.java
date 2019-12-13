@@ -1,29 +1,11 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.scripting.xmltags;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import ognl.OgnlContext;
-import ognl.OgnlException;
-import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.session.Configuration;
+import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
+import com.sun.xml.internal.ws.spi.db.PropertyAccessor;
 
 /**
  * @author Clinton Begin
@@ -56,7 +38,7 @@ public class DynamicContext {
   private final StringBuilder sqlBuilder = new StringBuilder();
 
   /**
-   * 唯一编号。在 {@link org.apache.ibatis.scripting.xmltags.XMLScriptBuilder.ForEachHandler} 使用
+   * 唯一编号。在 {@link ForEachHandler} 使用
    */
   private int uniqueNumber = 0;
 
