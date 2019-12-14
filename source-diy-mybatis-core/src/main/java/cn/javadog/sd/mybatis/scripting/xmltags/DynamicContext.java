@@ -69,7 +69,7 @@ public class DynamicContext {
     } else {
       bindings = new ContextMap(null);
     }
-    // 添加 bindings 的默认值
+    // 添加 bindings 的默认值。note 这里并没有添加 configuration.getVariables()
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
   }

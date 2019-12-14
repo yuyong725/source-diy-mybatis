@@ -1,11 +1,6 @@
 package cn.javadog.sd.mybatis.scripting.xmltags;
 
 /**
- * @author Clinton Begin
- *
- *
- */
-/**
  * @author 余勇
  * @date 2019-12-14 15:11
  *

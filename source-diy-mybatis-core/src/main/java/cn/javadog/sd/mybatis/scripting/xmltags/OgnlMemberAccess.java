@@ -8,14 +8,12 @@ import cn.javadog.sd.mybatis.support.reflection.Reflector;
 import ognl.MemberAccess;
 
 /**
+ * @author 余勇
+ * @date 2019-12-14 22:38
  *
- * 实现 ognl.MemberAccess 接口，OGNL 成员访问器实现类
- * The {@link MemberAccess} class that based on <a href=
+ * 实现 ognl.MemberAccess 接口，OGNL 成员访问器实现类。不懂不深究
+ * 基于：<a href=
  * 'https://github.com/jkuhnert/ognl/blob/OGNL_3_2_1/src/java/ognl/DefaultMemberAccess.java'>DefaultMemberAccess</a>.
- *
- * @author Kazuki Shimizu
- * @since 3.5.0
- *
  * @see <a href=
  *      'https://github.com/jkuhnert/ognl/blob/OGNL_3_2_1/src/java/ognl/DefaultMemberAccess.java'>DefaultMemberAccess</a>
  * @see <a href='https://github.com/jkuhnert/ognl/issues/47'>#47 of ognl</a>

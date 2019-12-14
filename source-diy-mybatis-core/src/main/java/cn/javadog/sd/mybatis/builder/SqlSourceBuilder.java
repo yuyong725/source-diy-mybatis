@@ -67,7 +67,7 @@ public class SqlSourceBuilder extends BaseBuilder {
     private List<ParameterMapping> parameterMappings = new ArrayList<>();
 
     /**
-     * 参数类型,对应的是 <parameterMap /> 的type属性
+     * 参数类型, 对应  #{} 中的参数的类型。如果有多个参数，那这可能是 <parameterMap /> 的type属性
      */
     private Class<?> parameterType;
 
@@ -95,13 +95,13 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     /**
      * 解析的逻辑
-     * @param content 要解析的SQL
+     * @param content 符合"#{}"的部分
      */
     @Override
     public String handleToken(String content) {
       // 构建 ParameterMapping 对象，并添加到 parameterMappings 中
       parameterMappings.add(buildParameterMapping(content));
-      // TODO 返回 ? 占位符，这并不代表将content变成占位符号，而只是#{}? 先留个坑
+      // 替换成 ？占位符返回
       return "?";
     }
 
@@ -109,7 +109,7 @@ public class SqlSourceBuilder extends BaseBuilder {
      * 构建 ParameterMapping 对象
      */
     private ParameterMapping buildParameterMapping(String content) {
-      // 解析成 Map 集合
+      // 解析成 Map 集合，针对是一个字段，可能是property ，jdbcType等类型
       Map<String, String> propertiesMap = parseParameterMapping(content);
       // 获得属性的名字和类型
       String property = propertiesMap.get("property");
@@ -118,7 +118,6 @@ public class SqlSourceBuilder extends BaseBuilder {
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         propertyType = metaParameters.getGetterType(property);
       } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
-        // TODO 很不合理，propertyType 按理只是 parameterType 的一个属性
         propertyType = parameterType;
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         // 如果jdbcType类型是 CURSOR 的话，就使用 ResultSet

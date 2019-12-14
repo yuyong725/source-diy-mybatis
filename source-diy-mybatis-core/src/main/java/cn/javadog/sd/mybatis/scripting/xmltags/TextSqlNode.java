@@ -11,7 +11,8 @@ import cn.javadog.sd.mybatis.support.type.SimpleTypeRegistry;
  * @author 余勇
  * @date 2019-12-14 15:17
  * 文本的 SqlNode 实现类。有可能含有表达式，如 if 标签的文本
- * 相比 StaticTextSqlNode 的实现来说，TextSqlNode 不确定是否为静态文本，所以提供 #isDynamic() 方法，进行判断是否为动态文本
+ * 相比 StaticTextSqlNode 的实现来说，TextSqlNode 不确定是否为静态文本，所以提供 #isDynamic() 方法，进行判断是否为动态文本。
+ *
  */
 public class TextSqlNode implements SqlNode {
 
@@ -41,7 +42,7 @@ public class TextSqlNode implements SqlNode {
   }
 
   /**
-   * 判断是否为动态文本
+   * 判断是否为动态文本，判断的依据是文本中是否包含 "${}"
    */
   public boolean isDynamic() {
     // 创建 DynamicCheckerTokenParser 对象
@@ -54,6 +55,9 @@ public class TextSqlNode implements SqlNode {
     return checker.isDynamic();
   }
 
+  /**
+   * 解析SQL，拼接到 context
+   */
   @Override
   public boolean apply(DynamicContext context) {
     // 创建 BindingTokenParser 对象，并创建 GenericTokenParser 对象
@@ -94,7 +98,7 @@ public class TextSqlNode implements SqlNode {
     }
 
     /**
-     * 替换 token
+     * 替换 '${}' token 的内容
      */
     @Override
     public String handleToken(String content) {

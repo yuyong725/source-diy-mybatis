@@ -58,9 +58,7 @@ public class ExpressionEvaluator {
         }
         // 如果是数组类型，则返回数组
         if (value.getClass().isArray()) {
-            // the array may be primitive, so Arrays.asList() may throw
-            // a ClassCastException (issue 209).  Do the work manually
-            // Curse primitives! :) (JGB)
+            // 数组可能是基础类型的，如 int，直接使用 Arrays.asList() 可能会报错
             int size = Array.getLength(value);
             List<Object> answer = new ArrayList<>();
             for (int i = 0; i < size; i++) {

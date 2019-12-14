@@ -12,7 +12,11 @@ import cn.javadog.sd.mybatis.session.Configuration;
  * @date 2019-12-11 22:41
  *
  * 静态的 SqlSource 实现类。
- * StaticSqlSource 的静态，是相对于 DynamicSqlSource 和 RawSqlSource 来说呢。实际上，StaticSqlSource.sql 属性，上面还是可能包括 ? 占位符。
+ * StaticSqlSource 的静态，是相对于 DynamicSqlSource 和 RawSqlSource 来说呢。
+ * 实际上，StaticSqlSource.sql 属性，上面还是可能包括 ? 占位符。
+ * note 我理解的 DynamicSqlSource 有 "${}" 和 "#{}", RawSqlSource 有 #{},
+ *  StaticSqlSource 啥也没有，但是可能有已经将 #{} 转换而成的 ?。可以认为，DynamicSqlSource 和 RawSqlSource 的 sqlSource 属性值
+ *  的类型实际是 StaticSqlSource
  */
 public class StaticSqlSource implements SqlSource {
 

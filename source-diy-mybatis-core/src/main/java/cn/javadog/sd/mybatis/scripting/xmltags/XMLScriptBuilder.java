@@ -15,8 +15,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Clinton Begin
- *
+ * @author 余勇
+ * @date 2019-12-14 21:59
  * 继承 BaseBuilder 抽象类，XML 动态语句( SQL )构建器，负责将 SQL 解析成 SqlSource 对象
  */
 public class XMLScriptBuilder extends BaseBuilder {
@@ -32,19 +32,27 @@ public class XMLScriptBuilder extends BaseBuilder {
   private boolean isDynamic;
 
   /**
-   * SQL 方法类型
+   * 节点的参数类型，也可能是 <parameterMap /> 的type属性
    */
   private final Class<?> parameterType;
 
   /**
    * NodeNodeHandler 的映射
+   * key：节点类型，如 trim，foreach
+   * value：节点的处理器
    */
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
 
+  /**
+   * 构造函数
+   */
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
   }
 
+  /**
+   * 构造函数
+   */
   public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
     super(configuration);
     this.context = context;
@@ -72,9 +80,9 @@ public class XMLScriptBuilder extends BaseBuilder {
    * 负责将 SQL 解析成 SqlSource 对象
    */
   public SqlSource parseScriptNode() {
-    // <1> 解析 SQL
+    // 解析 SQL
     MixedSqlNode rootSqlNode = parseDynamicTags(context);
-    // <2> 创建 SqlSource 对象
+    // 创建 SqlSource 对象
     SqlSource sqlSource = null;
     if (isDynamic) {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
