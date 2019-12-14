@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.session;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 13:10
+ * @author 余勇
+ * @date 2019-12-11 13:10
  * 自动映射行为的枚举。
  * 自动映射：数据库字段与POJO类的字段的映射。
  * 用于指定MyBatis是否开启自动映射，以及开启的程度。

@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.cache.Cache;
 import cn.javadog.sd.mybatis.support.exceptions.CacheException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 15:23
+ * @author 余勇
+ * @date 2019-12-04 15:23
  * 永不过期的 Cache 实现类，基于 HashMap 实现类
  * 这是源码中唯一的Cache的SPI实现，二级缓存默认用的就是它
  */

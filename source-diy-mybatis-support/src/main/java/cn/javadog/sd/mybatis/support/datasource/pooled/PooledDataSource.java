@@ -18,8 +18,8 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
 /**
  * This is a simple, synchronous, thread-safe database connection pool.
  *
- * @author: 余勇
- * @date: 2019-12-03 21:05
+ * @author 余勇
+ * @date 2019-12-03 21:05
  *
  * 实现 DataSource 接口，池化的 DataSource 实现类。这是个简单，线程安全的实现，麻雀虽小，五脏俱全
  * 实际场景下，我们基本不用 MyBatis 自带的数据库连接池的实现！！！

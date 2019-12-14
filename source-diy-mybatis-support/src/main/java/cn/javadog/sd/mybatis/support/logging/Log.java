@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.logging;
 
 /**
- * @author: 余勇
- * @date: 2019-12-03 20:16
+ * @author 余勇
+ * @date 2019-12-03 20:16
  * MyBatis Log 接口
  */
 public interface Log {

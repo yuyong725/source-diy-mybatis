@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.exceptions;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 13:49
+ * @author 余勇
+ * @date 2019-12-11 13:49
  * Executor 模块的异常
  */
 public class ExecutorException extends BaseException {

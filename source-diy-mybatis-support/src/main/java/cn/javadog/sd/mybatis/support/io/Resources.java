@@ -11,8 +11,8 @@ import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 20:17
+ * @author 余勇
+ * @date 2019-12-06 20:17
  * Resource 工具类，通过classloader操作资源
  */
 public class Resources {

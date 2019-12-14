@@ -7,8 +7,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:00
+ * @author 余勇
+ * @date 2019-12-05 21:00
  * Enum 类型的 TypeHandler 实现类, 取得是枚举的ordinal
  */
 public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {

@@ -15,8 +15,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 21:43
+ * @author 余勇
+ * @date 2019-12-10 21:43
  * 基础构造器抽象类，为子类提供通用的工具类。
  */
 public abstract class BaseBuilder {

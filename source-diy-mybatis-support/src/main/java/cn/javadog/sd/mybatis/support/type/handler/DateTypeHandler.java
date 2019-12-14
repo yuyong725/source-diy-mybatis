@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 20:59
+ * @author 余勇
+ * @date 2019-12-05 20:59
  *
  * java.util.Date(java) <=> java.sql.Timestamp(jdbc)
  */

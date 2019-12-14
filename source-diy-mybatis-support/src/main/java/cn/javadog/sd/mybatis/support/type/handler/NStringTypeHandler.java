@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:21
+ * @author 余勇
+ * @date 2019-12-05 21:21
  * String(java) <=> NString(jdbc)
  */
 public class NStringTypeHandler extends BaseTypeHandler<String> {

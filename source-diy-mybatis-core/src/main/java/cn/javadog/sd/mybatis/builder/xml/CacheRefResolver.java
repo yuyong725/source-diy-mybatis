@@ -4,8 +4,8 @@ import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
 import cn.javadog.sd.mybatis.support.cache.Cache;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 13:19
+ * @author 余勇
+ * @date 2019-12-12 13:19
  * CacheRef 解析器，实际功能是由 {@link #assistant} 完成的，只是用来记录解析过程出错的 <cache-ref /> 标签，最后统一记录下
  * note 源码中是放在 builder 包下，但从功能划分，放在当前包下更合适
  */

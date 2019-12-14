@@ -7,8 +7,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import cn.javadog.sd.mybatis.support.cache.Cache;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 17:33
+ * @author 余勇
+ * @date 2019-12-04 17:33
  *
  * 实现 Cache 接口，基于最少使用的淘汰机制的 Cache 实现类
  * note 很有学习意义，LRU的真正实践。所谓最少使用可以理解为，是按照最新一次的使用时间进行排序的

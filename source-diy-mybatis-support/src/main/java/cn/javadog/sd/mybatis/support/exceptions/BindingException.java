@@ -2,8 +2,8 @@ package cn.javadog.sd.mybatis.support.exceptions;
 
 
 /**
- * @author: 余勇
- * @date: 2019-12-09 16:02
+ * @author 余勇
+ * @date 2019-12-09 16:02
  *
  * binding模块的异常
  */

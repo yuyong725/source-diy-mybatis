@@ -15,8 +15,8 @@ import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-13 12:54
+ * @author 余勇
+ * @date 2019-12-13 12:54
  *
  * 结果字段的注解，对应 <result /> 标签
  */

@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 18:08
+ * @author 余勇
+ * @date 2019-12-01 18:08
  * 异常工具类
  */
 public class ExceptionUtil {

@@ -12,8 +12,8 @@ import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 17:43
+ * @author 余勇
+ * @date 2019-12-01 17:43
  *
  * 继承 BaseWrapper 抽象类，普通对象的 ObjectWrapper 实现类，
  * 例如 User、Order 这样的 POJO 类

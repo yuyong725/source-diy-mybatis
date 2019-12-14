@@ -11,8 +11,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.util.ByteArrayUtils;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 23:00
+ * @author 余勇
+ * @date 2019-12-04 23:00
  *
  * Byte[](java) <=> Blob(jdbc)
  */

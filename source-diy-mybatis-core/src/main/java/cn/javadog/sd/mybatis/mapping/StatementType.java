@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.mapping;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 16:43
+ * @author 余勇
+ * @date 2019-12-10 16:43
  *
  * Statement类型，移除存储过程CALLABLE
  */

@@ -21,8 +21,8 @@ import cn.javadog.sd.mybatis.support.exceptions.CacheException;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-04 15:28
+ * @author 余勇
+ * @date 2019-12-04 15:28
  * 实现 Cache 接口，阻塞的 Cache 实现类。
  * 这是一个简单低效版本的 Cache 阻塞装饰器
  */

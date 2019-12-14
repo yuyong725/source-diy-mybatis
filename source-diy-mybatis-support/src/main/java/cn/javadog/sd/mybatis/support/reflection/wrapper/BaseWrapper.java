@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 17:40
+ * @author 余勇
+ * @date 2019-12-01 17:40
  *
  * 实现 ObjectWrapper 接口，ObjectWrapper 抽象类，
  * 为子类 BeanWrapper 和 MapWrapper 提供属性值的获取和设置的公用方法

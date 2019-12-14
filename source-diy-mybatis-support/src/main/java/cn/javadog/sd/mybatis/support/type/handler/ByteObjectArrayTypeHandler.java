@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.util.ByteArrayUtils;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 14:34
+ * @author 余勇
+ * @date 2019-12-05 14:34
  *
  * Byte[](java) <=> byte[](jdbc)
  */

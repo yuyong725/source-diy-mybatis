@@ -6,8 +6,8 @@ import cn.javadog.sd.mybatis.executor.Executor;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 21:07
+ * @author 余勇
+ * @date 2019-12-13 21:07
  *
  * 空的 KeyGenerator 实现类，即无需主键生成
  */

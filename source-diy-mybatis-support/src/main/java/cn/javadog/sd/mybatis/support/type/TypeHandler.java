@@ -5,8 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 22:15
+ * @author 余勇
+ * @date 2019-12-04 22:15
  *
  * 类型转换处理器
  */

@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.support.transaction;
 import java.sql.Connection;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 13:16
+ * @author 余勇
+ * @date 2019-12-04 13:16
  * 事务的隔离级别，源码是在session包里面，这里移到了事务
  * 参考文章：https://tech.meituan.com/2014/08/20/innodb-lock.html
  */

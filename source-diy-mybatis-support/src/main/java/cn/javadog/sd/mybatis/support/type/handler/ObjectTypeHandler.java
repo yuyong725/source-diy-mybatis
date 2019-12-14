@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:31
+ * @author 余勇
+ * @date 2019-12-05 21:31
  * Object(java) <=> Object(jdbc)
  */
 public class ObjectTypeHandler extends BaseTypeHandler<Object> {

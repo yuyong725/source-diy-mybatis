@@ -9,8 +9,8 @@ package cn.javadog.sd.mybatis.mapping;
  * @author Clinton Begin
  */
 /**
- * @author: 余勇
- * @date: 2019-12-13 20:44
+ * @author 余勇
+ * @date 2019-12-13 20:44
  * SQL 来源接口。它代表从 Mapper XML 或方法注解上，读取的一条 SQL 内容。
  * 它根据用户，也就是程序员调用时提供的参数，返回一个 SQL对象，就是 BoundSql
  */

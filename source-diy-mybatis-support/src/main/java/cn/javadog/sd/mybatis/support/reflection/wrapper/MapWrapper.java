@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.SystemMetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 22:09
+ * @author 余勇
+ * @date 2019-12-02 22:09
  * 继承 BaseWrapper 抽象类，Map 对象的 ObjectWrapper 实现类。
  */
 public class MapWrapper extends BaseWrapper {

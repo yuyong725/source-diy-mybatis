@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 14:33
+ * @author 余勇
+ * @date 2019-12-05 14:33
  *
  * byte[](java) <=> byte[](jdbc)
  * TODO byte[]默认的是哪个呢？ {@link BlobTypeHandler} 也能转

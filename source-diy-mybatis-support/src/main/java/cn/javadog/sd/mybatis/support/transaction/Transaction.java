@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 13:10
+ * @author 余勇
+ * @date 2019-12-04 13:10
  * 事务接口,管理实务的生命周期，包括：创建，准备，提交，回滚，关闭
  * note 与Spring结合后使用的是 SpringManagedTransaction
  */

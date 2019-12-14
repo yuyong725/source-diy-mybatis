@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 import cn.javadog.sd.mybatis.support.io.Resources;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 23:11
+ * @author 余勇
+ * @date 2019-12-02 23:11
  *
  * 实现 DataSource 接口，非池化的 DataSource 对象
  */

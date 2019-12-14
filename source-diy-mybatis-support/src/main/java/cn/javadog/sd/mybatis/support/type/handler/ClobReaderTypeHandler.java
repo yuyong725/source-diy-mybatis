@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 20:50
+ * @author 余勇
+ * @date 2019-12-05 20:50
  * Reader(java) <=> Clob(jdbc)
  */
 public class ClobReaderTypeHandler extends BaseTypeHandler<Reader> {

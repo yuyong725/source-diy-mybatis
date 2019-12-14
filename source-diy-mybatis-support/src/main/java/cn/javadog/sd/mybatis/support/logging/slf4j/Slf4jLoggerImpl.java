@@ -7,8 +7,8 @@ import org.slf4j.Logger;
  * @author Eduardo Macarron
  */
 /**
- * @author: 余勇
- * @date: 2019-12-03 20:34
+ * @author 余勇
+ * @date 2019-12-03 20:34
  * slf4j 版本的日志实现，如果slf4j的版本<1.6或者通过LogFactory得到的log不是LocationAwareLogger类型，就使用这种
  */
 class Slf4jLoggerImpl implements Log {

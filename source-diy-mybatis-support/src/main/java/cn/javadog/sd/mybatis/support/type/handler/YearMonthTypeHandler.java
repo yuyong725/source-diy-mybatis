@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:53
+ * @author 余勇
+ * @date 2019-12-05 21:53
  *
  * YearMonth(java) <=> String(jdbc)
  * 这个类的实现注意依赖于 {@link YearMonth#parse(CharSequence)} 方法，因此它要求数据库对应字段的格式必须是 "yyyy-MM"，比如 "2016-08"

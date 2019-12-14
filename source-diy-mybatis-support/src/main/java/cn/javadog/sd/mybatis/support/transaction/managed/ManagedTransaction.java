@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.transaction.Transaction;
 import cn.javadog.sd.mybatis.support.transaction.TransactionIsolationLevel;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 13:55
+ * @author 余勇
+ * @date 2019-12-04 13:55
  * 实现 Transaction 接口，基于容器管理的事务实现类
  * note 和 JdbcTransaction 相比，少了 autoCommit 属性，空实现 #commit() 和 #rollback() 方法。因此，事务的管理，交给了容器；
  *  可以看看Spring的SpringManagedTransaction，

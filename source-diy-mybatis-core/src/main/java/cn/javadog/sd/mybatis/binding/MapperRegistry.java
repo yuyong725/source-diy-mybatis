@@ -13,8 +13,8 @@ import cn.javadog.sd.mybatis.support.exceptions.BindingException;
 import cn.javadog.sd.mybatis.support.util.ResolverUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 20:59
+ * @author 余勇
+ * @date 2019-12-10 20:59
  *
  * Mapper 注册表
  */

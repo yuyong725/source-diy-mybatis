@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:52
+ * @author 余勇
+ * @date 2019-12-05 21:52
  * Date(java) <=> java.sql.Time(jdbc)
  */
 public class TimeOnlyTypeHandler extends BaseTypeHandler<Date> {

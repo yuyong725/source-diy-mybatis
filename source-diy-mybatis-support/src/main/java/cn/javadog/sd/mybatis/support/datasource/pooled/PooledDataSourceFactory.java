@@ -4,8 +4,8 @@ package cn.javadog.sd.mybatis.support.datasource.pooled;
 import cn.javadog.sd.mybatis.support.datasource.unpooled.UnpooledDataSourceFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 12:47
+ * @author 余勇
+ * @date 2019-12-04 12:47
  *
  * POOLED– 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。 这是一种使得并发 Web 应用快速响应请求的流行处理方式。
  * 除了上述提到 UNPOOLED 下的属性外，还有更多属性用来配置 POOLED 的数据源：

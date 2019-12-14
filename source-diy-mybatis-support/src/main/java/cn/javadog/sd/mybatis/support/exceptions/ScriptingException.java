@@ -2,8 +2,8 @@ package cn.javadog.sd.mybatis.support.exceptions;
 
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 12:50
+ * @author 余勇
+ * @date 2019-12-12 12:50
  * Script 模块异常
  */
 public class ScriptingException extends BaseException {

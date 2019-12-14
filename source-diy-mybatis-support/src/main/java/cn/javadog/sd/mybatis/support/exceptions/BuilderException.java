@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.exceptions;
 
 /**
- * @author: 余勇
- * @date: 2019-12-09 18:26
+ * @author 余勇
+ * @date 2019-12-09 18:26
  *
  * builder模块异常
  */

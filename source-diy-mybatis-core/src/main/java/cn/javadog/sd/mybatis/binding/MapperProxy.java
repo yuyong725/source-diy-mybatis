@@ -12,8 +12,8 @@ import cn.javadog.sd.mybatis.session.SqlSession;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 17:51
+ * @author 余勇
+ * @date 2019-12-10 17:51
  *
  * 实现 InvocationHandler、Serializable 接口，Mapper Proxy
  */

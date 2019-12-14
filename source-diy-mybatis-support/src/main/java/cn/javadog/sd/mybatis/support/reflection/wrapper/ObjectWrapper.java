@@ -7,8 +7,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 16:03
+ * @author 余勇
+ * @date 2019-12-02 16:03
  *
  * 对象包装器接口, 对对象进行增强
  */

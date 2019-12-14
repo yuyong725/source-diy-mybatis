@@ -6,8 +6,8 @@ import java.util.List;
 import cn.javadog.sd.mybatis.session.Configuration;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 19:26
+ * @author 余勇
+ * @date 2019-12-11 19:26
  *
  * 参数集合，对应 parameterType="" 或 parameterMap="" 标签属性
  * 已被废弃！老式风格的参数映射。更好的办法是使用内联参数和 parameterType 属性.

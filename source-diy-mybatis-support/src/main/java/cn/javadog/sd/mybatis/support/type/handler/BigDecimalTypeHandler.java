@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 22:59
+ * @author 余勇
+ * @date 2019-12-04 22:59
  *
  * BigDecimal(java) <=> BigDecimal(jdbc)
  */

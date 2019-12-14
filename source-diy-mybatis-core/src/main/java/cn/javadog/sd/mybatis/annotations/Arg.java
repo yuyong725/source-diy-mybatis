@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 13:29
+ * @author 余勇
+ * @date 2019-12-13 13:29
  *
  * @ConstructorArgs 的参数，sql查询结果的构造函数的字段。类比 xml 中的 <idArg /> 或 <arg />
  */

@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 11:52
+ * @author 余勇
+ * @date 2019-12-13 11:52
  *
  * 新增语句 注解
  */

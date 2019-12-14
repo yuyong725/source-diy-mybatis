@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.mapping;
 import java.sql.ResultSet;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 21:58
+ * @author 余勇
+ * @date 2019-12-10 21:58
  *
  * 区别详情参见：https://juejin.im/post/5abb78a0f265da239e4e2331
  */

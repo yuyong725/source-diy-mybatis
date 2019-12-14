@@ -13,8 +13,8 @@ import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 21:58
+ * @author 余勇
+ * @date 2019-12-06 21:58
  * 虚拟文件系统( Virtual File System )抽象类，用来查找指定路径下的的文件们
  */
 public abstract class VFS {

@@ -15,8 +15,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 16:07
+ * @author 余勇
+ * @date 2019-12-11 16:07
  *
  * XML <include /> 标签的转换器，负责将 SQL 中的 <include /> 标签转换成对应的 <sql /> 的内容
  */

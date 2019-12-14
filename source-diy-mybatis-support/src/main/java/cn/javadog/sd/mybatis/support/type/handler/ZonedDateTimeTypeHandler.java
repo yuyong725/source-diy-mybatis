@@ -11,8 +11,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:58
+ * @author 余勇
+ * @date 2019-12-05 21:58
  * ZonedDateTime(java) <=> Timestamp(jdbc)
  */
 public class ZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {

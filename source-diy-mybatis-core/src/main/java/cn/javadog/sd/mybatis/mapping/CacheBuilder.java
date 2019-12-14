@@ -19,8 +19,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.meta.SystemMetaObject;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 18:28
+ * @author 余勇
+ * @date 2019-12-13 18:28
  *
  * Cache 构造器。基于装饰者设计模式，进行 Cache 对象的构造
  */

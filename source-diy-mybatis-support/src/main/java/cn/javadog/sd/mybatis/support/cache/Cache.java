@@ -18,8 +18,8 @@ import java.util.concurrent.locks.ReadWriteLock;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-04 14:37
+ * @author 余勇
+ * @date 2019-12-04 14:37
  *
  * 缓存容器接口。注意，它是一个容器，有点类似 HashMap ，可以往其中添加各种缓存。
  * 为缓存生产方提供的SPI，关于SPI可以看看：https://juejin.im/post/5af952fdf265da0b9e652de3，就是一种规范

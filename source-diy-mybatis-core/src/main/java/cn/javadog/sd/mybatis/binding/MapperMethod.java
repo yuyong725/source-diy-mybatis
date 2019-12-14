@@ -22,8 +22,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.resolver.TypeParameterResolver;
 
 /**
- * @author: 余勇
- * @date: 2019-12-09 22:38
+ * @author 余勇
+ * @date 2019-12-09 22:38
  *
  * Mapper 方法。在 Mapper 接口中，每个定义的方法，对应一个 MapperMethod 对象
  */

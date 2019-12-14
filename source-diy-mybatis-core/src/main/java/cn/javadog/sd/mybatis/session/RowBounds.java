@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.session;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 16:15
+ * @author 余勇
+ * @date 2019-12-13 16:15
  *
  * 分页条件
  */

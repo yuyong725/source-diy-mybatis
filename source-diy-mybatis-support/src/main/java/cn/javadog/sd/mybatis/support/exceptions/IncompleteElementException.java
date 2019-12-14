@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.exceptions;
 
 /**
- * @author: 余勇
- * @date: 2019-12-09 20:06
+ * @author 余勇
+ * @date 2019-12-09 20:06
  *
  * 解析未完成异常
  */

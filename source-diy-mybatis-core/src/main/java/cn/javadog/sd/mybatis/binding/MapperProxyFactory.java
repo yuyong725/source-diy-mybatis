@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import cn.javadog.sd.mybatis.session.SqlSession;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 20:46
+ * @author 余勇
+ * @date 2019-12-10 20:46
  * Mapper Proxy 工厂类
  */
 public class MapperProxyFactory<T> {

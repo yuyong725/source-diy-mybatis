@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 13:28
+ * @author 余勇
+ * @date 2019-12-13 13:28
  *
  * 返回结果的构造函数。类比 xml 中的 <constructor /> 标签
  */

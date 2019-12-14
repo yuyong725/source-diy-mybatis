@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 19:59
+ * @author 余勇
+ * @date 2019-12-13 19:59
  *
  * 数据库标识提供器接口。作用就是可以在xml中，根据数据库类型，选择指定的SQL，如xml中有两个ID相同的select语句，
  * 但数据库标示不同，那么启动的时候，mybatis会根据最终连接的数据库类型，加载指定的sql

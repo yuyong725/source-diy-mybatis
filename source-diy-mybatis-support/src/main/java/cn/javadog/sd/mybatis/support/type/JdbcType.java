@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 13:21
+ * @author 余勇
+ * @date 2019-12-06 13:21
  * Jdbc Type 枚举
  * mysql的数据类型参见：https://wiki.jikexueyuan.com/project/mysql/data-types.html
  * 本想细致的讲解一下，顺带复习一下mysql的数据类型与应用场景，一篇好文章都没有。。

@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.mapping;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 12:53
+ * @author 余勇
+ * @date 2019-12-13 12:53
  *
  * 获取嵌套查询结果的方式
  */

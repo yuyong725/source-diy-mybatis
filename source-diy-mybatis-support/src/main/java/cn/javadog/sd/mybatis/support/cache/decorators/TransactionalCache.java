@@ -24,8 +24,8 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-04 20:20
+ * @author 余勇
+ * @date 2019-12-04 20:20
  *
  * 支持事务的 Cache 实现类，主要用于二级缓存中。
  * 在一次会话中，所有添加到二级缓存的缓存都由这个类管理，当会话提交时缓存就会添加进来，回滚就会丢弃。

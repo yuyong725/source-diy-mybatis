@@ -31,8 +31,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 19:15
+ * @author 余勇
+ * @date 2019-12-12 19:15
  * 加载 Mapper 映射配置文件 入口
  * 继承 BaseBuilder 抽象类，Mapper XML 配置构建器，主要负责解析 Mapper 映射配置文件。
  */

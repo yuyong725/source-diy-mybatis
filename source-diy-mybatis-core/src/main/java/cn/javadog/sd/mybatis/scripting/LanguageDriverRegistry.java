@@ -1,18 +1,3 @@
-/**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.scripting;
 
 import java.util.HashMap;
@@ -21,7 +6,9 @@ import java.util.Map;
 import cn.javadog.sd.mybatis.support.exceptions.ScriptingException;
 
 /**
- * @author Frank D. Martinez [mnesarco]
+ * @author 余勇
+ * @date 2019-12-14 13:27
+ *
  * LanguageDriver 注册表
  * 这个类不是 LanguageDriver 的子类
  */
@@ -29,6 +16,8 @@ public class LanguageDriverRegistry {
 
   /**
    * LanguageDriver 映射
+   * key：LanguageDriver 类
+   * value：LanguageDriver 实例
    */
   private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap();
 
@@ -37,7 +26,11 @@ public class LanguageDriverRegistry {
    */
   private Class<? extends LanguageDriver> defaultDriverClass;
 
+  /**
+   * 根据 类 注册 LanguageDriver
+   */
   public void register(Class<? extends LanguageDriver> cls) {
+    // 为空直接GG
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
@@ -51,7 +44,11 @@ public class LanguageDriverRegistry {
     }
   }
 
+  /**
+   * 根据 对象 注册 LanguageDriver。
+   */
   public void register(LanguageDriver instance) {
+    // 为空直接GG
     if (instance == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
@@ -61,23 +58,30 @@ public class LanguageDriverRegistry {
       LANGUAGE_DRIVER_MAP.put(cls, instance);
     }
   }
-  
+
+  /**
+   * 获取指定驱动的实例
+   */
   public LanguageDriver getDriver(Class<? extends LanguageDriver> cls) {
     return LANGUAGE_DRIVER_MAP.get(cls);
   }
 
+  /**
+   * 获取默认驱动对象
+   */
   public LanguageDriver getDefaultDriver() {
     return getDriver(getDefaultDriverClass());
   }
 
+  /**
+   * 获取默认驱动类
+   */
   public Class<? extends LanguageDriver> getDefaultDriverClass() {
     return defaultDriverClass;
   }
 
   /**
-   * 设置 {@link #defaultDriverClass}
-   *
-   * @param defaultDriverClass 默认的 LanguageDriver 类
+   * 设置 默认的 LanguageDriver 类
    */
   public void setDefaultDriverClass(Class<? extends LanguageDriver> defaultDriverClass) {
     // 注册到 LANGUAGE_DRIVER_MAP 中

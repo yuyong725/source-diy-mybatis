@@ -14,8 +14,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
  * @author Tomas Rohovsky
  */
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:14
+ * @author 余勇
+ * @date 2019-12-05 21:14
  * LocalDateTime(java) <=> Timestamp(jdbc)
  */
 public class LocalDateTimeTypeHandler extends BaseTypeHandler<LocalDateTime> {

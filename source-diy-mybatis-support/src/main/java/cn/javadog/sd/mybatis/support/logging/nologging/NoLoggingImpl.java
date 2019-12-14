@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.support.logging.nologging;
 import cn.javadog.sd.mybatis.support.logging.Log;
 
 /**
- * @author: 余勇
- * @date: 2019-12-03 20:21
+ * @author 余勇
+ * @date 2019-12-03 20:21
  *
  * 不打印日志的日志，其实就是啥也不干，对的，啥也不干
  */

@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 import cn.javadog.sd.mybatis.builder.annotation.MapperAnnotationBuilder;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 23:12
+ * @author 余勇
+ * @date 2019-12-12 23:12
  *
  * 指向指定命名空间的注解
  * 对应 XML 标签为 <cache-ref />

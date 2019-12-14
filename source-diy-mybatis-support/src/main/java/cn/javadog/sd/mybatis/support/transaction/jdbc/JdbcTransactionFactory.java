@@ -19,8 +19,8 @@ import cn.javadog.sd.mybatis.support.transaction.TransactionIsolationLevel;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-04 13:51
+ * @author 余勇
+ * @date 2019-12-04 13:51
  * JdbcTransaction 工厂实现类，MyBatis有大量工厂模式
  */
 public class JdbcTransactionFactory implements TransactionFactory {

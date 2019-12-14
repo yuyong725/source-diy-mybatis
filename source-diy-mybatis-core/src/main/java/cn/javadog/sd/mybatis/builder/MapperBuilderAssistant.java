@@ -37,8 +37,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 16:09
+ * @author 余勇
+ * @date 2019-12-11 16:09
  * 继承 BaseBuilder 抽象类，Mapper 构造器的小助手
  * 提供了一些公用的方法，例如创建 ParameterMap、MappedStatement 对象等等。
  *

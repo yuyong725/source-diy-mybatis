@@ -5,8 +5,8 @@ import javax.sql.DataSource;
 import cn.javadog.sd.mybatis.support.transaction.TransactionFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 20:33
+ * @author 余勇
+ * @date 2019-12-13 20:33
  *
  * DB 环境，类似Spring的properties是dev，还是local，还是prod这种
  */

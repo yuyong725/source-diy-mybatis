@@ -8,19 +8,20 @@ import java.util.Map;
 
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
 
-
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-14 15:44
  *
  * OGNL 表达式计算器
  */
 public class ExpressionEvaluator {
 
     /**
-     * 判断表达式对应的值，是否为 true
+     * 判断表达式对应的值，是否为 true。
+     * 核心逻辑都是 ognl 封装的，我们不管
      *
      * @param expression 表达式
-     * @param parameterObject 参数对象
+     * @param parameterObject 所有参数对象
      * @return 是否为 true
      */
     public boolean evaluateBoolean(String expression, Object parameterObject) {

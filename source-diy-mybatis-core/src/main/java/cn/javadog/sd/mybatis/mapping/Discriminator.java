@@ -6,8 +6,8 @@ import java.util.Map;
 import cn.javadog.sd.mybatis.session.Configuration;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 21:41
+ * @author 余勇
+ * @date 2019-12-11 21:41
  *
  * 鉴别器，如:
  * <discriminator javaType="int" column="draft">

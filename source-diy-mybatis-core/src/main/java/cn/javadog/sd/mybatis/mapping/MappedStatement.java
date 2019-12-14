@@ -14,8 +14,8 @@ import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 20:38
+ * @author 余勇
+ * @date 2019-12-13 20:38
  *
  * 映射的语句，每个 <select />、<insert />、<update />、<delete /> 对应一个 MappedStatement 对象
  * 比较特殊的是，<selectKey /> 解析后，也会对应一个 MappedStatement 对象

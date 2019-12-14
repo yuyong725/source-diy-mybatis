@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.exceptions;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 15:01
+ * @author 余勇
+ * @date 2019-12-04 15:01
  * 缓存异常
  */
 public class CacheException extends BaseException {

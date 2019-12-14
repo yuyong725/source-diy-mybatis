@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.support.cache;
 import cn.javadog.sd.mybatis.support.exceptions.CacheException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 21:52
+ * @author 余勇
+ * @date 2019-12-04 21:52
  * 空缓存键
  */
 public final class NullCacheKey extends CacheKey {

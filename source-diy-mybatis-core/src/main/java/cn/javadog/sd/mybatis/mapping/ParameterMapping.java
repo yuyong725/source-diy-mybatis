@@ -12,8 +12,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
  * 参数映射
  */
 /**
- * @author: 余勇
- * @date: 2019-12-13 21:45
+ * @author 余勇
+ * @date 2019-12-13 21:45
  *
  * 参数映射。
  * </parameterMap /> 的子标签 <parameter />

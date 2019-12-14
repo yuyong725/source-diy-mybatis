@@ -16,8 +16,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 14:31
+ * @author 余勇
+ * @date 2019-12-12 14:31
  *
  * 继承 BaseBuilder 抽象类，SqlSource 构建器。
  * 负责将 SQL 语句中的 #{} 替换成相应的 ? 占位符，并获取该 ? 占位符对应的 {@link ParameterMapping} 对象。

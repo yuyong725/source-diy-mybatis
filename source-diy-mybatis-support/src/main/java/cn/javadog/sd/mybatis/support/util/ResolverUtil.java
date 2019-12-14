@@ -11,8 +11,8 @@ import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 20:46
+ * @author 余勇
+ * @date 2019-12-06 20:46
  * 解析器工具类，用于获得指定目录符合条件的类们
  * TODO 这是一种设计模式，叫啥呢，我也不知道，哈哈
  */

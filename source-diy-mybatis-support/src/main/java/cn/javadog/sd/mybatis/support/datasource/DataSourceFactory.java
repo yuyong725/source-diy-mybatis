@@ -4,8 +4,8 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 23:10
+ * @author 余勇
+ * @date 2019-12-02 23:10
  *
  * 工厂接口, 很眼熟的接口
  */

@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:19
+ * @author 余勇
+ * @date 2019-12-05 21:19
  * Month(java) <=> int(jdbc)
  */
 public class MonthTypeHandler extends BaseTypeHandler<Month> {

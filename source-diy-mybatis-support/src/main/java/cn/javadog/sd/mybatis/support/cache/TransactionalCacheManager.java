@@ -6,8 +6,8 @@ import java.util.Map;
 import cn.javadog.sd.mybatis.support.cache.decorators.TransactionalCache;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 21:53
+ * @author 余勇
+ * @date 2019-12-04 21:53
  *
  * TransactionalCache 管理器。
  */

@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.logging.slf4j.Slf4jImpl;
 import cn.javadog.sd.mybatis.support.logging.stdout.StdOutImpl;
 
 /**
- * @author: 余勇
- * @date: 2019-12-03 20:01
+ * @author 余勇
+ * @date 2019-12-03 20:01
  * Log 工厂类
  */
 public final class LogFactory {

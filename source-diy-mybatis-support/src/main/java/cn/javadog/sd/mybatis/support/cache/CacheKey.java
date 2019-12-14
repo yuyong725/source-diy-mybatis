@@ -7,8 +7,8 @@ import java.util.List;
 import cn.javadog.sd.mybatis.support.util.ArrayUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 21:24
+ * @author 余勇
+ * @date 2019-12-04 21:24
  *
  * 实现 Cloneable、Serializable 接口，缓存键
  */

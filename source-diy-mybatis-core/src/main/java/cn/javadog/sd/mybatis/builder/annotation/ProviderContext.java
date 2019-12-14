@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.builder.annotation;
 import java.lang.reflect.Method;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 13:43
+ * @author 余勇
+ * @date 2019-12-13 13:43
  *
  * ProviderSqlSource 的上下文
  */

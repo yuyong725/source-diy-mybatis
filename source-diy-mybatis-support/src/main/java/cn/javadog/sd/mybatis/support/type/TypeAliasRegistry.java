@@ -25,8 +25,8 @@ import cn.javadog.sd.mybatis.support.util.ResolverUtil;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-06 17:07
+ * @author 余勇
+ * @date 2019-12-06 17:07
  * 类型与别名的注册表
  * 通过别名，我们在 Mapper XML 中的 resultType 和 parameterType 属性，直接使用，而不用写全类名
  */

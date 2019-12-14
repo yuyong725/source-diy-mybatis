@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.support.util;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 23:01
+ * @author 余勇
+ * @date 2019-12-04 23:01
  * 字节数组转换工具，源码是在 type 包下，工具统一移到了这里
  */
 public class ByteArrayUtils {

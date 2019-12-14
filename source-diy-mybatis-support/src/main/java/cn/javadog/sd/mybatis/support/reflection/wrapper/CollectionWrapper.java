@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 22:09
+ * @author 余勇
+ * @date 2019-12-02 22:09
  *
  */
 public class CollectionWrapper implements ObjectWrapper {

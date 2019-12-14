@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.cursor;
 import java.io.Closeable;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 15:27
+ * @author 余勇
+ * @date 2019-12-13 15:27
  *
  * 继承 Closeable、Iterable 接口，游标接口。
  * 这个类用于处理懒加载时，获取关联的列表，对应 @many或<association />。

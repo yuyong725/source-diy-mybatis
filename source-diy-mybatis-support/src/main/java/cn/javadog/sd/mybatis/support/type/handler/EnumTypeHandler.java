@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:05
+ * @author 余勇
+ * @date 2019-12-05 21:05
  * Enum 类型的 TypeHandler 实现类，取得是枚举的name属性
  */
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {

@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 import cn.javadog.sd.mybatis.mapping.FetchType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 12:59
+ * @author 余勇
+ * @date 2019-12-13 12:59
  *
  * 关联查询，一对多的结果。功能类似 xml 中的 <collection />
  */

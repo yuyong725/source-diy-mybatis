@@ -5,8 +5,8 @@ import java.util.HashMap;
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 13:22
+ * @author 余勇
+ * @date 2019-12-12 13:22
  *
  * 内联参数表达式解析器，支持一些简单的语法
  * 内联的含义可以看看：https://baike.baidu.com/item/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0，当然，这只是我的猜测

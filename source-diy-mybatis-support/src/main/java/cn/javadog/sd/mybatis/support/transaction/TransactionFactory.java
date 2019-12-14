@@ -5,8 +5,8 @@ import java.sql.Connection;
 import java.util.Properties;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 14:09
+ * @author 余勇
+ * @date 2019-12-04 14:09
  *
  */
 public interface TransactionFactory {

@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 16:58
+ * @author 余勇
+ * @date 2019-12-06 16:58
  *
  * 匹配的 Java Type 类型的注解
  */

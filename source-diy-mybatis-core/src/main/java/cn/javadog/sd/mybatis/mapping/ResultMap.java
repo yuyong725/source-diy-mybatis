@@ -17,8 +17,8 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
 import cn.javadog.sd.mybatis.support.util.ParamNameUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 22:21
+ * @author 余勇
+ * @date 2019-12-13 22:21
  * ResultMap标签的信息，对应 <resultMap /> 标签 或 {@link cn.javadog.sd.mybatis.annotations.ResultMap}
  */
 public class ResultMap {

@@ -7,8 +7,8 @@ import cn.javadog.sd.mybatis.support.reflection.wrapper.DefaultObjectWrapperFact
 import cn.javadog.sd.mybatis.support.reflection.wrapper.ObjectWrapperFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 17:45
+ * @author 余勇
+ * @date 2019-12-01 17:45
  *
  * 系统级的 MetaObject 对象，
  * 主要提供了 ObjectFactory、ObjectWrapperFactory、空 MetaObject 的单例。

@@ -1,8 +1,8 @@
 package cn.javadog.sd.mybatis.session;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 16:19
+ * @author 余勇
+ * @date 2019-12-13 16:19
  *
  * 结果上下文接口
  */

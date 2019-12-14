@@ -24,8 +24,8 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-13 20:14
+ * @author 余勇
+ * @date 2019-12-13 20:14
  *
  * 实现 DatabaseIdProvider 接口，供应商数据库标识提供器实现类。
  * 主要作用就是返回数据库的标示，当然，如果你提供类一个别名映射，它会拿厂商返回的标示去别名映射里面找别名。

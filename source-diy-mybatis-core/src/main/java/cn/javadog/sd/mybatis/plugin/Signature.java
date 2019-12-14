@@ -6,26 +6,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-14 12:34
  *
- * 方法签名的注解
+ * 方法签名的注解。
+ * 如 @Signature(type = Map.class, method = "get", args = {Object.class}
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Signature {
+
   /**
-   * @return 类
+   * 拦截的类
    */
   Class<?> type();
 
   /**
-   * @return 方法名
+   * 要拦截的类的方法名
    */
   String method();
 
   /**
-   * @return 参数类型
+   * 拦截方法的参数类型，因为方法会有重载
    */
   Class<?>[] args();
 }

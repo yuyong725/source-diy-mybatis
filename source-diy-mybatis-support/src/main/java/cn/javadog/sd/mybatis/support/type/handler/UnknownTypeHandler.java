@@ -20,8 +20,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
  *
  */
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:58
+ * @author 余勇
+ * @date 2019-12-05 21:58
  * 未知的 TypeHandler 实现类, 就是没表明使用什么类型的解析器，其实我们写的xml一般都没有标明，最终由这个类去找的最匹配。
  * 通过获取对应的 TypeHandler ，进行处理。
  */

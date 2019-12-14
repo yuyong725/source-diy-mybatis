@@ -4,8 +4,8 @@ import cn.javadog.sd.mybatis.support.exceptions.ReflectionException;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 20:02
+ * @author 余勇
+ * @date 2019-12-02 20:02
  * 默认 ObjectWrapperFactory 实现类
  */
 public class DefaultObjectWrapperFactory implements ObjectWrapperFactory {

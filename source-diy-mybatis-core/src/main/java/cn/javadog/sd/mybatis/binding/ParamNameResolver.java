@@ -15,8 +15,8 @@ import cn.javadog.sd.mybatis.support.type.ParamMap;
 import cn.javadog.sd.mybatis.support.util.ParamNameUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 11:16
+ * @author 余勇
+ * @date 2019-12-10 11:16
  *
  * 参数名解析器
  */

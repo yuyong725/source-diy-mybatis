@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.exceptions.ResultMapException;
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 22:34
+ * @author 余勇
+ * @date 2019-12-04 22:34
  *
  * 实现 TypeHandler 接口，继承 TypeReference 抽象类，TypeHandler 基础抽象类。
  * 关于TypeReference简单了解一下：https://blog.csdn.net/zhuzj12345/article/details/102914545，反射模块讲解Type比较多。

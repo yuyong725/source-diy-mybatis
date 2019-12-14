@@ -76,8 +76,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 22:37
+ * @author 余勇
+ * @date 2019-12-12 22:37
  *
  * Mapper 注解构造器，负责解析 Mapper 接口上的注解
  *

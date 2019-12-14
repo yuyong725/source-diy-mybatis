@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:08
+ * @author 余勇
+ * @date 2019-12-05 21:08
  * Instant(java) <=> Timestamp(jdbc)
  */
 public class InstantTypeHandler extends BaseTypeHandler<Instant> {

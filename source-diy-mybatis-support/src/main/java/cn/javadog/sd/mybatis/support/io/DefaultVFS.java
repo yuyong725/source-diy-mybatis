@@ -20,8 +20,8 @@ import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 20:16
+ * @author 余勇
+ * @date 2019-12-06 20:16
  * 继承 VFS 抽象类，默认的 VFS 实现类
  */
 public class DefaultVFS extends VFS {

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: 余勇
- * @date: 2019-12-03 00:04
+ * @author 余勇
+ * @date 2019-12-03 00:04
  *
  * 连接池状态
  */

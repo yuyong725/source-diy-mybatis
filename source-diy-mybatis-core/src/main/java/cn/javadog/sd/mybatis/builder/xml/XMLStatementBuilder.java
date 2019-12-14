@@ -34,8 +34,8 @@ import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.parsing.XNode;
 
 /**
- * @author: 余勇
- * @date: 2019-12-12 22:36
+ * @author 余勇
+ * @date 2019-12-12 22:36
  *
  * 加载 Statement 配置
  * 继承 BaseBuilder 抽象类，Statement XML 配置构建器，主要负责解析 Statement 配置，即 <select />、<insert />、<update />、<delete /> 标签

@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:15
+ * @author 余勇
+ * @date 2019-12-05 21:15
  * LocalTime(java) <=> java.sql.Time(jdbc)
  */
 public class LocalTimeTypeHandler extends BaseTypeHandler<LocalTime> {

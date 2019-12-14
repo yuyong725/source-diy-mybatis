@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 19:53
+ * @author 余勇
+ * @date 2019-12-06 19:53
  * ClassLoader 包装器。将多个类加载器包装成一个类加载器使用
  */
 public class ClassLoaderWrapper {

@@ -5,8 +5,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import cn.javadog.sd.mybatis.support.cache.Cache;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 20:07
+ * @author 余勇
+ * @date 2019-12-04 20:07
  *
  * 实现 Cache 接口，定时清空整个容器的 Cache 实现类。清空操作并不是定时触发的，而是由相应的动作连带的触发
  */

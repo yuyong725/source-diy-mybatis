@@ -14,8 +14,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
  * @author Tomas Rohovsky
  */
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:32
+ * @author 余勇
+ * @date 2019-12-05 21:32
  * OffsetTime(java) <=> java.sql.Time(jdbc)
  */
 public class OffsetTimeTypeHandler extends BaseTypeHandler<OffsetTime> {

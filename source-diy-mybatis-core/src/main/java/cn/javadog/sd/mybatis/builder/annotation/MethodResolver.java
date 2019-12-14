@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.builder.annotation;
 import java.lang.reflect.Method;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 13:32
+ * @author 余勇
+ * @date 2019-12-13 13:32
  *
  * 注解方法的处理器。用于记录中间处理失败的方法，最后再统计处理
  */

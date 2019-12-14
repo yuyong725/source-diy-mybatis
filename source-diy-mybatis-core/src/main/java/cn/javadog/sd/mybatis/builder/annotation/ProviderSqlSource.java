@@ -14,8 +14,8 @@ import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
 import cn.javadog.sd.mybatis.support.parsing.PropertyParser;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 13:45
+ * @author 余勇
+ * @date 2019-12-13 13:45
  * 基于方法上的 @ProviderXXX 注解的 SqlSource 实现类
  */
 public class ProviderSqlSource implements SqlSource {

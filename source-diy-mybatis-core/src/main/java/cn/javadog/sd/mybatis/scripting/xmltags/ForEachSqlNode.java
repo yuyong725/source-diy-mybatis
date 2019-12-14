@@ -6,7 +6,8 @@ import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.parsing.GenericTokenParser;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-14 15:46
  *
  * <foreach /> 标签的 SqlNode 实现类
  */

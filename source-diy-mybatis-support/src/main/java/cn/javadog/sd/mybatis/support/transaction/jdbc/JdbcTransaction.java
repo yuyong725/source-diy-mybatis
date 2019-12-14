@@ -11,8 +11,8 @@ import cn.javadog.sd.mybatis.support.transaction.Transaction;
 import cn.javadog.sd.mybatis.support.transaction.TransactionIsolationLevel;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 13:12
+ * @author 余勇
+ * @date 2019-12-04 13:12
  *
  * 实现 Transaction 接口，基于 JDBC 的事务实现类
  */

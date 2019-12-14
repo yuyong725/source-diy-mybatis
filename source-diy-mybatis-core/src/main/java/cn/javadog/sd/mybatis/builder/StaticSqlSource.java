@@ -8,8 +8,8 @@ import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.session.Configuration;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 22:41
+ * @author 余勇
+ * @date 2019-12-11 22:41
  *
  * 静态的 SqlSource 实现类。
  * StaticSqlSource 的静态，是相对于 DynamicSqlSource 和 RawSqlSource 来说呢。实际上，StaticSqlSource.sql 属性，上面还是可能包括 ? 占位符。

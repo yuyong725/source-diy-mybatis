@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 20:57
+ * @author 余勇
+ * @date 2019-12-05 20:57
  *
  * java.util.Date(java) <=> java.sql.Date(jdbc)
  * 数据库里的时间有多种类型，以 MySQL 举例子，有 date、timestamp、datetime 三种类型

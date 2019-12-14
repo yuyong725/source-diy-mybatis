@@ -7,9 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
- *
- * 拦截器注解
+ * @author 余勇
+ * @date 2019-12-14 12:32
+ * 拦截器注解。
+ * 使用方法如：
+ * @Intercepts({@Signature(type = Map.class, method = "get", args = {Object.class})})
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -17,7 +19,7 @@ import java.lang.annotation.Target;
 public @interface Intercepts {
 
   /**
-   * @return 拦截的方法签名的数组
+   * 拦截的方法签名的数组，意思可以拦截多个签名
    */
   Signature[] value();
 }

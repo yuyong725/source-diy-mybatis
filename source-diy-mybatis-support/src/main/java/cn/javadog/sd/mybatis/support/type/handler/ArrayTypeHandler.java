@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 14:28
+ * @author 余勇
+ * @date 2019-12-05 14:28
  *
  * Object(java) <=> Array(jdbc)
  */

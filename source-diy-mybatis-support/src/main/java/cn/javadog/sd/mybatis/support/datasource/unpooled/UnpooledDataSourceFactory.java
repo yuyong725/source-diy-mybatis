@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.meta.SystemMetaObject;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 23:46n Begin
+ * @author 余勇
+ * @date 2019-12-02 23:46n Begin
  *
  * 实现 DataSourceFactory 接口，非池化的 DataSourceFactory 实现类
  *

@@ -11,8 +11,8 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 23:27
+ * @author 余勇
+ * @date 2019-12-13 23:27
  *
  * resultMap的子元素。对应xml 中 <resultMap /> 的子标签，不一定是<result />标签，还可能是其他各种标签
  */

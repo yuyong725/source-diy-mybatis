@@ -15,8 +15,8 @@ import cn.javadog.sd.mybatis.session.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 15:50
+ * @author 余勇
+ * @date 2019-12-13 15:50
  * 默认 Cursor 实现类，线程不安全
  */
 public class DefaultCursor<T> implements Cursor<T> {

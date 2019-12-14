@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 
 /**
- * @author: 余勇
- * @date: 2019-12-03 00:03
+ * @author 余勇
+ * @date 2019-12-03 00:03
  * 实现 InvocationHandler 接口，池化的 Connection 对象
  */
 class PooledConnection implements InvocationHandler {

@@ -5,8 +5,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import cn.javadog.sd.mybatis.support.cache.Cache;
 
 /**
- * @author: 余勇
- * @date: 2019-12-04 20:14
+ * @author 余勇
+ * @date 2019-12-04 20:14
  *
  * 实现 Cache 接口，同步的 Cache 实现类；就是对所有方法枷锁，实现都是交给委托对象
  */

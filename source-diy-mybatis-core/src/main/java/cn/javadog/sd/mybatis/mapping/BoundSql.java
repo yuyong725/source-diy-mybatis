@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-13 18:02
+ * @author 余勇
+ * @date 2019-12-13 18:02
  *
  * 封装所有信息的SQL
  *

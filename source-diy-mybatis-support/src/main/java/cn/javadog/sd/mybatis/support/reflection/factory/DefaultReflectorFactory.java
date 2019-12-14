@@ -7,8 +7,8 @@ import cn.javadog.sd.mybatis.support.reflection.Reflector;
 import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 18:05
+ * @author 余勇
+ * @date 2019-12-01 18:05
  *
  * ReflectorFactory的默认实现
  */

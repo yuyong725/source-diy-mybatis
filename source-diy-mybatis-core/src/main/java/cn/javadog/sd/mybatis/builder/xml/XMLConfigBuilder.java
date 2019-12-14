@@ -33,8 +33,8 @@ import cn.javadog.sd.mybatis.support.type.JdbcType;
 import cn.javadog.sd.mybatis.support.type.TypeHandler;
 
 /**
- * @author: 余勇
- * @date: 2019-12-10 22:59
+ * @author 余勇
+ * @date 2019-12-10 22:59
  *
  * XML 配置构建器，主要负责解析 mybatis-config.xml 配置文件
  */

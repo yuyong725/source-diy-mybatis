@@ -6,8 +6,8 @@ import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;
 
 /**
- * @author: 余勇
- * @date: 2019-12-11 13:19
+ * @author 余勇
+ * @date 2019-12-11 13:19
  *
  * 指定 当resultMap对应的POJO中，
  * 没有对应的属性(比如 select * 查出来10列，但POJO只有9个属性)；

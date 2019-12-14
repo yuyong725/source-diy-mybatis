@@ -9,8 +9,8 @@ import cn.javadog.sd.mybatis.support.type.BaseTypeHandler;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
 
 /**
- * @author: 余勇
- * @date: 2019-12-05 21:57
+ * @author 余勇
+ * @date 2019-12-05 21:57
  * Year(java) <=> int(jdbc)
  */
 public class YearTypeHandler extends BaseTypeHandler<Year> {

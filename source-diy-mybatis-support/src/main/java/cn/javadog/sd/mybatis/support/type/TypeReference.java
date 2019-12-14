@@ -6,8 +6,8 @@ import java.lang.reflect.Type;
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 19:17
+ * @author 余勇
+ * @date 2019-12-06 19:17
  *
  * 引用泛型抽象类。目的很简单，就是解析类上定义的泛型
  */

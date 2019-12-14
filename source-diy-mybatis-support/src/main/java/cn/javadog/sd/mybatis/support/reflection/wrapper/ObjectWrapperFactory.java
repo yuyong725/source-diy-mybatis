@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.support.reflection.wrapper;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 
 /**
- * @author: 余勇
- * @date: 2019-12-02 20:01
+ * @author 余勇
+ * @date 2019-12-02 20:01
  * ObjectWrapper 工厂接口
  */
 public interface ObjectWrapperFactory {

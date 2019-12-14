@@ -10,8 +10,8 @@ import org.slf4j.spi.LocationAwareLogger;
  * @author Eduardo Macarron
  */
 /**
- * @author: 余勇
- * @date: 2019-12-03 20:43
+ * @author 余勇
+ * @date 2019-12-03 20:43
  * slf4j版本的实现，如果slf4j的版本>1.6且得到的log是LocationAwareLogger类型,才使用这种
  */
 class Slf4jLocationAwareLoggerImpl implements Log {

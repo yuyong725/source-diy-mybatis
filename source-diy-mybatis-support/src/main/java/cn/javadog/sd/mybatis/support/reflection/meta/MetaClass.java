@@ -15,8 +15,8 @@ import cn.javadog.sd.mybatis.support.reflection.invoker.MethodInvoker;
 import cn.javadog.sd.mybatis.support.reflection.property.PropertyTokenizer;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 18:10
+ * @author 余勇
+ * @date 2019-12-01 18:10
  *
  * 类的元数据，基于 Reflector 和 PropertyTokenizer ，提供对指定类的各种骚操作。
  * note 这是个工具类，Reflector通过它暴露给外界使用

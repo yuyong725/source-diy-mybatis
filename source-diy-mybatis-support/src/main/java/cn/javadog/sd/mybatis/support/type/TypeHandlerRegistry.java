@@ -74,8 +74,8 @@ import cn.javadog.sd.mybatis.support.type.handler.ZonedDateTimeTypeHandler;
 import cn.javadog.sd.mybatis.support.util.ResolverUtil;
 
 /**
- * @author: 余勇
- * @date: 2019-12-06 17:14
+ * @author 余勇
+ * @date 2019-12-06 17:14
  * TypeHandler 注册表，相当于管理 TypeHandler 的容器，从其中能获取到对应的 TypeHandler 。
  */
 public final class TypeHandlerRegistry {

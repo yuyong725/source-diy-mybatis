@@ -3,8 +3,8 @@ package cn.javadog.sd.mybatis.support.reflection.factory;
 import cn.javadog.sd.mybatis.support.reflection.Reflector;
 
 /**
- * @author: 余勇
- * @date: 2019-12-01 17:47
+ * @author 余勇
+ * @date 2019-12-01 17:47
  *
  * 反射类Reflector的工厂
  */

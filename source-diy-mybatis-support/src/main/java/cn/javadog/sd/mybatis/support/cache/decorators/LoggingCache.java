@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
  * @author Clinton Begin
  */
 /**
- * @author: 余勇
- * @date: 2019-12-04 17:22
+ * @author 余勇
+ * @date 2019-12-04 17:22
  * 日志装饰器，实际只有 {@link #getObject(Object)} 这一步做了增强
  */
 public class LoggingCache implements Cache {
