@@ -11,13 +11,6 @@ import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 
 /**
- * Statement proxy to add logging
- * 
- * @author Clinton Begin
- * @author Eduardo Macarron
- * 
- */
-/**
  * @author 余勇
  * @date 2019-12-15 14:17
  * 

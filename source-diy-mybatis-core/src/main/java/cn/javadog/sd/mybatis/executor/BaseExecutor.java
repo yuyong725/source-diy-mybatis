@@ -451,7 +451,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   /**
-   *  获得 Connection 对象
+   *  获得 Connection 代理对象
    */
   protected Connection getConnection(Log statementLog) throws SQLException {
     // 获得 Connection 对象
@@ -477,15 +477,44 @@ public abstract class BaseExecutor implements Executor {
    */
   private static class DeferredLoad {
 
+    /**
+     * 原对象。如查询到 学生表的信息，学生有个老师字段，需要延迟加载老师信息。则此 resultObject 代表的就是学生信息
+     */
     private final MetaObject resultObject;
+
+    /**
+     * 延迟加载关联的属性
+     */
     private final String property;
+
+    /**
+     * 延迟加载的返回对象的类型
+     */
     private final Class<?> targetType;
+
+    /**
+     * CacheKey 对象
+     */
     private final CacheKey key;
+
+    /**
+     * 一级缓存
+     */
     private final PerpetualCache localCache;
+
+    /**
+     * ObjectFactory 对象
+     */
     private final ObjectFactory objectFactory;
+
+    /**
+     * 结果提取器
+     */
     private final ResultExtractor resultExtractor;
 
-    // issue #781
+    /**
+     * 构造函数，参见 issue #781
+     */
     public DeferredLoad(MetaObject resultObject,
                         String property,
                         CacheKey key,
@@ -496,24 +525,30 @@ public abstract class BaseExecutor implements Executor {
       this.property = property;
       this.key = key;
       this.localCache = localCache;
+      // 使用 configuration 里的objectFactory
       this.objectFactory = configuration.getObjectFactory();
+      // 初始化 resultExtractor
       this.resultExtractor = new ResultExtractor(configuration, objectFactory);
       this.targetType = targetType;
     }
 
+    /**
+     * 是否可以立即加载，也就是缓存中有
+     */
     public boolean canLoad() {
       return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
     }
 
     /**
-     * 执行延迟加载
+     * 立即加载
      */
     public void load() {
       @SuppressWarnings( "unchecked" )
-      // 假设查询拿到了列表数据
+      // 从缓存拿到了列表数据
       List<Object> list = (List<Object>) localCache.getObject(key);
-
+      // 提取结果
       Object value = resultExtractor.extractObjectFromList(list, targetType);
+      // 设置到 resultObject
       resultObject.setValue(property, value);
     }
 

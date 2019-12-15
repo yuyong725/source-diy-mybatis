@@ -14,19 +14,23 @@ import cn.javadog.sd.mybatis.mapping.MappedStatement;
 public class NoKeyGenerator implements KeyGenerator {
 
   /**
-   * A shared instance.
+   * 共享的单例
    * @since 3.4.3
    */
   public static final NoKeyGenerator INSTANCE = new NoKeyGenerator();
 
+  /**
+   * 啥事不干
+   */
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-    // Do Nothing
   }
 
+  /**
+   * 啥事不干
+   */
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-    // Do Nothing
   }
 
 }
