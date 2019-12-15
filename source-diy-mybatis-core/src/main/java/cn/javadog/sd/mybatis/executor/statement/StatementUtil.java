@@ -1,55 +1,46 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package cn.javadog.sd.mybatis.executor.statement;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Utility for {@link Statement}.
+ * @author 余勇
+ * @date 2019-12-15 13:12
  *
- * @since 3.4.0
- * @author Kazuki Shimizu
+ * statement 工具。
+ * core模块就这一个util结尾的工具类 ，所以不另外开一个包了
  */
 public class StatementUtil {
 
+  /**
+   * 构造方法，不对外开放
+   */
   private StatementUtil() {
-    // NOP
   }
 
   /**
-   * Apply a transaction timeout.
-   * <p>
-   * Update a query timeout to apply a transaction timeout.
-   * </p>
-   * @param statement a target statement
-   * @param queryTimeout a query timeout
-   * @param transactionTimeout a transaction timeout
-   * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
+   * 设置statement的超时时间，基于事务的超时时间和全局的查询超时时间
+   *
+   * @param statement 目标会话
+   * @param queryTimeout 全局查询超时时间
+   * @param transactionTimeout 事务超时时间
+   * @throws SQLException 如果发生SQL异常，会调用 statement 的close方法
    */
   public static void applyTransactionTimeout(Statement statement, Integer queryTimeout, Integer transactionTimeout) throws SQLException {
+    // 事务超时时间为 null 的话，直接返回
     if (transactionTimeout == null){
       return;
     }
     Integer timeToLiveOfQuery = null;
+    // 如果全局 查询超时时间 为0或者null的话
     if (queryTimeout == null || queryTimeout == 0) {
+      // 设置 statement 查询超时时间为事务的超时时间
       timeToLiveOfQuery = transactionTimeout;
     } else if (transactionTimeout < queryTimeout) {
+      // 如果全局查询超时时间比事务的超时时间还要大的话，设置 statement 超时时间为事务超时时间
       timeToLiveOfQuery = transactionTimeout;
     }
+    // 设置 statement 的查询超时时间
     if (timeToLiveOfQuery != null) {
       statement.setQueryTimeout(timeToLiveOfQuery);
     }

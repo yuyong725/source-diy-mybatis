@@ -55,6 +55,8 @@ public class CacheKey implements Cloneable, Serializable {
    * 这个key对应的值的历史记录
    * Sonarlint(一个功能非常强大的代码质量检查、管理的工具)标记这个类应该声明为transient。
    * 如果说没有内容需要被序列化，这里确实应该标记为transient，但偶尔还是有内容需要被序列化的，因此这里没有标记transient
+   *
+   * TODO 上面翻译的不对！
    */
   private List<Object> updateList;
 

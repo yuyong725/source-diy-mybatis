@@ -10,8 +10,7 @@ import java.util.Arrays;
 public class ArrayUtil {
 
   /**
-   * Returns a hash code for {@code obj}.
-   * 
+   *
    * @param obj
    *          The object to get a hash code for. May be an array or <code>null</code>.
    * @return A hash code of {@code obj} or 0 if {@code obj} is <code>null</code>
@@ -50,7 +49,6 @@ public class ArrayUtil {
   }
 
   /**
-   * Compares two objects. Returns <code>true</code> if
    * <ul>
    * <li>{@code thisObj} and {@code thatObj} are both <code>null</code></li>
    * <li>{@code thisObj} and {@code thatObj} are instances of the same type and
