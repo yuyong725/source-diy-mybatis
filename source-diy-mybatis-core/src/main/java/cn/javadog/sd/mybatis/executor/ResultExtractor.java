@@ -9,14 +9,26 @@ import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 
 /**
- * @author Andrew Gustafson
+ * @author 余勇
+ * @date 2019-12-16 21:10
  *
  * 结果提取器
  */
 public class ResultExtractor {
+
+  /**
+   * 全局配置
+   */
   private final Configuration configuration;
+
+  /**
+   * 对象工厂
+   */
   private final ObjectFactory objectFactory;
 
+  /**
+   * 构造函数
+   */
   public ResultExtractor(Configuration configuration, ObjectFactory objectFactory) {
     this.configuration = configuration;
     this.objectFactory = objectFactory;

@@ -25,6 +25,7 @@ import cn.javadog.sd.mybatis.executor.loader.ProxyFactory;
 import cn.javadog.sd.mybatis.executor.loader.cglib.CglibProxyFactory;
 import cn.javadog.sd.mybatis.executor.loader.javassist.JavassistProxyFactory;
 import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.executor.resultset.DefaultResultSetHandler;
 import cn.javadog.sd.mybatis.executor.resultset.ResultSetHandler;
 import cn.javadog.sd.mybatis.executor.statement.RoutingStatementHandler;

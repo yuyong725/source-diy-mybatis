@@ -6,7 +6,7 @@ import java.util.List;
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.cache.CacheKey;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
@@ -85,12 +85,12 @@ public interface Executor {
   Transaction getTransaction();
 
   /**
-   * 关闭事务
+   * 关闭执行器
    */
   void close(boolean forceRollback);
 
   /**
-   * 判断事务是否关闭
+   * 判断执行器关闭
    */
   boolean isClosed();
 

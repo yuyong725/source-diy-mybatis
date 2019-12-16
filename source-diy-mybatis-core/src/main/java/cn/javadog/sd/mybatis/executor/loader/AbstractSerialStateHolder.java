@@ -21,8 +21,9 @@ import java.util.Map;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 
 /**
- * @author Eduardo Macarron
- * @author Franta Mejta
+ * @author 余勇
+ * @date 2019-12-15 16:39
+ * 抽样的序列化状态记录器。不深究不翻译，本框架不做序列化的支持
  */
 public abstract class AbstractSerialStateHolder implements Externalizable {
 

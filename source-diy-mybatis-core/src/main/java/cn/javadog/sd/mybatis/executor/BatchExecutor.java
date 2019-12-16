@@ -16,51 +16,65 @@ import cn.javadog.sd.mybatis.executor.statement.StatementHandler;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
 import cn.javadog.sd.mybatis.session.Configuration;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.transaction.Transaction;
 
 /**
- * @author Jeff Butler
- *
- * 批量执行的 Executor 实现类
+ * @author 余勇
+ * @date 2019-12-16 21:30
+ * 支持批处理的 Executor 实现类。
+ * 强烈建议看看：https://my.oschina.net/zudajun/blog/667214
  */
 public class BatchExecutor extends BaseExecutor {
 
+  /**
+   * 批处理返回值的默认值，也就是所有语句的影响行数
+   */
   public static final int BATCH_UPDATE_RETURN_VALUE = Integer.MIN_VALUE + 1002;
 
   /**
    * Statement 数组
    */
   private final List<Statement> statementList = new ArrayList<>();
+
   /**
    * BatchResult 数组
    *
    * 每一个 BatchResult 元素，对应一个 {@link #statementList} 的 Statement 元素
    */
   private final List<BatchResult> batchResultList = new ArrayList<>();
+
   /**
    * 当前 SQL
    */
   private String currentSql;
+
   /**
    * 当前 MappedStatement 对象
    */
   private MappedStatement currentStatement;
 
+  /**
+   * 构造函数
+   */
   public BatchExecutor(Configuration configuration, Transaction transaction) {
     super(configuration, transaction);
   }
 
+  /**
+   * 增改删
+   */
   @Override
   public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
     final Configuration configuration = ms.getConfiguration();
-    // <1> 创建 StatementHandler 对象
+    // 创建 StatementHandler 对象
     final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
     final BoundSql boundSql = handler.getBoundSql();
+    // 本质执行的SQL
     final String sql = boundSql.getSql();
     final Statement stmt;
-    // <2> 如果匹配最后一次 currentSql 和 currentStatement ，则聚合到 BatchResult 中
+    // 如果匹配最后一次 currentSql 和 currentStatement ，则聚合到 BatchResult 中
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       // <2.1> 获得最后一次的 Statement 对象
       int last = statementList.size() - 1;
@@ -74,18 +88,18 @@ public class BatchExecutor extends BaseExecutor {
       batchResult.addParameterObject(parameterObject);
       // <3> 如果不匹配最后一次 currentSql 和 currentStatement ，则新建 BatchResult 对象
     } else {
-      // <3.1> 获得 Connection
+      // 获得 Connection
       Connection connection = getConnection(ms.getStatementLog());
-      // <3.2> 创建 Statement 或 PrepareStatement 对象
+      // 创建 Statement 或 PrepareStatement 对象
       stmt = handler.prepare(connection, transaction.getTimeout());
-      // <3.3> 设置 SQL 上的参数，例如 PrepareStatement 对象上的占位符
-      handler.parameterize(stmt);    //fix Issues 322
-      // <3.4> 重新设置 currentSql 和 currentStatement
+      // 设置 SQL 上的参数，例如 PrepareStatement 对象上的占位符
+      handler.parameterize(stmt);
+      // 重新设置 currentSql 和 currentStatement
       currentSql = sql;
       currentStatement = ms;
-      // <3.5> 添加 Statement 到 statementList 中
+      // 添加 Statement 到 statementList 中
       statementList.add(stmt);
-      // <3.6> 创建 BatchResult 对象，并添加到 batchResultList 中
+      // 创建 BatchResult 对象，并添加到 batchResultList 中
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
     // handler.parameterize(stmt);

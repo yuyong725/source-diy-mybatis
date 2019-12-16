@@ -2,8 +2,6 @@ package cn.javadog.sd.mybatis.executor.result;
 
 import java.util.Map;
 
-import cn.javadog.sd.mybatis.session.ResultContext;
-import cn.javadog.sd.mybatis.session.ResultHandler;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.reflection.factory.ReflectorFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.BatchResult;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 
 /**
  * The primary Java interface for working with MyBatis.

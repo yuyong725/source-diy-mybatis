@@ -62,7 +62,7 @@ import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.mapping.StatementType;
 import cn.javadog.sd.mybatis.scripting.LanguageDriver;
 import cn.javadog.sd.mybatis.session.Configuration;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.exceptions.BindingException;
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;

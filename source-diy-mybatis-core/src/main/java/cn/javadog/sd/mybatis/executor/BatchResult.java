@@ -8,6 +8,11 @@ import cn.javadog.sd.mybatis.mapping.MappedStatement;
 /**
  * @author Jeff Butler
  */
+/**
+ * @author 余勇
+ * @date 2019-12-16 22:18
+ *
+ */
 public class BatchResult {
 
   /**

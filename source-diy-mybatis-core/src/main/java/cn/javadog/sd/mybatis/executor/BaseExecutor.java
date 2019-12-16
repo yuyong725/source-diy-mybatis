@@ -16,7 +16,7 @@ import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.session.LocalCacheScope;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.cache.CacheKey;
 import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;

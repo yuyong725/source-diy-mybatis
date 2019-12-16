@@ -29,13 +29,28 @@ import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
  * @author Eduardo Macarron
  *
  * 基于 Javassist 的 ProxyFactory 实现类
+ * 关于字节码可以看：https://www.jianshu.com/p/43424242846b
  */
 public class JavassistProxyFactory implements cn.javadog.sd.mybatis.executor.loader.ProxyFactory {
 
+  /**
+   * 日志打印器
+   */
   private static final Log log = LogFactory.getLog(JavassistProxyFactory.class);
+
+  /**
+   * 垃圾回收方法
+   */
   private static final String FINALIZE_METHOD = "finalize";
+
+  /**
+   * 序列化时触发的方法
+   */
   private static final String WRITE_REPLACE_METHOD = "writeReplace";
 
+  /**
+   * 构造方法
+   */
   public JavassistProxyFactory() {
     try {
       // 加载 javassist.util.proxy.ProxyFactory 类
@@ -45,6 +60,9 @@ public class JavassistProxyFactory implements cn.javadog.sd.mybatis.executor.loa
     }
   }
 
+  /**
+   * 创建代理对象
+   */
   @Override
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
@@ -57,6 +75,9 @@ public class JavassistProxyFactory implements cn.javadog.sd.mybatis.executor.loa
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
+  /**
+   * 设置属性，未做实现
+   */
   @Override
   public void setProperties(Properties properties) {
       // Not Implemented
@@ -71,16 +92,17 @@ public class JavassistProxyFactory implements cn.javadog.sd.mybatis.executor.loa
     ProxyFactory enhancer = new ProxyFactory();
     // 设置父类
     enhancer.setSuperclass(type);
-
     // 根据情况，设置接口为 WriteReplaceInterface 。和序列化相关，可以无视
     try {
-      type.getDeclaredMethod(WRITE_REPLACE_METHOD); // 如果已经存在 writeReplace 方法，则不用设置接口为 WriteReplaceInterface
+      // 如果已经存在 writeReplace 方法，则不用设置接口为 WriteReplaceInterface
+      type.getDeclaredMethod(WRITE_REPLACE_METHOD);
       // ObjectOutputStream will call writeReplace of objects returned by writeReplace
       if (log.isDebugEnabled()) {
         log.debug(WRITE_REPLACE_METHOD + " method was found on bean " + type + ", make sure it returns this");
       }
     } catch (NoSuchMethodException e) {
-      enhancer.setInterfaces(new Class[]{WriteReplaceInterface.class}); // 如果不存在 writeReplace 方法，则设置接口为 WriteReplaceInterface
+      // 如果不存在 writeReplace 方法，则设置接口为 WriteReplaceInterface
+      enhancer.setInterfaces(new Class[]{WriteReplaceInterface.class});
     } catch (SecurityException e) {
       // nothing to do here
     }

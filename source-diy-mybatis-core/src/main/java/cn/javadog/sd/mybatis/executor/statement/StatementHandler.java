@@ -8,11 +8,17 @@ import java.util.List;
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 
 /**
  * @author Clinton Begin
  *
+ *
+ *
+ */
+/**
+ * @author 余勇
+ * @date 2019-12-16 20:28
  * Statement 处理器，
  * 其中 Statement 包含 java.sql.Statement、java.sql.PreparedStatement、java.sql.CallableStatement 三种
  */
@@ -40,13 +46,15 @@ public interface StatementHandler {
    * @param statement Statement 对象
    */
   void batch(Statement statement) throws SQLException;
+
   /**
-   * 执行写操作
+   * 执行写操作，增改删都是写
    *
    * @param statement Statement 对象
    * @return 影响的条数
    */
   int update(Statement statement) throws SQLException;
+
   /**
    * 执行读操作
    *
@@ -56,6 +64,7 @@ public interface StatementHandler {
    * @return 读取的结果
    */
   <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException;
+
   /**
    * 执行读操作，返回 Cursor 对象
    *
@@ -66,11 +75,12 @@ public interface StatementHandler {
   <E> Cursor<E> queryCursor(Statement statement) throws SQLException;
 
   /**
-   * @return BoundSql 对象
+   * 获取 BoundSql 对象
    */
   BoundSql getBoundSql();
+
   /**
-   * @return ParameterHandler 对象
+   * 获取 ParameterHandler 对象
    */
   ParameterHandler getParameterHandler();
 

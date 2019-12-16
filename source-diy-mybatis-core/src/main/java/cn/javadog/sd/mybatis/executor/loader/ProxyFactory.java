@@ -7,7 +7,8 @@ import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 
 /**
- * @author Eduardo Macarron
+ * @author 余勇
+ * @date 2019-12-15 15:27
  *
  * 代理工厂接口，用于创建需要延迟加载属性的结果对象
  */

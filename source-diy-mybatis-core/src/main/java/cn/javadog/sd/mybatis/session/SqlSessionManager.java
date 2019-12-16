@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.BatchResult;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.support.exceptions.SqlSessionException;
 import cn.javadog.sd.mybatis.support.transaction.TransactionIsolationLevel;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;

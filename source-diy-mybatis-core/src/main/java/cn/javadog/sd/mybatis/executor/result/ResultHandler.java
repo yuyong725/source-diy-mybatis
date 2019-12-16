@@ -1,9 +1,10 @@
-package cn.javadog.sd.mybatis.session;
+package cn.javadog.sd.mybatis.executor.result;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-15 17:30
  *
- * 结果处理器接口
+ * 结果处理器接口，源码在session包下
  */
 public interface ResultHandler<T> {
 

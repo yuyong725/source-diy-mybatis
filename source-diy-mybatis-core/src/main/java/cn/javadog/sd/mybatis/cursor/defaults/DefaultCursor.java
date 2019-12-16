@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.resultset.DefaultResultSetHandler;
 import cn.javadog.sd.mybatis.executor.resultset.ResultSetWrapper;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
-import cn.javadog.sd.mybatis.session.ResultContext;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultContext;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 
 /**

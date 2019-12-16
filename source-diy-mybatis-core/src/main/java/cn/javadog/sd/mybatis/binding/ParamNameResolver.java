@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 import cn.javadog.sd.mybatis.annotations.Param;
 import cn.javadog.sd.mybatis.session.Configuration;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.type.ParamMap;
 import cn.javadog.sd.mybatis.support.util.ParamNameUtil;

@@ -12,7 +12,9 @@ import cn.javadog.sd.mybatis.support.reflection.property.PropertyNamer;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-15 16:40
+ * 抽象的反序列化代理增强类。不深究不翻译，本框架不做序列化的支持
  */
 public abstract class AbstractEnhancedDeserializationProxy {
 

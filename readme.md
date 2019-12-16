@@ -131,3 +131,6 @@
 
 ##### mapping模块
 * 移除`DefaultDatabaseIdProvider`，本就已废弃
+
+##### executor模块
+* 移除`CglibProxyFactory`和`JavassistProxyFactory`，这俩已废弃。在各自包下有相同的

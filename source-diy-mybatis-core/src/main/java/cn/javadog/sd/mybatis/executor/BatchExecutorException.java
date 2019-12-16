@@ -13,6 +13,13 @@ import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
  * 
  * @author Jeff Butler
  */
+/**
+ * @author 余勇
+ * @date 2019-12-16 20:57
+ * 批处理异常。
+ *
+ *
+ */
 public class BatchExecutorException extends ExecutorException {
 
   private static final long serialVersionUID = 154049229650533990L;

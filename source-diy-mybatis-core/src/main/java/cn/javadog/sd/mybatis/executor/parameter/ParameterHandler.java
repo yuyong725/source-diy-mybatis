@@ -4,18 +4,18 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * A parameter handler sets the parameters of the {@code PreparedStatement}
+ * @author 余勇
+ * @date 2019-12-15 17:28
  *
- * @author Clinton Begin
- *
- * 参数处理器接口
+ * 参数处理器接口。用于给 {@code PreparedStatement} 设置参数
  */
 public interface ParameterHandler {
 
   /**
-   * @return 参数对象
+   * 获取参数对象值
    */
   Object getParameterObject();
+
 
   /**
    * 设置 PreparedStatement 的占位符参数

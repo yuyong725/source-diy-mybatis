@@ -1,10 +1,10 @@
-package cn.javadog.sd.mybatis.session;
+package cn.javadog.sd.mybatis.executor.result;
 
 /**
  * @author 余勇
  * @date 2019-12-13 16:19
  *
- * 结果上下文接口
+ * 结果上下文接口，源码在session包下，移到这里
  */
 public interface ResultContext<T> {
 

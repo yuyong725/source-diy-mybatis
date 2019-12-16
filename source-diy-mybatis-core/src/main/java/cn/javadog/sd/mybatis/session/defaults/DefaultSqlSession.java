@@ -17,7 +17,7 @@ import cn.javadog.sd.mybatis.executor.result.DefaultMapResultHandler;
 import cn.javadog.sd.mybatis.executor.result.DefaultResultContext;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
 import cn.javadog.sd.mybatis.session.Configuration;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.session.SqlSession;
 import cn.javadog.sd.mybatis.support.exceptions.BindingException;

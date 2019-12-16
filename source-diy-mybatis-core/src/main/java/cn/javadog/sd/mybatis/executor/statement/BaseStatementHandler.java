@@ -12,32 +12,68 @@ import cn.javadog.sd.mybatis.executor.resultset.ResultSetHandler;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
 import cn.javadog.sd.mybatis.session.Configuration;
-import cn.javadog.sd.mybatis.session.ResultHandler;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
 import cn.javadog.sd.mybatis.support.reflection.factory.ObjectFactory;
 import cn.javadog.sd.mybatis.support.type.TypeHandlerRegistry;
 
-
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-16 20:29
  *
  * StatementHandler 基类，提供骨架方法，从而使子类只要实现指定的几个抽象方法即可
  */
 public abstract class BaseStatementHandler implements StatementHandler {
 
+  /**
+   * 全局配置
+   */
   protected final Configuration configuration;
+
+  /**
+   * 对象工厂
+   */
   protected final ObjectFactory objectFactory;
+
+  /**
+   * 类型处理器注册表
+   */
   protected final TypeHandlerRegistry typeHandlerRegistry;
+
+  /**
+   * ResultSet 处理器
+   */
   protected final ResultSetHandler resultSetHandler;
+
+  /**
+   * 参数处理器
+   */
   protected final ParameterHandler parameterHandler;
 
+  /**
+   * 执行器
+   */
   protected final Executor executor;
+
+  /**
+   * mappedStatement 对象
+   */
   protected final MappedStatement mappedStatement;
+
+  /**
+   * 分页信息
+   */
   protected final RowBounds rowBounds;
 
+  /**
+   * SQL 信息
+   */
   protected BoundSql boundSql;
 
+  /**
+   * 构造函数
+   */
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     // 获得 Configuration 对象
     this.configuration = mappedStatement.getConfiguration();
@@ -49,38 +85,47 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
 
-    // <1> 如果 boundSql 为空，一般是写类操作，例如：insert、update、delete ，则先获得自增主键，然后再创建 BoundSql 对象
-    if (boundSql == null) { // issue #435, get the key before calculating the statement
-      // <1.1> 获得自增主键
+    // 如果 boundSql 为空，一般是写类操作，例如：insert、update、delete ，则先获得自增主键，然后再创建 BoundSql 对象
+    if (boundSql == null) {
+      // 获得自增主键，对于 Jdbc3KeyGenerator，这里啥也没干
       generateKeys(parameterObject);
-      // <1.2> 创建 BoundSql 对象
+      // 创建 BoundSql 对象
       boundSql = mappedStatement.getBoundSql(parameterObject);
     }
 
     this.boundSql = boundSql;
 
-    // <2> 创建 ParameterHandler 对象
+    // 创建 ParameterHandler 对象
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
-    // <3> 创建 ResultSetHandler 对象
+    // 创建 ResultSetHandler 对象
     this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
   }
 
+  /**
+   * 获取 boundSql
+   */
   @Override
   public BoundSql getBoundSql() {
     return boundSql;
   }
 
+  /**
+   * 获取 parameterHandler
+   */
   @Override
   public ParameterHandler getParameterHandler() {
     return parameterHandler;
   }
 
+  /**
+   * 准备阶段
+   */
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
-      // <1> 创建 Statement 对象
+      // 创建 Statement 对象
       statement = instantiateStatement(connection);
       // 设置超时时间
       setStatementTimeout(statement, transactionTimeout);
@@ -98,8 +143,14 @@ public abstract class BaseStatementHandler implements StatementHandler {
     }
   }
 
+  /**
+   * 初始化 Statement
+   */
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
+  /**
+   * 设置 Statement 超时时间
+   */
   protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
     // 获得 queryTimeout
     Integer queryTimeout = null;
@@ -116,6 +167,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
     StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);
   }
 
+  /**
+   * 设置 FetchSize
+   */
   protected void setFetchSize(Statement stmt) throws SQLException {
     // 获得 fetchSize 。非空，则进行设置
     Integer fetchSize = mappedStatement.getFetchSize();
@@ -130,6 +184,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
     }
   }
 
+  /**
+   * 关闭 statement
+   */
   protected void closeStatement(Statement statement) {
     try {
       if (statement != null) {
@@ -146,9 +203,11 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected void generateKeys(Object parameter) {
     // 获得 KeyGenerator 对象
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
+    // 异常上下文记录一笔
     ErrorContext.instance().store();
-    // 前置处理，创建自增编号到 parameter 中
+    // 前置处理，创建自增编号到 parameter 中。如果是 Jdbc3KeyGenerator，这里啥也不做
     keyGenerator.processBefore(executor, mappedStatement, null, parameter);
+    // 异常上下文记录一笔
     ErrorContext.instance().recall();
   }
 
