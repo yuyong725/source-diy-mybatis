@@ -13,7 +13,6 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
  * 没有对应的属性(比如 select * 查出来10列，但POJO只有9个属性)；
  * 或者有属性未映射到(比如 select * 查出来10列，但POJO只有11个属性)
  *
- * TODO 不确定上面的解释对不对，还是仅仅指
  */
 public enum AutoMappingUnknownColumnBehavior {
 

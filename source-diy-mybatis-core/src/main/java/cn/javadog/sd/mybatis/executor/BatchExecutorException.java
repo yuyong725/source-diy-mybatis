@@ -6,27 +6,33 @@ import java.util.List;
 import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
 
 /**
- * This exception is thrown if a <code>java.sql.BatchUpdateException</code> is caught
- * during the execution of any nested batch.  The exception contains the
- * java.sql.BatchUpdateException that is the root cause, as well as
- * the results from any prior nested batch that executed successfully.  
- * 
- * @author Jeff Butler
- */
-/**
  * @author 余勇
  * @date 2019-12-16 20:57
  * 批处理异常。
- *
- *
+ * 当进行批处理报错时会抛出，根源是 BatchUpdateException
  */
 public class BatchExecutorException extends ExecutorException {
 
   private static final long serialVersionUID = 154049229650533990L;
+
+  /**
+   * 成功的批处理结果
+   */
   private final List<BatchResult> successfulBatchResults;
+
+  /**
+   * 批量更新异常
+   */
   private final BatchUpdateException batchUpdateException;
+
+  /**
+   * 出错的那条记录
+   */
   private final BatchResult batchResult;
 
+  /**
+   * 构造函数
+   */
   public BatchExecutorException(String message, 
                                 BatchUpdateException cause, 
                                 List<BatchResult> successfulBatchResults,
@@ -38,43 +44,29 @@ public class BatchExecutorException extends ExecutorException {
   }
 
   /**
-   * Returns the BatchUpdateException that caused the nested executor
-   * to fail.  That exception contains an array of row counts
-   * that can be used to determine exactly which statement of the
-   * executor caused the failure (or failures).
-   *
-   * @return the root BatchUpdateException
+   * 返回异常的根源 batchUpdateException。该异常包含一个数组，记录批处理语句每一条影响的行数，
+   * 通过它能找到到底哪个 statement 产生的错误
    */
   public BatchUpdateException getBatchUpdateException() {
     return batchUpdateException;
   }
 
   /**
-   * Returns a list of BatchResult objects.  There will be one entry
-   * in the list for each successful sub-executor executed before the failing
-   * executor.
-   *
-   * @return the previously successful executor results (may be an empty list
-   *         if no executor has executed successfully)
+   * 返回 successfulBatchResults。是出错前每个 statement 的结果
    */
   public List<BatchResult> getSuccessfulBatchResults() {
     return successfulBatchResults;
   }
 
   /**
-   * Returns the SQL statement that caused the failure
-   * (not the parameterArray)
-   *
-   * @return the failing SQL string
+   * 返回导致识别的 statement 的SQL
    */
   public String getFailingSqlStatement() {
     return batchResult.getSql();
   }
 
   /**
-   * Returns the statement id of the statement that caused the failure
-   *
-   * @return the statement id
+   * 拿到失败的 statement 的ID
    */
   public String getFailingStatementId() {
     return batchResult.getMappedStatement().getId();

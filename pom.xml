@@ -11,6 +11,7 @@
     <modules>
         <module>source-diy-mybatis-support</module>
         <module>source-diy-mybatis-core</module>
+        <module>source-diy-mybatis-test</module>
     </modules>
 
     <dependencies>

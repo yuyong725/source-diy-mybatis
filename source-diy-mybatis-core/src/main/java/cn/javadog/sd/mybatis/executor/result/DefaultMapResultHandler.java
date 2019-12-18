@@ -8,17 +8,41 @@ import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.reflection.wrapper.ObjectWrapperFactory;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-17 16:25
  *
+ * 针对返回map类型的结果处理器
  */
 public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
+  /**
+   * 要返回结果
+   */
   private final Map<K, V> mappedResults;
+
+  /**
+   * mapKey
+   */
   private final String mapKey;
+
+  /**
+   * 对象工厂
+   */
   private final ObjectFactory objectFactory;
+
+  /**
+   * 包装对象工厂
+   */
   private final ObjectWrapperFactory objectWrapperFactory;
+
+  /**
+   * 反射工厂
+   */
   private final ReflectorFactory reflectorFactory;
 
+  /**
+   * 默认构造
+   */
   @SuppressWarnings("unchecked")
   public DefaultMapResultHandler(String mapKey, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
@@ -36,6 +60,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
   public void handleResult(ResultContext<? extends V> context) {
     // 获得 KEY 对应的属性
     final V value = context.getResultObject();
+    // 获取元信息
     final MetaObject mo = MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
@@ -43,6 +68,9 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     mappedResults.put(key, value);
   }
 
+  /**
+   * 获取结果
+   */
   public Map<K, V> getMappedResults() {
     return mappedResults;
   }

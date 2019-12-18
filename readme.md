@@ -92,9 +92,14 @@
     * 完成builder模块，啃完了也清晰很多
     * 完成cursor模块，就俩类
     * 完成mapping模块，奥力给
- * 12.4
+ * 12.14
     * 完成插件模块，类不多，但 是一个JDK动态代理的 极好案例
     * 完成script模块，其中OGNL几个类不懂也不去深究了，主要是节点的解析和SqlSource
+ * 12.17 
+    * `DefaultResultSetHandler` 这个类划水严重，头大不看
+    * loader包暂时不看，太吃力，先看session
+ * 12.18
+    * 搞定 `session` 模块
  
 
 #### 各个模块的删减部分

@@ -3,21 +3,6 @@ package cn.javadog.sd.mybatis.support.cache;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
- * SPI for cache providers.
- * 
- * One instance of cache will be created for each namespace.
- * 
- * The cache implementation must have a constructor that receives the cache id as an String parameter.
- * 
- * MyBatis will pass the namespace as id to the constructor.
- * 
-
- *
- * @author Clinton Begin
- *
- *
- */
-/**
  * @author 余勇
  * @date 2019-12-04 14:37
  *
