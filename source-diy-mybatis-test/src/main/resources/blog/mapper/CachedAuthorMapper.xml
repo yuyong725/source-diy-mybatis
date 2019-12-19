@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mapper namespace="cn.javadog.sd.mybatis.example.mapper.CachedAuthorMapper">
+
+  <cache readOnly="true"/>
+
+  <select id="selectAllAuthors"
+          resultType="cn.javadog.sd.mybatis.example.domain.Author">
+    select * from author
+  </select>
+
+  <select id="selectAuthorWithInlineParams"
+          parameterType="int"
+          resultType="cn.javadog.sd.mybatis.example.domain.Author">
+    select * from author where id = #{id}
+  </select>
+
+  <insert id="insertAuthor"
+          parameterType="cn.javadog.sd.mybatis.example.domain.Author">
+    insert into Author (id,username,password,email,bio)
+    values (#{id},#{username},#{password},#{email},#{bio})
+  </insert>
+
+  <update id="updateAuthor"
+          parameterType="cn.javadog.sd.mybatis.example.domain.Author">
+    update Author
+    set username=#{username},password=#{password},email=#{email},bio=#{bio}
+    where id=#{id}
+  </update>
+
+  <delete id="deleteAuthor"
+          parameterType="int">
+    delete from Author where id = #{id}
+  </delete>
+
+</mapper>

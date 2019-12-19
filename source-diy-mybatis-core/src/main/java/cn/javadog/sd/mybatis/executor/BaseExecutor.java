@@ -20,6 +20,7 @@ import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.cache.CacheKey;
 import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.support.exceptions.ExecutorException;
 import cn.javadog.sd.mybatis.support.logging.Log;
 import cn.javadog.sd.mybatis.support.logging.LogFactory;

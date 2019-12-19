@@ -2,6 +2,7 @@ package cn.javadog.sd.mybatis.support.parsing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.w3c.dom.CharacterData;
@@ -26,7 +27,6 @@ public class XNode {
 
 	/**
 	 * 节点的name，都是w3c的标准，具体含义不追究
-	 * todo 用处
 	 */
 	private final String name;
 
@@ -41,8 +41,8 @@ public class XNode {
 	/**
 	 * 构造函数
 	 */
-	public XNode(XPathParser xPathParser, Node node, Properties variables){
-		this.xpathParser = xPathParser;
+	public XNode(XPathParser xpathParser, Node node, Properties variables){
+		this.xpathParser = xpathParser;
 		this.node = node;
 		this.name = node.getNodeName();
 		this.variables = variables;
@@ -131,16 +131,16 @@ public class XNode {
 	 * </birth_date>
 	 */
 	private Properties parseAttributes(Node n) {
-		Properties properties = new Properties();
+		Properties attributes = new Properties();
 		NamedNodeMap namedNodeMap = n.getAttributes();
 		if (namedNodeMap != null){
 			for (int i = 0; i < namedNodeMap.getLength(); i++) {
-				Node item = namedNodeMap.item(i);
-				// todo 解析其中的占位符
-				properties.put(item.getNodeName(), item.getNodeValue());
+				Node attribute = namedNodeMap.item(i);
+				String value = PropertyParser.parse(attribute.getNodeValue(), variables);
+				attributes.put(attribute.getNodeName(), value);
 			}
 		}
-		return properties;
+		return attributes;
 	}
 
 	/**
@@ -382,5 +382,42 @@ public class XNode {
 		} else {
 			return Float.parseFloat(value);
 		}
+	}
+
+	/**
+	 * 调试时作用很大
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<");
+		builder.append(name);
+		for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
+			builder.append(" ");
+			builder.append(entry.getKey());
+			builder.append("=\"");
+			builder.append(entry.getValue());
+			builder.append("\"");
+		}
+		List<XNode> children = getChildren();
+		if (!children.isEmpty()) {
+			builder.append(">\n");
+			for (XNode node : children) {
+				builder.append(node.toString());
+			}
+			builder.append("</");
+			builder.append(name);
+			builder.append(">");
+		} else if (body != null) {
+			builder.append(">");
+			builder.append(body);
+			builder.append("</");
+			builder.append(name);
+			builder.append(">");
+		} else {
+			builder.append("/>");
+		}
+		builder.append("\n");
+		return builder.toString();
 	}
 }

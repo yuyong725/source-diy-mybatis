@@ -15,7 +15,7 @@ import java.util.Set;
 import cn.javadog.sd.mybatis.annotations.AutomapConstructor;
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.cursor.defaults.DefaultCursor;
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.Executor;
 import cn.javadog.sd.mybatis.executor.loader.ResultLoader;
 import cn.javadog.sd.mybatis.executor.loader.ResultLoaderMap;
@@ -214,7 +214,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
 
   /**
-   * 处理 java.sql.ResultSet 结果集，转换成映射的对应结果
+   * 处理 java.sql.ResultSet 结果集，转换成映射的对应结果.
+   * 移除了多结果集的处理
    */
   @Override
   public List<Object> handleResultSets(Statement stmt) throws SQLException {
@@ -247,22 +248,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       cleanUpAfterHandlingResultSet();
       // resultSetCount ++
       resultSetCount++;
-    }
-
-    // 因为 `mappedStatement.resultSets` 只在存储过程中使用，本系列暂时不考虑，忽略即可
-    String[] resultSets = mappedStatement.getResultSets();
-    if (resultSets != null) {
-      while (rsw != null && resultSetCount < resultSets.length) {
-        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);
-        if (parentMapping != null) {
-          String nestedResultMapId = parentMapping.getNestedResultMapId();
-          ResultMap resultMap = configuration.getResultMap(nestedResultMapId);
-          handleResultSet(rsw, resultMap, null, parentMapping);
-        }
-        rsw = getNextResultSet(stmt);
-        cleanUpAfterHandlingResultSet();
-        resultSetCount++;
-      }
     }
 
     // 如果是 multipleResults 单元素，则取首元素返回

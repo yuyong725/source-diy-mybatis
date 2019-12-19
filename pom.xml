@@ -28,6 +28,32 @@
             <version>1.7.25</version>
             <optional>true</optional>
         </dependency>
+
+        <!--javassist TODO-->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.24.1-GA</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--ognl xml解析需要表达式支持-->
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>3.2.10</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--cglib 动态代理-->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.10</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 
@@ -45,6 +71,39 @@
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <!--隐藏包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <includes>
+                                    <include>cn.javadog:source-diy-mybatis</include>
+                                    <include>ognl:ognl</include>
+                                    <include>org.javassist:javassist</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>ognl</pattern>
+                                    <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javassist</pattern>
+                                    <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

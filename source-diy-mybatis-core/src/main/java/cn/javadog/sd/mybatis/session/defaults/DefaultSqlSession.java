@@ -11,7 +11,7 @@ import java.util.Map;
 
 import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.BatchResult;
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.Executor;
 import cn.javadog.sd.mybatis.executor.result.DefaultMapResultHandler;
 import cn.javadog.sd.mybatis.executor.result.DefaultResultContext;

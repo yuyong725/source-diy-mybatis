@@ -11,7 +11,7 @@ import cn.javadog.sd.mybatis.session.Configuration;
  *
  * <set /> 标签的 SqlNode 实现类。用于 UPDATE。
  * 使用示例：
- * <update id="updateAuthorIfNecessary" parameterType="org.apache.ibatis.domain.blog.Author">
+ * <update id="updateAuthorIfNecessary" parameterType="cn.javadog.sd.mybatis.test.example.domain.Author">
  * 	 update Author
  * 	 <set>
  * 			<if test="username != null">username=#{username},</if>

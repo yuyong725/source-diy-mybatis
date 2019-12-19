@@ -5,6 +5,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -53,22 +54,28 @@ public class XPathParser {
 	/**
 	 * Java XPath 对象，解析的底层实现交给它完成
 	 */
-	private XPath xPath;
+	private XPath xpath;
 
 	/*三种构造*/
 
 	public XPathParser(String xml, Properties variables) {
 		this.variables = variables;
+		XPathFactory factory = XPathFactory.newInstance();
+		this.xpath = factory.newXPath();
 		this.document = createDocument(new InputSource(new StringReader(xml)));
 	}
 
 	public XPathParser(Reader reader, Properties variables) {
 		this.variables = variables;
+		XPathFactory factory = XPathFactory.newInstance();
+		this.xpath = factory.newXPath();
 		this.document = createDocument(new InputSource(reader));
 	}
 
 	public XPathParser(InputStream inputStream, Properties variables) {
 		this.variables = variables;
+		XPathFactory factory = XPathFactory.newInstance();
+		this.xpath = factory.newXPath();
 		this.document = createDocument(new InputSource(inputStream));
 	}
 
@@ -123,7 +130,7 @@ public class XPathParser {
 	 */
 	private Object evaluate(String expression, Object root, QName returnType) {
 		try {
-			return xPath.evaluate(expression, root, returnType);
+			return xpath.evaluate(expression, root, returnType);
 		} catch (Exception e) {
 			throw new ParsingException("Error evaluating XPath. Cause: " + e, e);
 		}
@@ -213,6 +220,10 @@ public class XPathParser {
 
 	public XNode evalNode(String expression, Object root){
 		Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
+		// 必须判断，不然GG
+		if (node == null) {
+			return null;
+		}
 		return new XNode(this, node, variables);
 	}
 

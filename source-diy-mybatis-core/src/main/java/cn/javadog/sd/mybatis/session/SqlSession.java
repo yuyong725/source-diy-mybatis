@@ -10,14 +10,6 @@ import cn.javadog.sd.mybatis.executor.BatchResult;
 import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 
 /**
- * The primary Java interface for working with MyBatis.
- * Through this interface you can execute commands, get mappers and manage transactions.
- *
- * @author Clinton Begin
- *
- *
- */
-/**
  * @author 余勇
  * @date 2019-12-17 15:30
  *

@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.mapping.CacheBuilder;
 import cn.javadog.sd.mybatis.mapping.Discriminator;

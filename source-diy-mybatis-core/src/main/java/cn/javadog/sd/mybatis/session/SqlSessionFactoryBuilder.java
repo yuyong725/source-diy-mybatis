@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 import cn.javadog.sd.mybatis.builder.xml.XMLConfigBuilder;
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.session.defaults.DefaultSqlSessionFactory;
 import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
 

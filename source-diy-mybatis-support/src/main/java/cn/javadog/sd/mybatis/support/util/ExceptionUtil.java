@@ -3,6 +3,9 @@ package cn.javadog.sd.mybatis.support.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
+import cn.javadog.sd.mybatis.support.exceptions.BaseException;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
+
 /**
  * @author 余勇
  * @date 2019-12-01 18:08
@@ -43,9 +46,7 @@ public class ExceptionUtil {
    * @return BaseException
    */
   public static RuntimeException wrapException(String message, Exception e) {
-    // TODO ErrorContext
-    return null;
-    // return new BaseException(ErrorContext.instance().message(message).cause(e).toString(), e);
+     return new BaseException(ErrorContext.instance().message(message).cause(e).toString(), e);
   }
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mapper namespace="cn.javadog.sd.mybatis.example.mapper.AuthorMapper">
+
+	<resultMap id="selectAuthor" type="cn.javadog.sd.mybatis.example.domain.Author">
+		<id column="id" property="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<result property="bio" column="bio" />
+		<result property="favouriteSection" column="favourite_section" />
+	</resultMap>
+
+	<select id="selectAllAuthors" resultType="cn.javadog.sd.mybatis.example.domain.Author">
+		select * from author
+	</select>
+
+
+
+</mapper>

@@ -3,7 +3,7 @@ package cn.javadog.sd.mybatis.session.defaults;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.Executor;
 import cn.javadog.sd.mybatis.mapping.Environment;
 import cn.javadog.sd.mybatis.session.Configuration;

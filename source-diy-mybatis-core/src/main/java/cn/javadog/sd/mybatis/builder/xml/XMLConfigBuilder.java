@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 import cn.javadog.sd.mybatis.builder.BaseBuilder;
-import cn.javadog.sd.mybatis.executor.ErrorContext;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.loader.ProxyFactory;
 import cn.javadog.sd.mybatis.mapping.DatabaseIdProvider;
 import cn.javadog.sd.mybatis.mapping.Environment;

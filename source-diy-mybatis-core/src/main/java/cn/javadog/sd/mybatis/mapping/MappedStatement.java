@@ -22,6 +22,10 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
  */
 public final class MappedStatement {
 
+  /**
+   * 对应的xml资源, 如：org/apache/ibatis/builder/AuthorMapper.xml
+   * 对应的mapper接口，如：org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess)
+   */
   private String resource;
 
   /**
@@ -30,13 +34,16 @@ public final class MappedStatement {
   private Configuration configuration;
 
   /**
-   * 唯一标示
+   * 唯一标示。
+   * ${namespace}.${methodname}，
+   * 如: cn.javadog.sd.mybatis.example.mapper.AuthorMapper.selectAllAuthorsArray
    */
   private String id;
 
   /**
    * 驱动每次返回的行数，比如查询一句符合条件1000条，但fetchSize设置的额200条，那么驱动会将
-   * 查询到的结果分五次返回，当然，客户端是无感知的。哈哈，我猜的😄
+   * 查询到的结果分五次返回，当然，客户端是无感知的。
+   * 补充阅读：https://juejin.im/post/5a6757e351882573541c86bb
    */
   private Integer fetchSize;
 
@@ -63,6 +70,7 @@ public final class MappedStatement {
 
   /**
    * Cache 对象，用于二级缓存
+   * TODO 一级还是二级？
    */
   private Cache cache;
 

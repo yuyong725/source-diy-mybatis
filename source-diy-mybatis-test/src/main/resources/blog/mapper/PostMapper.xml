@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mapper namespace="cn.javadog.sd.mybatis.example.mapper.PostMapper">
+
+	<select id="selectCountOfPosts" resultType="int">
+		select count(1) from post
+	</select>
+
+</mapper>

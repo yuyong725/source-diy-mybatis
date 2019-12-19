@@ -268,7 +268,7 @@ public class Reflector {
 			// 记录当前类定义的方法
 			addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 			// 记录接口中定义的方法，接口方法的优先级要低于父类的方法，对比Java8的接口的default方法就可以理解的，
-			// 关于接口的default方法可以看下https://blog.csdn.net/wf13265/article/details/79363522
+			// 关于接口的default方法可以看下https://example.csdn.net/wf13265/article/details/79363522
 			Class<?>[] interfaces = currentClass.getInterfaces();
 			for (Class<?> anInterface : interfaces) {
 				// 接口没有private方法，可以直接通过getMethods获取父类所有方法。正好避免了在这里再去处理似有方法与父类方法😄
