@@ -10,8 +10,8 @@ import cn.javadog.sd.mybatis.mapping.ResultSetType;
 import cn.javadog.sd.mybatis.mapping.StatementType;
 
 /**
- * @author Clinton Begin
- *
+ * @author 余勇
+ * @date 2019-12-19 19:27
  * 操作可选项
  * 通过 useGeneratedKeys + keyProperty + keyColumn 属性，可实现返回自增 ID
  */

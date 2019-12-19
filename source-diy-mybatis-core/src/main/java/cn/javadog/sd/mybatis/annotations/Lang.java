@@ -9,7 +9,9 @@ import java.lang.annotation.Target;
 import cn.javadog.sd.mybatis.scripting.LanguageDriver;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-19 19:26
+ * 指定方法所用的语言驱动
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

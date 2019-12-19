@@ -10,11 +10,6 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author Clinton Begin
- *
- *
- */
-/**
  * @author 余勇
  * @date 2019-12-13 12:54
  *

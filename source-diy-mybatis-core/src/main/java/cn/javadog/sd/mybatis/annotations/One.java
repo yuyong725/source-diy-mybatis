@@ -8,11 +8,6 @@ import java.lang.annotation.Target;
 import cn.javadog.sd.mybatis.mapping.FetchType;
 
 /**
- * @author Clinton Begin
- *
- * 复杂类型的单独属性值的注解
- */
-/**
  * @author 余勇
  * @date 2019-12-13 12:58
  *
