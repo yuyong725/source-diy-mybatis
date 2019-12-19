@@ -9,7 +9,9 @@ import java.lang.annotation.Target;
 import cn.javadog.sd.mybatis.mapping.StatementType;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-19 17:02
+ * 用于返回主键
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
