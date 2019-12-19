@@ -32,7 +32,6 @@ public enum SqlCommandType {
   /**
    * FLUSH
    */
-  FLUSH;
-
+  FLUSH
 
 }

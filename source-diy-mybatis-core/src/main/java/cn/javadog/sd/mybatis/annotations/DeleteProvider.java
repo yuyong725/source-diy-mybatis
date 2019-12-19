@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author 余勇
- * @date 2019-12-19 19:25
+ * @date 2019-12-19 16:58
  * 删除语句提供器
  */
 @Documented

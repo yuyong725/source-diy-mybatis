@@ -11,6 +11,11 @@ import java.lang.annotation.Target;
  * @date 2019-12-19 19:25
  * delete 语句
  */
+/**
+ * @author 余勇
+ * @date 2019-12-19 16:58
+ * 标记 delete 语句
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

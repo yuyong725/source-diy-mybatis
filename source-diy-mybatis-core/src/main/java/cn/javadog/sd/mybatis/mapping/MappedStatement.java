@@ -1,9 +1,5 @@
 package cn.javadog.sd.mybatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import cn.javadog.sd.mybatis.executor.keygen.Jdbc3KeyGenerator;
 import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.executor.keygen.NoKeyGenerator;
@@ -75,17 +71,13 @@ public final class MappedStatement {
   private Cache cache;
 
   /**
-   * 对应的 ParameterMap
-   */
-  private ParameterMap parameterMap;
-
-  /**
    * 对应的 ResultMap 列表，一个SQL可以根据结果，使用不同的 ResultMap
    */
-  private List<ResultMap> resultMaps;
+  private ResultMap resultMap;
 
   /**
-   * 是否需要刷新缓存，这取决于sql 的类型和缓存的类型
+   * 是否需要刷新缓存，这取决于sql 的类型和缓存的类型.
+   * 从赋值的逻辑可以看到，查询不刷新，增改删除会刷新
    */
   private boolean flushCacheRequired;
 
@@ -125,11 +117,6 @@ public final class MappedStatement {
   private boolean hasNestedResultMaps;
 
   /**
-   * 数据库ID
-   */
-  private String databaseId;
-
-  /**
    * 日志打印器
    */
   private Log statementLog;
@@ -138,11 +125,6 @@ public final class MappedStatement {
    * 语言驱动
    */
   private LanguageDriver lang;
-
-  /**
-   * 用于存储过程，返回多个结果集
-   */
-  private String[] resultSets;
 
   /**
    * 构造函数，没被public修改，相当于关闭了，由 构造器调用暴露
@@ -171,10 +153,6 @@ public final class MappedStatement {
       mappedStatement.statementType = StatementType.PREPARED;
       // resultSetType使用默认值 DEFAULT
       mappedStatement.resultSetType = ResultSetType.DEFAULT;
-      // parameterMap 使用ParameterMap.Builder构建一个默认的实现
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
-      // resultMaps 空数组
-      mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
       // 当sql命令是insert操作，且全局配置需要生成主键，就使用Jdbc3KeyGenerator(适用于MySQL)，否则使用NoKeyGenerator，也就是不做操作
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
@@ -204,22 +182,12 @@ public final class MappedStatement {
     }
 
     /**
-     * 设置 parameterMap
+     * 设置 resultMap
      */
-    public Builder parameterMap(ParameterMap parameterMap) {
-      mappedStatement.parameterMap = parameterMap;
-      return this;
-    }
-
-    /**
-     * 设置 resultMaps
-     */
-    public Builder resultMaps(List<ResultMap> resultMaps) {
-      mappedStatement.resultMaps = resultMaps;
-      for (ResultMap resultMap : resultMaps) {
-        // 只要一个resultMap有嵌套的resultMap，就可以认为 mappedStatement 有嵌套查询
-        mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps || resultMap.hasNestedResultMaps();
-      }
+    public Builder resultMap(ResultMap resultMap) {
+      mappedStatement.resultMap = resultMap;
+      // 只要一个resultMap有嵌套的resultMap，就可以认为 mappedStatement 有嵌套查询
+      mappedStatement.hasNestedResultMaps = mappedStatement.hasNestedResultMaps || resultMap.hasNestedResultMaps();
       return this;
     }
 
@@ -307,27 +275,10 @@ public final class MappedStatement {
     }
 
     /**
-     * 设置 databaseId
-     */
-    public Builder databaseId(String databaseId) {
-      mappedStatement.databaseId = databaseId;
-      return this;
-    }
-
-    /**
      * 设置 lang
      */
     public Builder lang(LanguageDriver driver) {
       mappedStatement.lang = driver;
-      return this;
-    }
-
-    /**
-     * 设置 resultSets
-     */
-    public Builder resultSets(String resultSet) {
-      // 将 resultSet 切割成数组
-      mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
 
@@ -341,8 +292,7 @@ public final class MappedStatement {
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
       assert mappedStatement.lang != null;
-      // 将 resultMaps 包装成不可变
-      mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
+      assert mappedStatement.resultMap != null;
       return mappedStatement;
     }
   }
@@ -393,12 +343,8 @@ public final class MappedStatement {
     return sqlSource;
   }
 
-  public ParameterMap getParameterMap() {
-    return parameterMap;
-  }
-
-  public List<ResultMap> getResultMaps() {
-    return resultMaps;
+  public ResultMap getResultMap() {
+    return resultMap;
   }
 
   public Cache getCache() {
@@ -417,10 +363,6 @@ public final class MappedStatement {
     return resultOrdered;
   }
 
-  public String getDatabaseId() {
-    return databaseId;
-  }
-
   public String[] getKeyProperties() {
     return keyProperties;
   }
@@ -437,37 +379,12 @@ public final class MappedStatement {
     return lang;
   }
 
-  public String[] getResultSets() {
-    return resultSets;
-  }
-
   /**
    * 非常重要，获取对应的 BoundSql
    */
   public BoundSql getBoundSql(Object parameterObject) {
     // 获得 BoundSql 对象
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    // 忽略，因为 <parameterMap /> 已经废弃，参见 http://www.mybatis.org/mybatis-3/zh/sqlmap-xml.html 文档
-    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-    if (parameterMappings == null || parameterMappings.isEmpty()) {
-      boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
-    }
-    // 判断传入的参数中，是否有内嵌的结果 ResultMap 。如果有，则修改 hasNestedResultMaps 为 true
-    // 存储过程相关，暂时无视
-    for (ParameterMapping pm : boundSql.getParameterMappings()) {
-      // 拿到ParameterMapping的ResultMapId，因为此参数对应返回值，需要解析。只有存储过程才会由此属性
-      String rmId = pm.getResultMapId();
-      if (rmId != null) {
-        // 拿到对应的resultMap
-        ResultMap rm = configuration.getResultMap(rmId);
-        if (rm != null) {
-          // |= 挺有意思，a |= b 相当于 a= a || b
-          hasNestedResultMaps |= rm.hasNestedResultMaps();
-        }
-      }
-    }
-
-    return boundSql;
+    return sqlSource.getBoundSql(parameterObject);
   }
 
   /**

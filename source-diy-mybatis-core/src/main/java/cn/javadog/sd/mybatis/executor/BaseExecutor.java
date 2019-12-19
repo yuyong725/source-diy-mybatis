@@ -12,7 +12,6 @@ import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.statement.StatementUtil;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
-import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.session.LocalCacheScope;

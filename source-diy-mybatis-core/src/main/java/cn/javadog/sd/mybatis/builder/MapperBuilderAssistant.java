@@ -15,8 +15,6 @@ import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.mapping.CacheBuilder;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
-import cn.javadog.sd.mybatis.mapping.ParameterMap;
-import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.mapping.ResultFlag;
 import cn.javadog.sd.mybatis.mapping.ResultMap;

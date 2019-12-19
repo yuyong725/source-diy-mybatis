@@ -19,6 +19,7 @@ import cn.javadog.sd.mybatis.mapping.StatementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Options {
+
   /**
    * The options for the {@link Options#flushCache()}.
    * The default is {@link FlushCachePolicy#DEFAULT}

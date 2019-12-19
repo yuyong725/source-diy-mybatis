@@ -15,7 +15,6 @@ import cn.javadog.sd.mybatis.builder.BaseBuilder;
 import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
 import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
-import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.mapping.ResultFlag;
 import cn.javadog.sd.mybatis.mapping.ResultMap;

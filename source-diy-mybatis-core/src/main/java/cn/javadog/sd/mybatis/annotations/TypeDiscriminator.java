@@ -13,7 +13,7 @@ import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 /**
  * @author 余勇
  * @date 2019-12-19 19:29
- * TODo
+ * TODO
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
