@@ -11,10 +11,9 @@ import cn.javadog.sd.mybatis.support.cache.decorators.BlockingCache;
 import cn.javadog.sd.mybatis.support.cache.decorators.LruCache;
 import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
 
-
 /**
- * @author Clinton Begin
- * @author Kazuki Shimizu
+ * @author 余勇
+ * @date 2019-12-19 16:57
  *
  * 缓存空间配置的注解
  * 对应 XML 标签为 <cache />
