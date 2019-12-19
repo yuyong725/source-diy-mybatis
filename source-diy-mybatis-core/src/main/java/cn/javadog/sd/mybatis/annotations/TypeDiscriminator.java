@@ -11,7 +11,9 @@ import cn.javadog.sd.mybatis.support.type.TypeHandler;
 import cn.javadog.sd.mybatis.support.type.handler.UnknownTypeHandler;
 
 /**
- * @author Clinton Begin
+ * @author 余勇
+ * @date 2019-12-19 17:03
+ * TODO
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

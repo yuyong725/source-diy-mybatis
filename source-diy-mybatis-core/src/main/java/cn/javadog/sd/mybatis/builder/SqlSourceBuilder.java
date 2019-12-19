@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.scripting.xmltags.DynamicContext;
 import cn.javadog.sd.mybatis.session.Configuration;

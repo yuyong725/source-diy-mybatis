@@ -1,10 +1,5 @@
 package cn.javadog.sd.mybatis.binding;
 
-import cn.javadog.sd.mybatis.annotations.Flush;
-import cn.javadog.sd.mybatis.annotations.MapKey;
-import cn.javadog.sd.mybatis.cursor.Cursor;
-import cn.javadog.sd.mybatis.mapping.MappedStatement;
-import cn.javadog.sd.mybatis.mapping.SqlCommandType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -13,8 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.annotations.Flush;
+import cn.javadog.sd.mybatis.annotations.MapKey;
+import cn.javadog.sd.mybatis.cursor.Cursor;
 import cn.javadog.sd.mybatis.executor.result.ResultHandler;
+import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.SqlCommandType;
+import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.session.SqlSession;
 import cn.javadog.sd.mybatis.support.exceptions.BindingException;
@@ -157,7 +157,7 @@ public class MapperMethod {
     // 获得 MappedStatement 对象
     MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
     // 返回结果类型是void，抛出 BindingException 异常。note 这里删除了存储过程的判断
-    if (void.class.equals(ms.getResultMaps().get(0).getType())) {
+    if (void.class.equals(ms.getResultMap().getType())) {
       throw new BindingException("method " + command.getName()
               + " needs either a @ResultMap annotation, a @ResultType annotation,"
               + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");

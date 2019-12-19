@@ -8,7 +8,6 @@ import java.util.Properties;
 import cn.javadog.sd.mybatis.builder.BaseBuilder;
 import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.loader.ProxyFactory;
-import cn.javadog.sd.mybatis.mapping.DatabaseIdProvider;
 import cn.javadog.sd.mybatis.mapping.Environment;
 import cn.javadog.sd.mybatis.plugin.Interceptor;
 import cn.javadog.sd.mybatis.session.AutoMappingBehavior;

@@ -7,9 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
- *
- * 结果的注解
+ * @author 余勇
+ * @date 2019-12-19 17:01
  * 对应 XML 标签为 <resultMap />
  */
 @Documented

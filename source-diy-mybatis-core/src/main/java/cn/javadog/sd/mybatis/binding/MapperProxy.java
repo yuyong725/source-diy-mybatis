@@ -1,6 +1,5 @@
 package cn.javadog.sd.mybatis.binding;
 
-import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -17,9 +16,7 @@ import cn.javadog.sd.mybatis.support.util.ExceptionUtil;
  *
  * 实现 InvocationHandler、Serializable 接口，Mapper Proxy
  */
-public class MapperProxy<T> implements InvocationHandler, Serializable {
-
-  private static final long serialVersionUID = -6424540398559729838L;
+public class MapperProxy<T> implements InvocationHandler {
 
   /**
    * SqlSession 对象,方法的执行由它完成，实际是交给MapperMethod，由它完成
