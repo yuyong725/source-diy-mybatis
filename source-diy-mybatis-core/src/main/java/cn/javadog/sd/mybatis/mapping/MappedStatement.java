@@ -1,5 +1,7 @@
 package cn.javadog.sd.mybatis.mapping;
 
+import java.util.ArrayList;
+
 import cn.javadog.sd.mybatis.executor.keygen.Jdbc3KeyGenerator;
 import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.executor.keygen.NoKeyGenerator;
@@ -127,6 +129,11 @@ public final class MappedStatement {
   private LanguageDriver lang;
 
   /**
+   * 关联的 parameterMap，此框架只有内联和无参数的 parameterMap
+   */
+  private ParameterMap parameterMap;
+
+  /**
    * 构造函数，没被public修改，相当于关闭了，由 构造器调用暴露
    */
   MappedStatement() {
@@ -153,6 +160,7 @@ public final class MappedStatement {
       mappedStatement.statementType = StatementType.PREPARED;
       // resultSetType使用默认值 DEFAULT
       mappedStatement.resultSetType = ResultSetType.DEFAULT;
+      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
       mappedStatement.sqlCommandType = sqlCommandType;
       // 当sql命令是insert操作，且全局配置需要生成主键，就使用Jdbc3KeyGenerator(适用于MySQL)，否则使用NoKeyGenerator，也就是不做操作
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
@@ -179,6 +187,11 @@ public final class MappedStatement {
      */
     public String id() {
       return mappedStatement.id;
+    }
+
+    public Builder parameterMap(ParameterMap parameterMap) {
+      mappedStatement.parameterMap = parameterMap;
+      return this;
     }
 
     /**
@@ -313,6 +326,10 @@ public final class MappedStatement {
 
   public Configuration getConfiguration() {
     return configuration;
+  }
+
+  public ParameterMap getParameterMap() {
+    return parameterMap;
   }
 
   public String getId() {

@@ -4,12 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.parameter.ParameterHandler;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.session.Configuration;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.support.exceptions.TypeException;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
@@ -69,6 +70,7 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   /**
    * 将 parameterObject 参数值填充到 PreparedStatement
+   * TODO 按理是必然为空
    */
   @Override
   public void setParameters(PreparedStatement ps) {
@@ -81,7 +83,7 @@ public class DefaultParameterHandler implements ParameterHandler {
         // 获得 ParameterMapping 对象
         ParameterMapping parameterMapping = parameterMappings.get(i);
         // 排除 存储过程 的情况
-        if (parameterMapping.getMode() != ParameterMode.OUT) {
+        if (parameterMapping.getMode() == ParameterMode.IN) {
           Object value;
           // 先拿到字段名
           String propertyName = parameterMapping.getProperty();

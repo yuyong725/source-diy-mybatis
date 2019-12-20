@@ -10,12 +10,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.executor.keygen.KeyGenerator;
 import cn.javadog.sd.mybatis.mapping.CacheBuilder;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
-import cn.javadog.sd.mybatis.mapping.ParameterMode;
+import cn.javadog.sd.mybatis.mapping.ParameterMap;
 import cn.javadog.sd.mybatis.mapping.ResultFlag;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
 import cn.javadog.sd.mybatis.mapping.ResultMapping;
@@ -29,6 +28,7 @@ import cn.javadog.sd.mybatis.support.cache.Cache;
 import cn.javadog.sd.mybatis.support.cache.decorators.LruCache;
 import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.support.exceptions.IncompleteElementException;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaClass;
 import cn.javadog.sd.mybatis.support.type.JdbcType;
@@ -105,8 +105,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   /**
-   * 拼接命名空间
-   * TODO 根据使用场景翻译
+   * 拼接命名空间,TODO 相关不相关哪来的
    * @param base 要拼接的名称，比如resultMap或parameterMap的ID
    * @param isReference 是否与当前命名空间相关
    */
@@ -119,8 +118,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       if (base.contains(".")) {
         return base;
       }
-    } else {
-      // 与当前命名空间不相关，
+    }
+    // 与当前命名空间不相关
+    else {
       // 如果是以当前命名空间+'.'开头，那也直接返回base，可以认为它就是与当前命名空间相关的
       if (base.startsWith(currentNamespace + ".")) {
         return base;
@@ -169,7 +169,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
    * @param blocking 是否阻塞，就是读取的时候是否阻塞其他线程读取
    * @param flushInterval 刷新周期
    * @param readWrite 是否可序列化
-   * @param size 如果缓存实现类有size属性的话，就使用该值，note 这不是可存储缓存的大小
+   * @param size 如果缓存实现类有size属性的话，就使用该值，这不是可存储缓存的大小
    * @param props 缓存实现类的特定字段的属性值
    */
   public Cache useNewCache(Class<? extends Cache> typeClass,
@@ -187,7 +187,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .addDecorator(valueOrDefault(evictionClass, LruCache.class))
         // 默认不设置,也就是没有刷新间隔,缓存仅仅调用clear语句时刷新。设置了即使用ScheduledCache
         .clearInterval(flushInterval)
-        // 如果缓存实现类有size属性的话，就使用该值，note 这不是可存储缓存的大小
+        // 如果缓存实现类有size属性的话，就使用该值，这不是可存储缓存的大小
         .size(size)
         // 是否可序列化缓存
         .readWrite(readWrite)
@@ -202,61 +202,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     // 赋值给 currentCache
     currentCache = cache;
     return cache;
-  }
-
-  /**
-   * 添加ParameterMap
-   *
-   * @param id <ParameterMap /> 标签的ID属性
-   * @param parameterMappings <ParameterMap /> 标签下的所有子元素
-   * @param parameterClass <ParameterMap /> 标签的type属性
-   */
-  public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
-    // 拼接完整的带命名空间的ID
-    id = applyCurrentNamespace(id, false);
-    // 构建ParameterMap
-    ParameterMap parameterMap = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings).build();
-    // 添加 ParameterMap 到 configuration
-    configuration.addParameterMap(parameterMap);
-    // 返回构建的 parameterMap
-    return parameterMap;
-  }
-
-  /**
-   * 构建ParameterMapping，就是<ParameterMap /> 标签下的子标签 <parameter />
-   *
-   * @param parameterType <ParameterMap /> 的type
-   * @param javaType 属性的Java类型
-   * @param jdbcType 对应字段的jdbc类型
-   * @param property 属性名 note 这里没有字段名，因为这只是入参数，不是解析结果
-   * @param resultMap note 忽略，貌似只在存储过程中使用
-   * @param parameterMode {@link ParameterMode} 存储过程时才会去指定
-   * @param typeHandler 使用的类型处理器
-   * @param numericScale 对于数字类型的参数，使用什么级别的精确度
-   */
-  public ParameterMapping buildParameterMapping(
-      Class<?> parameterType,
-      String property,
-      Class<?> javaType,
-      JdbcType jdbcType,
-      String resultMap,
-      ParameterMode parameterMode,
-      Class<? extends TypeHandler<?>> typeHandler,
-      Integer numericScale) {
-    // resultMap拼接namespace
-    resultMap = applyCurrentNamespace(resultMap, true);
-    // 解析属性最匹配的Java类型
-    Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    // 解析javaTypeClass对应的typeHandler实例
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
-    // 构建ParameterMapping
-    return new ParameterMapping.Builder(configuration, property, javaTypeClass)
-        .jdbcType(jdbcType)
-        .resultMapId(resultMap)
-        .mode(parameterMode)
-        .numericScale(numericScale)
-        .typeHandler(typeHandlerInstance)
-        .build();
   }
 
   /**
@@ -337,21 +282,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler, Map<String, String> discriminatorMap) {
 
     // 构建 ResultMapping 对象
-    ResultMapping resultMapping = buildResultMapping(
-        resultType,
-        null,
-        column,
-        javaType,
-        jdbcType,
-        null,
-        null,
-        null,
-        null,
-        typeHandler,
-        new ArrayList<ResultFlag>(),
-        null,
-        null,
-        false);
+    ResultMapping resultMapping = buildResultMapping(resultType, null, column, javaType,
+        jdbcType, null, null, null, null, typeHandler,
+        new ArrayList<>(), false);
     // 创建 namespaceDiscriminatorMap 映射
     Map<String, String> namespaceDiscriminatorMap = new HashMap<>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
@@ -387,9 +320,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       KeyGenerator keyGenerator,
       String keyProperty,
       String keyColumn,
-      String databaseId,
-      LanguageDriver lang,
-      String resultSets) {
+      LanguageDriver lang) {
 
     // 如果指向的 Cache 未解析，抛出 IncompleteElementException 异常。note 默认值是false，只有开始解析却未解析成功才会true
     if (unresolvedCacheRef) {
@@ -410,12 +341,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .keyGenerator(keyGenerator)
         .keyProperty(keyProperty)
         .keyColumn(keyColumn)
-        .databaseId(databaseId)
         .lang(lang)
         .resultOrdered(resultOrdered)
-        .resultSets(resultSets)
-            // 获得 ResultMap 集合
-        .resultMaps(getStatementResultMaps(resultMap, resultType, id))
+        // 获得 ResultMap 集合
+        .resultMap(getStatementResultMap(resultMap, resultType, id))
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
         .useCache(valueOrDefault(useCache, isSelect))
@@ -442,12 +371,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   /**
-   * 构建Statement的ParameterMap
+   * 构建Statement的ParameterMap。如果是内联，对应的 ParameterMapping 是空数组
    */
-  private ParameterMap getStatementParameterMap(
-      String parameterMapName,
-      Class<?> parameterTypeClass,
-      String statementId) {
+  private ParameterMap getStatementParameterMap(String parameterMapName, Class<?> parameterTypeClass, String statementId) {
     parameterMapName = applyCurrentNamespace(parameterMapName, true);
     ParameterMap parameterMap = null;
     if (parameterMapName != null) {
@@ -457,54 +383,39 @@ public class MapperBuilderAssistant extends BaseBuilder {
         throw new IncompleteElementException("Could not find parameter map " + parameterMapName, e);
       }
     } else if (parameterTypeClass != null) {
-      List<ParameterMapping> parameterMappings = new ArrayList<>();
-      parameterMap = new ParameterMap.Builder(
-          configuration,
-          // note 使用的是parameterType时，会加上"-Inline"
-          statementId + "-Inline",
-          parameterTypeClass,
-          parameterMappings).build();
+      // 使用的是parameterType时，会加上"-Inline"，并且此种情况拿到的 ParameterMap 的 ParameterMapping 是空数组！
+      parameterMap = new ParameterMap
+          .Builder(configuration, statementId + "-Inline", parameterTypeClass, new ArrayList<>())
+          .build();
     }
     return parameterMap;
   }
 
   /**
-   * 获得 ResultMap 集合
-   *
-   * TODO resultMap可能是集合
+   * 获得 ResultMap，源码中是多个，这里不支持
    */
-  private List<ResultMap> getStatementResultMaps(
-      String resultMap,
-      Class<?> resultType,
-      String statementId) {
+  private ResultMap getStatementResultMap(String resultMapName, Class<?> resultType, String statementId) {
     // 获得 resultMap 的编号
-    resultMap = applyCurrentNamespace(resultMap, true);
-
+    resultMapName = applyCurrentNamespace(resultMapName, true);
     // 创建 ResultMap 集合
-    List<ResultMap> resultMaps = new ArrayList<>();
+    ResultMap resultMap = null;
     // 如果 resultMap 非空，则获得 resultMap 对应的 ResultMap 对象(们）
-    if (resultMap != null) {
-      String[] resultMapNames = resultMap.split(",");
-      for (String resultMapName : resultMapNames) {
+    if (resultMapName != null) {
         try {
           // 从 configuration 中获得
-          resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+          resultMap = configuration.getResultMap(resultMapName.trim());
         } catch (IllegalArgumentException e) {
           throw new IncompleteElementException("Could not find result map " + resultMapName, e);
         }
-      }
-    // 如果 resultType 非空，则创建 ResultMap 对象
-    } else if (resultType != null) {
-      ResultMap inlineResultMap = new ResultMap.Builder(
-          configuration,
-          // note 这里加的 '-Inline'，只有resultType才会出现这种
-          statementId + "-Inline",
-          resultType,
-          new ArrayList<ResultMapping>(),
-          null).build();
-      resultMaps.add(inlineResultMap);
     }
-    return resultMaps;
+    // 如果 resultType 非空，则创建 ResultMap 对象，对应的 ResultMapping 也是空数组
+    else if (resultType != null) {
+      // note 这里加的 '-Inline'，只有resultType才会出现这种
+      resultMap = new ResultMap
+          .Builder(configuration, statementId + "-Inline", resultType, new ArrayList<>(), null)
+          .build();
+    }
+    return resultMap;
   }
 
   /**
@@ -525,8 +436,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
    *
    * @param typeHandler 指定类型处理器
    * @param flags 对应的ResultFlag
-   * @param resultSet 结果集，针对存储过程返回多个结果集
-   * @param foreignColumn 指定外键对应的列名，指定的列将与父类型中 column 的给出的列进行匹配，存储过程用的
    * @param lazy 是否懒加载
    */
   public ResultMapping buildResultMapping(
@@ -541,8 +450,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags,
-      String resultSet,
-      String foreignColumn,
       boolean lazy) {
 
     // 解析对应的 Java Type 类和 TypeHandler 对象
@@ -556,13 +463,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .jdbcType(jdbcType)
         .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true))
-        .resultSet(resultSet)
         .typeHandler(typeHandlerInstance)
         .flags(flags == null ? new ArrayList<ResultFlag>() : flags)
         .composites(composites)
         .notNullColumns(parseMultipleColumnNames(notNullColumn))
         .columnPrefix(columnPrefix)
-        .foreignColumn(foreignColumn)
         .lazy(lazy)
         .build();
   }
@@ -588,9 +493,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   /**
-   * 解析组合字段名称成 ResultMapping 集合。从作用和含义上讲，更接近 ParameterMap
-   * note 这可能是多个字符串，如column="{prop1=col1,prop2=col2}"，用于关联的嵌套查询(该查询需要几个参数，这里就传几个)；
-   *  这里不是处理多结果集，也就是存储过程的场景，存储过程如果有多个列的话 column="col1,col2"，代表的是联合外键。
+   * 解析组合字段名称成 ResultMapping 集合。
+   * 这里必然多个字符串，如column="{prop1=col1,prop2=col2}"，用于关联的嵌套查询(该查询需要几个参数，这里就传几个)；
    */
   private List<ResultMapping> parseCompositeColumnName(String columnName) {
     List<ResultMapping> composites = new ArrayList<>();
@@ -661,27 +565,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   /**
-   * 构建ResultMapping，从参数上看，针对的是 非存储过程方式 的调用。
-   * 所谓的向下兼容，因为之前的mybatis版本不支持存储过程
-   */
-  public ResultMapping buildResultMapping(
-      Class<?> resultType,
-      String property,
-      String column,
-      Class<?> javaType,
-      JdbcType jdbcType,
-      String nestedSelect,
-      String nestedResultMap,
-      String notNullColumn,
-      String columnPrefix,
-      Class<? extends TypeHandler<?>> typeHandler,
-      List<ResultFlag> flags) {
-      return buildResultMapping(
-        resultType, property, column, javaType, jdbcType, nestedSelect,
-        nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
-  }
-
-  /**
    * 获取指定语言的驱动
    */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
@@ -694,37 +577,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
     // 获得 LanguageDriver 对象
     return configuration.getLanguageRegistry().getDriver(langClass);
-  }
-
-  /**
-   * 添加MappedStatement
-   * 向下兼容，因为之前的mybatis版本不支持存储过程
-   */
-  public MappedStatement addMappedStatement(
-    String id,
-    SqlSource sqlSource,
-    StatementType statementType,
-    SqlCommandType sqlCommandType,
-    Integer fetchSize,
-    Integer timeout,
-    String parameterMap,
-    Class<?> parameterType,
-    String resultMap,
-    Class<?> resultType,
-    ResultSetType resultSetType,
-    boolean flushCache,
-    boolean useCache,
-    boolean resultOrdered,
-    KeyGenerator keyGenerator,
-    String keyProperty,
-    String keyColumn,
-    String databaseId,
-    LanguageDriver lang) {
-    return addMappedStatement(
-      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
-      parameterMap, parameterType, resultMap, resultType, resultSetType,
-      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
-      keyColumn, databaseId, lang, null);
   }
 
 }

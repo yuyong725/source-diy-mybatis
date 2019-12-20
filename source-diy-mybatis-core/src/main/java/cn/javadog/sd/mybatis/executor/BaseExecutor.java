@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import cn.javadog.sd.mybatis.cursor.Cursor;
+import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.executor.statement.StatementUtil;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.session.LocalCacheScope;
-import cn.javadog.sd.mybatis.executor.result.ResultHandler;
 import cn.javadog.sd.mybatis.session.RowBounds;
 import cn.javadog.sd.mybatis.support.cache.CacheKey;
 import cn.javadog.sd.mybatis.support.cache.impl.PerpetualCache;
@@ -296,7 +297,7 @@ public abstract class BaseExecutor implements Executor {
     // 设置 ParameterMapping 数组的元素对应的每个 value 到 CacheKey 对象中
     for (ParameterMapping parameterMapping : parameterMappings) {
       // 这块逻辑，和 DefaultParameterHandler 获取 value 是一致的。
-      if (parameterMapping.getMode() != ParameterMode.OUT) {
+      if (parameterMapping.getMode() == ParameterMode.IN) {
         Object value;
         String propertyName = parameterMapping.getProperty();
         if (boundSql.hasAdditionalParameter(propertyName)) {

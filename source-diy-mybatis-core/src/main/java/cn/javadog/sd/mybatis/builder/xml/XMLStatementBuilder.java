@@ -56,12 +56,6 @@ public class XMLStatementBuilder extends BaseBuilder {
   public void parseStatementNode() {
     // 获得 id 属性，编号。
     String id = context.getStringAttribute("id");
-    // 获得 databaseId ， 判断 databaseId 是否匹配
-    String databaseId = context.getStringAttribute("databaseId");
-    // 不匹配的直接跳过，不会报错
-    if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
-      return;
-    }
     // 获得各种属性
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");
@@ -119,10 +113,25 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
 
     // 创建 MappedStatement 对象
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
-        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered, 
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
+    builderAssistant.addMappedStatement(
+        id,
+        sqlSource,
+        statementType,
+        sqlCommandType,
+        fetchSize,
+        timeout,
+        parameterMap,
+        parameterTypeClass,
+        resultMap,
+        resultTypeClass,
+        resultSetTypeEnum,
+        flushCache,
+        useCache,
+        resultOrdered,
+        keyGenerator,
+        keyProperty,
+        keyColumn,
+        langDriver);
   }
 
   /**
@@ -152,20 +161,15 @@ public class XMLStatementBuilder extends BaseBuilder {
     for (XNode nodeToHandle : list) {
       // 获得完整 id ，格式为 `${id}!selectKey`
       String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
-      // 获得 databaseId ， 判断 databaseId 是否匹配
-      String databaseId = nodeToHandle.getStringAttribute("databaseId");
-      // 校验databaseId
-      if (databaseIdMatchesCurrent(id, databaseId, skRequiredDatabaseId)) {
-        // 执行解析单个 <selectKey /> 节点
-        parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver, databaseId);
-      }
+      // 执行解析单个 <selectKey /> 节点
+      parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver);
     }
   }
 
   /**
    * 执行解析单个 <selectKey /> 节点
    */
-  private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
+  private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     // 获得各种属性和对应的类
     String resultType = nodeToHandle.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
@@ -192,10 +196,26 @@ public class XMLStatementBuilder extends BaseBuilder {
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     // 创建 MappedStatement 对象。属性真鸡儿多，看都不想看
-    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
-        fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered,
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, null);
+    builderAssistant.addMappedStatement(
+        id,
+        sqlSource,
+        statementType,
+        sqlCommandType,
+        fetchSize,
+        timeout,
+        parameterMap,
+        parameterTypeClass,
+        resultMap,
+        resultTypeClass,
+        resultSetTypeEnum,
+        flushCache,
+        useCache,
+        resultOrdered,
+        keyGenerator,
+        keyProperty,
+        keyColumn,
+        langDriver
+    );
 
     // 获得 SelectKey 的编号，格式为 `${namespace}.${id}`
     id = builderAssistant.applyCurrentNamespace(id, false);
@@ -212,35 +232,6 @@ public class XMLStatementBuilder extends BaseBuilder {
     for (XNode nodeToHandle : selectKeyNodes) {
       nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
     }
-  }
-
-  /**
-   * 判断 databaseId 是否匹配。
-   * 与 {@link XMLMapperBuilder#databaseIdMatchesCurrent(String, String, String)} 实现一模一样，干鸡儿不提到父类
-   */
-  private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
-    if (requiredDatabaseId != null) {
-      // 如果不匹配，则返回 false
-      if (!requiredDatabaseId.equals(databaseId)) {
-        return false;
-      }
-    } else {
-      // 如果未设置 requiredDatabaseId ，但是 databaseId 存在，说明还是不匹配，则返回 false
-      if (databaseId != null) {
-        return false;
-      }
-      // 判断是否已经存在
-      id = builderAssistant.applyCurrentNamespace(id, false);
-      if (this.configuration.hasStatement(id, false)) {
-        // issue #2
-        MappedStatement previous = this.configuration.getMappedStatement(id, false);
-        if (previous.getDatabaseId() != null) {
-          // 若存在，则判断原有的 sqlFragment 是否 databaseId 为空。因为，当前 databaseId 为空，这样两者才能匹配。
-          return false;
-        }
-      }
-    }
-    return true;
   }
 
   /**

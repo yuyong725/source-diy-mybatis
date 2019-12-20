@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.scripting.xmltags.DynamicContext;
 import cn.javadog.sd.mybatis.session.Configuration;
@@ -151,12 +152,8 @@ public class SqlSourceBuilder extends BaseBuilder {
           builder.mode(resolveParameterMode(value));
         } else if ("numericScale".equals(name)) {
           builder.numericScale(Integer.valueOf(value));
-        } else if ("resultMap".equals(name)) {
-          builder.resultMapId(value);
         } else if ("typeHandler".equals(name)) {
           typeHandlerAlias = value;
-        } else if ("jdbcTypeName".equals(name)) {
-          builder.jdbcTypeName(value);
         } else if ("property".equals(name)) {
           // 最👆已经干了
         } else if ("expression".equals(name)) {

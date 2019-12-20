@@ -13,15 +13,14 @@ import java.util.Properties;
 
 import cn.javadog.sd.mybatis.builder.BaseBuilder;
 import cn.javadog.sd.mybatis.builder.MapperBuilderAssistant;
-import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.mapping.Discriminator;
-import cn.javadog.sd.mybatis.mapping.ParameterMode;
 import cn.javadog.sd.mybatis.mapping.ResultFlag;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
 import cn.javadog.sd.mybatis.mapping.ResultMapping;
 import cn.javadog.sd.mybatis.session.Configuration;
 import cn.javadog.sd.mybatis.support.cache.Cache;
 import cn.javadog.sd.mybatis.support.exceptions.BuilderException;
+import cn.javadog.sd.mybatis.support.exceptions.ErrorContext;
 import cn.javadog.sd.mybatis.support.exceptions.IncompleteElementException;
 import cn.javadog.sd.mybatis.support.io.Resources;
 import cn.javadog.sd.mybatis.support.parsing.XNode;
@@ -151,8 +150,6 @@ public class XMLMapperBuilder extends BaseBuilder {
       cacheRefElement(context.evalNode("cache-ref"));
       // 解析 <cache /> 节点
       cacheElement(context.evalNode("cache"));
-      // 已废弃！老式风格的参数映射。内联参数是首选, 这个元素可能在将来被移除，这里不会记录。
-      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       // 解析 <resultMap /> 节点们
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       // 解析 <sql /> 节点们
@@ -304,38 +301,6 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   /**
-   * 解析parameterMap，逻辑很简单
-   */
-  private void parameterMapElement(List<XNode> list) throws Exception {
-    for (XNode parameterMapNode : list) {
-      String id = parameterMapNode.getStringAttribute("id");
-      String type = parameterMapNode.getStringAttribute("type");
-      Class<?> parameterClass = resolveClass(type);
-      List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
-      List<ParameterMapping> parameterMappings = new ArrayList<>();
-      for (XNode parameterNode : parameterNodes) {
-        String property = parameterNode.getStringAttribute("property");
-        String javaType = parameterNode.getStringAttribute("javaType");
-        String jdbcType = parameterNode.getStringAttribute("jdbcType");
-        String resultMap = parameterNode.getStringAttribute("resultMap");
-        String mode = parameterNode.getStringAttribute("mode");
-        String typeHandler = parameterNode.getStringAttribute("typeHandler");
-        Integer numericScale = parameterNode.getIntAttribute("numericScale");
-        ParameterMode modeEnum = resolveParameterMode(mode);
-        Class<?> javaTypeClass = resolveClass(javaType);
-        JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-        @SuppressWarnings("unchecked")
-        Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
-        // 构建ParameterMapping
-        ParameterMapping parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
-        parameterMappings.add(parameterMapping);
-      }
-      // 构建ParameterMap
-      builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
-    }
-  }
-
-  /**
    * 解析所有 <resultMap /> 节点
    */
   private void resultMapElements(List<XNode> list) throws Exception {
@@ -481,46 +446,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void sqlElement(List<XNode> list, String requiredDatabaseId) throws Exception {
     // 遍历所有 <sql /> 节点
     for (XNode context : list) {
-      // 获得 databaseId 属性
-      String databaseId = context.getStringAttribute("databaseId");
       // 获得完整的 id 属性，格式为 `${namespace}.${id}`
       String id = context.getStringAttribute("id");
       id = builderAssistant.applyCurrentNamespace(id, false);
-      // 判断 databaseId 是否匹配
-      if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
-        // 添加到 sqlFragments 中
-        sqlFragments.put(id, context);
-      }
+      // 添加到 sqlFragments 中
+      sqlFragments.put(id, context);
     }
-  }
-
-  /**
-   * 判断 databaseId 是否匹配
-   *
-   * @param id SQL id
-   */
-  private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
-    // requiredDatabaseId 不为空代表需要校验
-    if (requiredDatabaseId != null) {
-      // 不相等，说明不匹配
-      if (!requiredDatabaseId.equals(databaseId)) {
-        return false;
-      }
-    } else {
-      // 如果未设置 requiredDatabaseId ，但是 databaseId 存在，说明还是不匹配，则返回 false
-      if (databaseId != null) {
-        return false;
-      }
-      // 判断是否已经存在，TODO 同一个节点被多次加载？
-      if (this.sqlFragments.containsKey(id)) {
-        XNode context = this.sqlFragments.get(id);
-        // 若存在，则判断原有的 sqlFragment 是否 databaseId 为空。因为，当前 databaseId 为空，这样两者才能匹配。
-        if (context.getStringAttribute("databaseId") != null) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 
   /**
@@ -563,11 +494,24 @@ public class XMLMapperBuilder extends BaseBuilder {
     Class<?> javaTypeClass = resolveClass(javaType);
     // 获得typeHandler对应的类
     @SuppressWarnings("unchecked")
-    Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
+    Class<? extends TypeHandler<?>> typeHandlerClass = resolveClass(typeHandler);
     // 获取jdbcType对应的类型
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     // 构建 ResultMapping 对象
-    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resultSet, foreignColumn, lazy);
+    return builderAssistant.buildResultMapping(
+        resultType,
+        property,
+        column,
+        javaTypeClass,
+        jdbcTypeEnum,
+        nestedSelect,
+        nestedResultMap,
+        notNullColumn,
+        columnPrefix,
+        typeHandlerClass,
+        flags,
+        lazy
+    );
   }
 
   /**

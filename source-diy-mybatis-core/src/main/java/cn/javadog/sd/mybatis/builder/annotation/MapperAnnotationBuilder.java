@@ -129,7 +129,7 @@ public class MapperAnnotationBuilder {
    * 构造函数
    */
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
-    // 将全类名改成路径的形式，note 我们debug的时候应该经常看到(best guess)
+    // 将全类名改成路径的形式，我们debug的时候应该经常看到(best guess)
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     // 创建 MapperBuilderAssistant 对象
     this.assistant = new MapperBuilderAssistant(configuration, resource);
@@ -500,11 +500,8 @@ public class MapperAnnotationBuilder {
           keyGenerator,
           keyProperty,
           keyColumn,
-          // DatabaseID
-          null,
-          languageDriver,
-          // ResultSets
-          options != null ? nullOrEmpty(options.resultSets()) : null);
+          languageDriver
+      );
     }
   }
 
@@ -772,8 +769,6 @@ public class MapperAnnotationBuilder {
           null,
           typeHandler,
           flags,
-          null,
-          null,
           isLazy(result));
       // 添加到 resultMappings 中
       resultMappings.add(resultMapping);
@@ -854,8 +849,6 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.columnPrefix()),
           typeHandler,
           flags,
-          null,
-          null,
           false);
       // 添加到 resultMappings 中
       resultMappings.add(resultMapping);
@@ -910,9 +903,25 @@ public class MapperAnnotationBuilder {
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     // 创建 MappedStatement 对象
-    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-        flushCache, useCache, false,
-        keyGenerator, keyProperty, keyColumn, null, languageDriver, null);
+    assistant.addMappedStatement(id,
+        sqlSource,
+        statementType,
+        sqlCommandType,
+        fetchSize,
+        timeout,
+        parameterMap,
+        parameterTypeClass,
+        resultMap,
+        resultTypeClass,
+        resultSetTypeEnum,
+        flushCache,
+        useCache,
+        false,
+        keyGenerator,
+        keyProperty,
+        keyColumn,
+        languageDriver
+    );
 
     // 获得 SelectKeyGenerator 的编号，格式为 `${namespace}.${id}`
     id = assistant.applyCurrentNamespace(id, false);

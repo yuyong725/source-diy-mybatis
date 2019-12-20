@@ -1,6 +1,7 @@
 package cn.javadog.sd.mybatis.mapping;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.javadog.sd.mybatis.session.Configuration;
@@ -41,10 +42,16 @@ public class BoundSql {
   private final MetaObject metaParameters;
 
   /**
+   * 关联的 ParameterMapping 数组
+   */
+  private final List<ParameterMapping> parameterMappings;
+
+  /**
    * 构造函数
    */
-  public BoundSql(Configuration configuration, String sql, Object parameterObject) {
+  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
+    this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
     // 默认是空
     this.additionalParameters = new HashMap<>();
@@ -57,6 +64,13 @@ public class BoundSql {
    */
   public String getSql() {
     return sql;
+  }
+
+  /**
+   * 获取参数映射关系
+   */
+  public List<ParameterMapping> getParameterMappings() {
+    return parameterMappings;
   }
 
   /**

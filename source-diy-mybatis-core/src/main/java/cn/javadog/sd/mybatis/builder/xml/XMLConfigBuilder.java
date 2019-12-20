@@ -59,28 +59,16 @@ public class XMLConfigBuilder extends BaseBuilder {
    */
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
-  /** n个不同的构造*/
-
-  public XMLConfigBuilder(Reader reader) {
-    this(reader, null, null);
-  }
-
-  public XMLConfigBuilder(Reader reader, String environment) {
-    this(reader, environment, null);
-  }
-
+  /**
+   * 使用 reader 的构造
+   */
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     this(new XPathParser(reader, props), environment, props);
   }
 
-  public XMLConfigBuilder(InputStream inputStream) {
-    this(inputStream, null, null);
-  }
-
-  public XMLConfigBuilder(InputStream inputStream, String environment) {
-    this(inputStream, environment, null);
-  }
-
+  /**
+   * 使用 inputStream 的构造
+   */
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
     this(new XPathParser(inputStream, props), environment, props);
   }
@@ -123,8 +111,7 @@ public class XMLConfigBuilder extends BaseBuilder {
    */
   private void parseConfiguration(XNode root) {
     try {
-      //issue #117 read properties first
-      // 解析 <properties /> 标签，note 必须最先解析，原因见 issue #117
+      // 解析 <properties /> 标签，必须最先解析，原因见 issue #117
       propertiesElement(root.evalNode("properties"));
       // 解析 <settings /> 标签
       Properties settings = settingsAsProperties(root.evalNode("settings"));
@@ -142,10 +129,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
       // 赋值 <settings /> 到 Configuration 属
       settingsElement(settings);
-      // 解析 <environments /> 标签，note 必须在 objectFactory 和 objectWrapperFactory 解析之后再解析，原因见 #631
+      // 解析 <environments /> 标签，必须在 objectFactory 和 objectWrapperFactory 解析之后再解析，原因见 #631
       environmentsElement(root.evalNode("environments"));
-      // 解析 <databaseIdProvider /> 标签
-      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       // 解析 <typeHandlers /> 标签
       typeHandlerElement(root.evalNode("typeHandlers"));
       // 解析 <mappers /> 标签，从xml去找接口，而不是@mapperScan+mapper.location这种从接口找xml
@@ -232,6 +217,11 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 解析 <plugins /> 标签，添加到 Configuration#interceptorChain 中
+   * <plugins>
+   *     <plugin interceptor="org.apache.ibatis.builder.ExamplePlugin">
+   *       <property name="pluginProperty" value="100"/>
+   *     </plugin>
+   * </plugins>
    */
   private void pluginElement(XNode parent) throws Exception {
     if (parent != null) {
@@ -241,7 +231,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         Properties properties = child.getChildrenAsProperties();
         // 创建 Interceptor 对象
         Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
-        // 设置属性，note 也就是说插件的属性与Spring结合后，是可以在这里以某个前缀统一设置的
+        // 设置属性
         interceptorInstance.setProperties(properties);
         // 添加到 configuration 中
         configuration.addInterceptor(interceptorInstance);
@@ -426,39 +416,6 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   /**
-   * 解析 <databaseIdProvider />
-   *
-   * MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 databaseId 属性。
-   * MyBatis 会加载不带 databaseId 属性和带有匹配当前数据库 databaseId 属性的所有语句。
-   * 如果同时找到带有 databaseId 和不带 databaseId 的相同语句，则后者会被舍弃。
-   * 为支持多厂商特性只要像下面这样在 mybatis-config.xml 文件中加入 databaseIdProvider 即可：
-   * note 很少使用到
-   */
-  private void databaseIdProviderElement(XNode context) throws Exception {
-    DatabaseIdProvider databaseIdProvider = null;
-    if (context != null) {
-      // 获得 DatabaseIdProvider 的类
-      String type = context.getStringAttribute("type");
-      // 为了兼容性而加的糟糕补丁
-      if ("VENDOR".equals(type)) {
-          type = "DB_VENDOR";
-      }
-      // 获得 Properties 对象
-      Properties properties = context.getChildrenAsProperties();
-      // 创建 DatabaseIdProvider 对象，并设置对应的属性
-      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
-      databaseIdProvider.setProperties(properties);
-    }
-    Environment environment = configuration.getEnvironment();
-    if (environment != null && databaseIdProvider != null) {
-      // 获得对应的 databaseId 编号
-      String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
-      // 设置到 configuration 中
-      configuration.setDatabaseId(databaseId);
-    }
-  }
-
-  /**
    * 解析 <transactionManager /> 标签，返回 TransactionFactory 对象
    */
   private TransactionFactory transactionManagerElement(XNode context) throws Exception {
@@ -588,7 +545,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   /**
    * 将要被解析的environment标签的ID，是否就是我们需要的
-   * note 这里要求两者都不能为空，必须有所指定，因此也不能直接一行代码 environment.equals(id)
+   * 这里要求两者都不能为空，必须有所指定，因此也不能直接一行代码 environment.equals(id)
    */
   private boolean isSpecifiedEnvironment(String id) {
     if (environment == null) {

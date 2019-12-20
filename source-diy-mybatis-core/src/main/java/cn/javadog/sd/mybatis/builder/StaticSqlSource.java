@@ -1,6 +1,9 @@
 package cn.javadog.sd.mybatis.builder;
 
+import java.util.List;
+
 import cn.javadog.sd.mybatis.mapping.BoundSql;
+import cn.javadog.sd.mybatis.mapping.ParameterMapping;
 import cn.javadog.sd.mybatis.mapping.SqlSource;
 import cn.javadog.sd.mybatis.session.Configuration;
 
@@ -28,11 +31,17 @@ public class StaticSqlSource implements SqlSource {
   private final Configuration configuration;
 
   /**
+   * ParameterMapping 集合
+   */
+  private final List<ParameterMapping> parameterMappings;
+
+  /**
    * 构造函数
    */
-  public StaticSqlSource(Configuration configuration, String sql) {
+  StaticSqlSource(Configuration configuration, String sql, List<ParameterMapping> parameterMappings) {
     this.sql = sql;
     this.configuration = configuration;
+    this.parameterMappings = parameterMappings;
   }
 
   /**
@@ -41,7 +50,7 @@ public class StaticSqlSource implements SqlSource {
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
     // 创建 BoundSql 对象
-    return new BoundSql(configuration, sql, parameterObject);
+    return new BoundSql(configuration, sql, parameterMappings, parameterObject);
   }
 
 }

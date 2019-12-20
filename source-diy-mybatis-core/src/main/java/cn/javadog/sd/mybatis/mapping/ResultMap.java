@@ -162,7 +162,7 @@ public class ResultMap {
         // 判断是否有嵌套查询
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
         // 判断是否有内嵌的ResultMap
-        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
+        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null);
         // 拿到 <result /> 标签对应的列名
         final String column = resultMapping.getColumn();
         if (column != null) {

@@ -80,16 +80,6 @@ public class ResultMapping {
   private List<ResultMapping> composites;
 
   /**
-   * 结果集，用于存储过程，无视
-   */
-  private String resultSet;
-
-  /**
-   * 指定外键对应的列名，指定的列将与父类型中 column 的给出的列进行匹配。用于存储过程，无视
-   */
-  private String foreignColumn;
-
-  /**
    * 是否懒加载，用于关联查询
    */
   private boolean lazy;
@@ -175,22 +165,6 @@ public class ResultMapping {
     }
 
     /**
-     * 设置 resultSet
-     */
-    public Builder resultSet(String resultSet) {
-      resultMapping.resultSet = resultSet;
-      return this;
-    }
-
-    /**
-     * 设置 foreignColumn
-     */
-    public Builder foreignColumn(String foreignColumn) {
-      resultMapping.foreignColumn = foreignColumn;
-      return this;
-    }
-
-    /**
      * 设置 notNullColumns
      */
     public Builder notNullColumns(Set<String> notNullColumns) {
@@ -267,20 +241,6 @@ public class ResultMapping {
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
-      // 针对存储过程的ResultSet的校验，无视
-      if (resultMapping.getResultSet() != null) {
-        int numColumns = 0;
-        if (resultMapping.column != null) {
-          numColumns = resultMapping.column.split(",").length;
-        }
-        int numForeignColumns = 0;
-        if (resultMapping.foreignColumn != null) {
-          numForeignColumns = resultMapping.foreignColumn.split(",").length;
-        }
-        if (numColumns != numForeignColumns) {
-          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
-        }
-      }
     }
 
     /**
@@ -353,18 +313,6 @@ public class ResultMapping {
     return this.composites != null && !this.composites.isEmpty();
   }
 
-  public String getResultSet() {
-    return this.resultSet;
-  }
-
-  public String getForeignColumn() {
-    return foreignColumn;
-  }
-
-  public void setForeignColumn(String foreignColumn) {
-    this.foreignColumn = foreignColumn;
-  }
-
   public boolean isLazy() {
     return lazy;
   }
@@ -426,8 +374,6 @@ public class ResultMapping {
     sb.append(", columnPrefix='").append(columnPrefix).append('\'');
     sb.append(", flags=").append(flags);
     sb.append(", composites=").append(composites);
-    sb.append(", resultSet='").append(resultSet).append('\'');
-    sb.append(", foreignColumn='").append(foreignColumn).append('\'');
     sb.append(", lazy=").append(lazy);
     sb.append('}');
     return sb.toString();

@@ -27,10 +27,6 @@ import cn.javadog.sd.mybatis.support.logging.LogFactory;
 import cn.javadog.sd.mybatis.support.reflection.meta.MetaObject;
 
 /**
- * @author Clinton Begin
- * @author Franta Mejta
- */
-/**
  * @author 余勇
  * @date 2019-12-15 16:07
  * 用于记录要被懒加载的ResultLoader

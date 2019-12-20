@@ -33,6 +33,7 @@ import cn.javadog.sd.mybatis.executor.statement.StatementHandler;
 import cn.javadog.sd.mybatis.mapping.BoundSql;
 import cn.javadog.sd.mybatis.mapping.Environment;
 import cn.javadog.sd.mybatis.mapping.MappedStatement;
+import cn.javadog.sd.mybatis.mapping.ParameterMap;
 import cn.javadog.sd.mybatis.mapping.ResultMap;
 import cn.javadog.sd.mybatis.plugin.Interceptor;
 import cn.javadog.sd.mybatis.plugin.InterceptorChain;
@@ -354,8 +355,6 @@ public class Configuration {
     typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class);
     typeAliasRegistry.registerAlias("FIFO", FifoCache.class);
     typeAliasRegistry.registerAlias("LRU", LruCache.class);
-    // 数据库标示
-    typeAliasRegistry.registerAlias("DB_VENDOR", VendorDatabaseIdProvider.class);
     // 语言驱动类型
     typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class);
     typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class);
