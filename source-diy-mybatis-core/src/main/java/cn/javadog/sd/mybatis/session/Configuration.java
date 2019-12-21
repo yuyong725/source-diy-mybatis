@@ -232,11 +232,6 @@ public class Configuration {
   protected ProxyFactory proxyFactory = new JavassistProxyFactory();
 
   /**
-   * 数据库标示
-   */
-  protected String databaseId;
-
-  /**
    * 配置工厂类
    * 用于创建配置类，反序列化属性
    * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
@@ -426,14 +421,6 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
-  }
-
-  public String getDatabaseId() {
-    return databaseId;
-  }
-
-  public void setDatabaseId(String databaseId) {
-    this.databaseId = databaseId;
   }
 
   public Class<?> getConfigurationFactory() {

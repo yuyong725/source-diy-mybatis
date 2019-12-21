@@ -163,23 +163,12 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   /**
    * 解析所有 <select />、<insert />、<update />、<delete /> 节点
-   * 完全可以简写成一行：buildStatementFromContext(list, configuration.getDatabaseId());
    */
   private void buildStatementFromContext(List<XNode> list) {
-    if (configuration.getDatabaseId() != null) {
-      buildStatementFromContext(list, configuration.getDatabaseId());
-    }
-    buildStatementFromContext(list, null);
-  }
-
-  /**
-   * 解析所有 <select />、<insert />、<update />、<delete /> 节点
-   */
-  private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     // 遍历 <select /> <insert /> <update /> <delete /> 节点们
     for (XNode context : list) {
       // 获得 XMLStatementBuilder
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context);
       try {
         // 进行解析
         statementParser.parseStatementNode();
@@ -427,23 +416,10 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   /**
    * 解析所有 <sql /> 节点
-   * note 完全可以简写成 sqlElement(list, configuration.getDatabaseId());
-   */
-  private void sqlElement(List<XNode> list) throws Exception {
-    if (configuration.getDatabaseId() != null) {
-      // 如果有数据库标示的话，解析时要多加验证
-      sqlElement(list, configuration.getDatabaseId());
-    }
-    sqlElement(list, null);
-  }
-
-  /**
-   * 解析所有 <sql /> 节点
    *
    * @param list 要解析的SQL节点
-   * @param requiredDatabaseId 数据库标示
    */
-  private void sqlElement(List<XNode> list, String requiredDatabaseId) throws Exception {
+  private void sqlElement(List<XNode> list) throws Exception {
     // 遍历所有 <sql /> 节点
     for (XNode context : list) {
       // 获得完整的 id 属性，格式为 `${namespace}.${id}`

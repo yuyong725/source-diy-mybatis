@@ -34,20 +34,10 @@ public class XMLStatementBuilder extends BaseBuilder {
    */
   private final XNode context;
 
-  /**
-   * 要求的 databaseId
-   */
-  private final String requiredDatabaseId;
-
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
-    this(configuration, builderAssistant, context, null);
-  }
-
-  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context, String databaseId) {
     super(configuration);
     this.builderAssistant = builderAssistant;
     this.context = context;
-    this.requiredDatabaseId = databaseId;
   }
 
   /**
@@ -135,16 +125,13 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   /**
-   * 解析 <selectKey /> 标签，核心逻辑是👇的{@link #parseSelectKeyNodes(String, List, Class, LanguageDriver, String)}
+   * 解析 <selectKey /> 标签，核心逻辑是👇的{@link #parseSelectKeyNodes(String, List, Class, LanguageDriver)}
    */
   private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     // 获得 <selectKey /> 节点们
     List<XNode> selectKeyNodes = context.evalNodes("selectKey");
     // 执行解析 <selectKey /> 节点们
-    if (configuration.getDatabaseId() != null) {
-      parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
-    }
-    parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
+    parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver);
     // 移除 <selectKey /> 节点们
     removeSelectKeyNodes(selectKeyNodes);
   }
@@ -156,7 +143,7 @@ public class XMLStatementBuilder extends BaseBuilder {
    *    CALL IDENTITY()
    * </selectKey>
    */
-  private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
+  private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     // 遍历 <selectKey /> 节点们
     for (XNode nodeToHandle : list) {
       // 获得完整 id ，格式为 `${id}!selectKey`
