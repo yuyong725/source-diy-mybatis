@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Fri Dec 20 22:59:42 CST 2019:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-016f-23d2-4e83-00000734e458 
+Sat Dec 21 13:37:07 CST 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-016f-26f5-9893-00000734eb00 
 on database directory /Users/yuyong/code/source_diy/source-diy-mybatis/source-diy-mybatis-test/blog with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
 Loaded from file:/Users/yuyong/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Oracle Corporation
